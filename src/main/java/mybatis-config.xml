@@ -1,18 +1,21 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE configuration
-  PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+  PUBLIC "-//mybatis.org//DTD//EN"
   "http://mybatis.org/dtd/mybatis-3-config.dtd">
 <configuration>
-
     <settings>
         <setting name="cacheEnabled" value="true"/>
         <setting name="defaultStatementTimeout" value="3000"/>
+        <!-- 开启驼峰命名与下划线命名互相转换 -->
         <setting name="mapUnderscoreToCamelCase" value="true"/>
         <!-- 代理 -->
         <setting name="proxyFactory" value="CGLIB"/>
         <setting name="lazyLoadingEnabled" value="true"/>
     </settings>
-
+    <!-- 指定使用枚举序号转换 -->
+    <typeHandlers>
+    	<typeHandler handler="org.apache.ibatis.type.EnumOrdinalTypeHandler" javaType="com.foo.ProcessStatus"/>
+	</typeHandlers>
     <!-- 分页插件 -->
     <plugins>
         <plugin interceptor="com.github.pagehelper.PageInterceptor">
@@ -28,5 +31,4 @@
             <property name="pageSizeZero" value="true"/>
         </plugin>
     </plugins>
-
 </configuration>

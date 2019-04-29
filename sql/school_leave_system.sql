@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 50723
 File Encoding         : 65001
 
-Date: 2019-04-29 14:46:54
+Date: 2019-04-29 15:05:07
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -65,7 +65,7 @@ CREATE TABLE `leave` (
   `end_lesson` int(2) NOT NULL COMMENT '请假到第X节课为止',
   `reason` text NOT NULL COMMENT '请假理由',
   `create_time` datetime NOT NULL COMMENT '请假申请创建的时间',
-  `pass` int(1) NOT NULL COMMENT '请假是否通过\r\n-1-等待审核\r\n0-未通过\r\n1-通过',
+  `pass` int(1) NOT NULL COMMENT '请假是否通过\r\n0-等待审核\r\n1-未通过\r\n2-通过',
   `reviewer_id` int(11) DEFAULT NULL COMMENT '审核人的id',
   `review_time` datetime DEFAULT NULL COMMENT '审核的时间',
   PRIMARY KEY (`id`),

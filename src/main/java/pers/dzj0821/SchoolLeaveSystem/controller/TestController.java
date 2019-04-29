@@ -35,7 +35,7 @@ public class TestController {
 		if(user == null) {
 			return "用户名不存在";
 		}
-		if(user.getPassword().equals(password)) {
+		if(user.getHex256Password().equals(password)) {
 			return "登陆成功";
 		}
 		return "用户名或密码错误";
