@@ -5,6 +5,6 @@ import org.apache.ibatis.annotations.Select;
 import pers.dzj0821.SchoolLeaveSystem.pojo.User;
 
 public interface UserDao {
-	@Select("select * from user where username = #{id}")
+	@Select("select * from user where username = #{username}")
 	User selectUserByUsername(String username) throws Exception;
 }

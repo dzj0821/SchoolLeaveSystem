@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 50723
 File Encoding         : 65001
 
-Date: 2019-04-29 15:05:07
+Date: 2019-04-29 16:00:23
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -46,9 +46,11 @@ CREATE TABLE `collage` (
 -- ----------------------------
 DROP TABLE IF EXISTS `grade`;
 CREATE TABLE `grade` (
-  `year` int(5) NOT NULL AUTO_INCREMENT COMMENT '年级的年份',
-  PRIMARY KEY (`year`)
-) ENGINE=InnoDB AUTO_INCREMENT=2020 DEFAULT CHARSET=utf8 COMMENT='年级表';
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `year` int(5) NOT NULL COMMENT '年级的年份',
+  PRIMARY KEY (`id`),
+  KEY `year` (`year`)
+) ENGINE=InnoDB AUTO_INCREMENT=2021 DEFAULT CHARSET=utf8 COMMENT='年级表';
 
 -- ----------------------------
 -- Table structure for leave
