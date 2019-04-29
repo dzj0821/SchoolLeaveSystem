@@ -6,5 +6,5 @@ import pers.dzj0821.SchoolLeaveSystem.pojo.User;
 
 public interface UserDao {
 	@Select("select * from user where username = #{username}")
-	User selectUserByUsername(String username) throws Exception;
+	User[] findUserByUsername(String username) throws Exception;
 }

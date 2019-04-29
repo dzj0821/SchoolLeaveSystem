@@ -14,7 +14,7 @@ public class User {
 
 	@Override
 	public String toString() {
-		return "User[id=" + id + ", username=" + username + ", hex256Password=" + hex256Password + ", type=" + type
+		return "User [id=" + id + ", username=" + username + ", hex256Password=" + hex256Password + ", type=" + type
 				+ ", name=" + name + ", telephone=" + telephone + ", clientToken=" + clientToken + ", clientId="
 				+ clientId + "]";
 	}

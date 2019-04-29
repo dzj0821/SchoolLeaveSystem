@@ -15,6 +15,7 @@
     <!-- 指定使用枚举序号转换 -->
     <typeHandlers>
     	<typeHandler handler="org.apache.ibatis.type.EnumOrdinalTypeHandler" javaType="pers.dzj0821.SchoolLeaveSystem.type.UserType"/>
+    	<typeHandler handler="org.apache.ibatis.type.EnumOrdinalTypeHandler" javaType="pers.dzj0821.SchoolLeaveSystem.type.LeaveType"/>
 	</typeHandlers>
     <!-- 分页插件 -->
     <plugins>

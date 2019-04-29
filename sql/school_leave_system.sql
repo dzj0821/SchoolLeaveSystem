@@ -2,33 +2,33 @@
 Navicat MySQL Data Transfer
 
 Source Server         : localhost
-Source Server Version : 50723
+Source Server Version : 50724
 Source Host           : localhost:3306
 Source Database       : school_leave_system
 
 Target Server Type    : MYSQL
-Target Server Version : 50723
+Target Server Version : 50724
 File Encoding         : 65001
 
-Date: 2019-04-29 16:00:23
+Date: 2019-04-29 23:49:31
 */
 
 SET FOREIGN_KEY_CHECKS=0;
 
 -- ----------------------------
--- Table structure for class
+-- Table structure for clazz
 -- ----------------------------
-DROP TABLE IF EXISTS `class`;
-CREATE TABLE `class` (
+DROP TABLE IF EXISTS `clazz`;
+CREATE TABLE `clazz` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `no` int(1) NOT NULL COMMENT '专业内分班编号，如软件1班',
-  `grade_year` int(4) NOT NULL COMMENT '所属年级',
+  `grade_id` int(11) NOT NULL COMMENT '所属年级',
   `major_id` int(11) NOT NULL COMMENT '所属专业',
   PRIMARY KEY (`id`),
-  KEY `class_ibfk_1` (`grade_year`),
+  KEY `class_ibfk_1` (`grade_id`),
   KEY `class_ibfk_2` (`major_id`),
-  CONSTRAINT `class_ibfk_1` FOREIGN KEY (`grade_year`) REFERENCES `grade` (`year`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `class_ibfk_2` FOREIGN KEY (`major_id`) REFERENCES `major` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+  CONSTRAINT `clazz_ibfk_1` FOREIGN KEY (`grade_id`) REFERENCES `grade` (`year`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `clazz_ibfk_2` FOREIGN KEY (`major_id`) REFERENCES `major` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8 COMMENT='班级表\r\n/*\r\nBEGIN\r\n    SET @count = (SELECT COUNT(*) FROM class WHERE grade_year = NEW.grade_year AND major_id = NEW.major_id AND no = NEW.no);\r\n    IF @count != 0 THEN\r\n        SIGNAL SQLSTATE ''45000''\r\n SET MESSAGE_TEXT = ''试图往班级表中插入重复的班级'';\r\n    END IF;\r\nEND\r\n*/';
 
 -- ----------------------------
@@ -59,7 +59,7 @@ DROP TABLE IF EXISTS `leave`;
 CREATE TABLE `leave` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `user_id` int(11) NOT NULL COMMENT '请假用户的id',
-  `class_name` varchar(255) NOT NULL COMMENT '请假学生请假时的完整班级名，如2019级计算机与信息工程学院软件工程1班',
+  `clazz_name` varchar(255) NOT NULL COMMENT '请假学生请假时的完整班级名，如2019级计算机与信息工程学院软件工程1班',
   `telephone` int(11) NOT NULL COMMENT '请假学生请假时的电话',
   `start_date` date NOT NULL COMMENT '请假的开始日期',
   `start_lesson` int(2) NOT NULL COMMENT '从第X节课开始请假',
@@ -67,7 +67,7 @@ CREATE TABLE `leave` (
   `end_lesson` int(2) NOT NULL COMMENT '请假到第X节课为止',
   `reason` text NOT NULL COMMENT '请假理由',
   `create_time` datetime NOT NULL COMMENT '请假申请创建的时间',
-  `pass` int(1) NOT NULL COMMENT '请假是否通过\r\n0-等待审核\r\n1-未通过\r\n2-通过',
+  `type` int(1) NOT NULL COMMENT '假条状态\r\n0-等待审核\r\n1-未通过\r\n2-通过',
   `reviewer_id` int(11) DEFAULT NULL COMMENT '审核人的id',
   `review_time` datetime DEFAULT NULL COMMENT '审核的时间',
   PRIMARY KEY (`id`),
@@ -105,18 +105,18 @@ CREATE TABLE `major` (
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 COMMENT='专业表';
 
 -- ----------------------------
--- Table structure for permission_class
+-- Table structure for permission_clazz
 -- ----------------------------
-DROP TABLE IF EXISTS `permission_class`;
-CREATE TABLE `permission_class` (
+DROP TABLE IF EXISTS `permission_clazz`;
+CREATE TABLE `permission_clazz` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `user_id` int(11) NOT NULL COMMENT '给予权限的用户id',
   `class_id` int(11) NOT NULL COMMENT '给予X班级的权限',
   PRIMARY KEY (`id`),
   KEY `user_id` (`user_id`),
   KEY `class_id` (`class_id`),
-  CONSTRAINT `permission_class_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `permission_class_ibfk_2` FOREIGN KEY (`class_id`) REFERENCES `class` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+  CONSTRAINT `permission_clazz_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `permission_clazz_ibfk_2` FOREIGN KEY (`class_id`) REFERENCES `clazz` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- ----------------------------
@@ -148,5 +148,5 @@ CREATE TABLE `user` (
   `client_token` varchar(64) DEFAULT NULL COMMENT '客户端保持登录验证用的token',
   `client_id` varchar(20) DEFAULT NULL COMMENT '客户端的唯一id',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
 SET FOREIGN_KEY_CHECKS=1;
