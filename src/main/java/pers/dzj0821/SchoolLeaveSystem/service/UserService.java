@@ -2,7 +2,7 @@ package pers.dzj0821.SchoolLeaveSystem.service;
 
 public interface UserService {
 	
-	public String register(String username, String password, String name, int telephone);
+	public String register(String username, String password, String name, int telephone, String RSAPrivateKey);
 	/**
 	 * 
 	 * @param username
@@ -11,5 +11,9 @@ public interface UserService {
 	 */
 	public String login(String username, String password);
 	
-	public String modifyUserInfo(String username, String password, String name, int telephone);
+	public String modify(String username, String password, String name, int telephone);
+	
+	public String logout();
+	
+	
 }
