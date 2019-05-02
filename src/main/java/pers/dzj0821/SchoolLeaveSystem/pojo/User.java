@@ -11,6 +11,19 @@ public class User {
 	private int telephone;
 	private String clientToken;
 	private String clientId;
+	
+	public User() {}
+	
+	public User(String username, String hex256Password, String name, int telephone) {
+		id = 0;
+		this.username = username;
+		this.hex256Password = hex256Password;
+		type = UserType.Normal;
+		this.name = name;
+		this.telephone = telephone;
+		clientToken = null;
+		clientId = null;
+	}
 
 	@Override
 	public String toString() {

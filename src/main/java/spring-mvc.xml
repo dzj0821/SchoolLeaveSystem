@@ -19,6 +19,7 @@
 
     <!-- 让扫描spring扫描这个包下所有的类，让标注spring注解的类生效 -->
     <context:component-scan base-package="pers.dzj0821.SchoolLeaveSystem.controller"></context:component-scan>
+    <context:component-scan base-package="pers.dzj0821.SchoolLeaveSystem.service"></context:component-scan>
 
     <!-- 视图解析器 -->
     <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
