@@ -14,12 +14,14 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import pers.dzj0821.SchoolLeaveSystem.Messages;
 import pers.dzj0821.SchoolLeaveSystem.dao.UserDao;
 import pers.dzj0821.SchoolLeaveSystem.pojo.User;
 import pers.dzj0821.SchoolLeaveSystem.pojo.json.JSONResult;
 import pers.dzj0821.SchoolLeaveSystem.service.UserService;
 import pers.dzj0821.SchoolLeaveSystem.type.JSONCodeType;
 import pers.dzj0821.SchoolLeaveSystem.util.RSAUtil;
+import pers.dzj0821.SchoolLeaveSystem.util.SHA256Util;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -27,23 +29,24 @@ public class UserServiceImpl implements UserService {
 	@Autowired
 	private UserDao userDao;
 	private Logger logger = LogManager.getLogger(UserServiceImpl.class);
-	private JSONResult serverError = new JSONResult(JSONCodeType.ServerError, "服务器错误，请稍后再试", null);
+	private JSONResult serverError = new JSONResult(JSONCodeType.ServerError, Messages.getString("ServerError"), null); //$NON-NLS-1$
 
 	@Override
-	public JSONResult register(String username, String base64RSAPassword, String name, int telephone,
+	public JSONResult register(String username, String base64RSAPassword, String name, String telephone,
 			PrivateKey privateKey) {
 		// 验证输入
-		if (!Pattern.matches(Messages.getString("UserServiceImpl.UsernameRegex"), username)) { //$NON-NLS-1$
+		if (!Pattern.matches(Messages.getString("UsernameRegex"), username)) { //$NON-NLS-1$
 			return new JSONResult(JSONCodeType.RegisterUsernameInvalid,
-					Messages.getString("UserServiceImpl.RegisterUsernameInvalid"), null); //$NON-NLS-1$
+					Messages.getString("InvalidUsername"), null); //$NON-NLS-1$
 		}
-		if (!Pattern.matches("[u4e00-u9fa5]{2,4}", name)) {
-			return new JSONResult(JSONCodeType.RegisterNameInvalid, "姓名不符合要求", null);
+		if (!Pattern.matches(Messages.getString("NameRegex"), name)) { //$NON-NLS-1$
+			System.out.println(name);
+			return new JSONResult(JSONCodeType.RegisterNameInvalid, Messages.getString("InvalidName"), null); //$NON-NLS-1$
 		}
-		if (!Pattern.matches("^(13|14|15|17|18|19)[0-9]{9}$", Integer.toString(telephone))) {
-			return new JSONResult(JSONCodeType.RegisterTelephoneInvalid, "手机号不符合要求", null);
+		if (!Pattern.matches(Messages.getString("TelephoneRegex"), telephone)) { //$NON-NLS-1$
+			return new JSONResult(JSONCodeType.RegisterTelephoneInvalid, Messages.getString("InvalidTelephone"), null); //$NON-NLS-1$
 		}
-		JSONResult Invalidpassword = new JSONResult(JSONCodeType.RegisterPasswordInvalid, "密码不符合要求", null);
+		JSONResult Invalidpassword = new JSONResult(JSONCodeType.RegisterPasswordInvalid, Messages.getString("InvalidPassword"), null); //$NON-NLS-1$
 		String password = null;
 		//密码解码
 		try {
@@ -51,8 +54,8 @@ public class UserServiceImpl implements UserService {
 		} catch (InvalidKeyException | IllegalBlockSizeException | BadPaddingException e) {
 			return Invalidpassword;
 		}
-		if (password == null || !Pattern.matches("^[a-zA-Z0-9]{9,18}$", password)
-				|| Pattern.matches("^[0-9]*$", password) || Pattern.matches("^[a-zA-Z]*$", password)) {
+		if (password == null || !Pattern.matches(Messages.getString("PasswordRegex"), password) //$NON-NLS-1$
+				|| Pattern.matches(Messages.getString("AllDigitalRegex"), password) || Pattern.matches(Messages.getString("AllLetterRegex"), password)) { //$NON-NLS-1$ //$NON-NLS-2$
 			return Invalidpassword;
 		}
 		//验证用户名是否存在
@@ -60,23 +63,23 @@ public class UserServiceImpl implements UserService {
 		try {
 			user = userDao.findUserByUsername(username);
 		} catch (Exception e) {
-			logger.warn("SQL Error", e);
+			logger.warn(Messages.getString("SQLError"), e); //$NON-NLS-1$
 			return serverError;
 		}
 		if(user != null) {
-			return new JSONResult(JSONCodeType.RegisterUsernameAlreadyExist, "用户名已存在", null);
+			return new JSONResult(JSONCodeType.RegisterUsernameAlreadyExist, Messages.getString("UsernameAlreadyExist"), null); //$NON-NLS-1$
 		}
-		user = new User(username, password, name, telephone);
+		user = new User(username, SHA256Util.encrypt(password), name, telephone);
 		try {
 			userDao.addUser(user);
 		} catch (Exception e) {
-			logger.warn("SQL Error", e);
+			logger.warn(Messages.getString("SQLError"), e); //$NON-NLS-1$
 			return serverError;
 		}
 		HashMap<String, Object> data = new HashMap<>();
-		data.put("id", user.getId());
-		JSONResult success = new JSONResult(JSONCodeType.Success, "注册成功", data);
-		success.put("user", user);
+		data.put("id", user.getId()); //$NON-NLS-1$
+		JSONResult success = new JSONResult(JSONCodeType.Success, Messages.getString("RegisterSuccess"), data); //$NON-NLS-1$
+		success.put(Messages.getString("UserObjectSessionName"), user); //$NON-NLS-1$
 		return success;
 	}
 
@@ -87,7 +90,7 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public JSONResult modify(String username, String password, String name, int telephone) {
+	public JSONResult modify(String username, String password, String name, String telephone) {
 		// TODO 自动生成的方法存根
 		return null;
 	}

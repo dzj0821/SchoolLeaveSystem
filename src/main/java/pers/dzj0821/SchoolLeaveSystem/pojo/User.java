@@ -8,13 +8,13 @@ public class User {
 	private String hex256Password;
 	private UserType type;
 	private String name;
-	private int telephone;
+	private String telephone;
 	private String clientToken;
 	private String clientId;
 	
 	public User() {}
 	
-	public User(String username, String hex256Password, String name, int telephone) {
+	public User(String username, String hex256Password, String name, String telephone) {
 		id = 0;
 		this.username = username;
 		this.hex256Password = hex256Password;
@@ -72,11 +72,11 @@ public class User {
 		this.name = name;
 	}
 
-	public int getTelephone() {
+	public String getTelephone() {
 		return telephone;
 	}
 
-	public void setTelephone(int telephone) {
+	public void setTelephone(String telephone) {
 		this.telephone = telephone;
 	}
 

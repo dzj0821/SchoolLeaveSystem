@@ -1,6 +1,6 @@
 package pers.dzj0821.SchoolLeaveSystem.controller.api;
 
-import java.security.PrivateKey;
+import java.security.KeyPair;
 import java.util.Map;
 
 import javax.servlet.http.HttpSession;
@@ -10,6 +10,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import pers.dzj0821.SchoolLeaveSystem.Messages;
 import pers.dzj0821.SchoolLeaveSystem.service.UserService;
 
 @RequestMapping("/api/user")
@@ -21,7 +22,8 @@ public class ApiUserController {
 	
 	@RequestMapping("/register")
 	@ResponseBody
-	public Map<String, Object> register(String username, String base64RSAPassword, String name, int telephone, HttpSession session) {
-		return userService.register(username, base64RSAPassword, name, telephone, (PrivateKey)session.getAttribute("privateKey"));
+	public Map<String, Object> register(String username, String password, String name, String telephone, String publicKey, HttpSession session) {
+		KeyPair keyPair = (KeyPair) session.getAttribute(Messages.getString("RSAKeyPairSessionName")); //$NON-NLS-1$
+		return userService.register(username, password, name, telephone, keyPair.getPrivate());
 	}
 }

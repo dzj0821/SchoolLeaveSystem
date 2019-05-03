@@ -15,6 +15,8 @@ import javax.crypto.NoSuchPaddingException;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 
+import pers.dzj0821.SchoolLeaveSystem.Messages;
+
 public class RSAUtil {
 	private static Logger logger = LogManager.getLogger(RSAUtil.class);
 	private final static int keyLength = 1024;
@@ -24,7 +26,7 @@ public class RSAUtil {
 	static {
 		try {
 			generator = KeyPairGenerator.getInstance("RSA"); //$NON-NLS-1$
-			cipher = Cipher.getInstance("RSA"); //$NON-NLS-1$
+			cipher = Cipher.getInstance("RSA/ECB/PKCS1Padding"); //$NON-NLS-1$
 		} catch (NoSuchAlgorithmException | NoSuchPaddingException e) {
 			logger.error(Messages.getString("RSAInitFailed"), e); //$NON-NLS-1$
 			throw new Error(Messages.getString("RSAInitFailed"), e); //$NON-NLS-1$
