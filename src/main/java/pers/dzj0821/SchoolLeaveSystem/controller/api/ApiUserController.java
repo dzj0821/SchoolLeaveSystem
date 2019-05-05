@@ -24,8 +24,16 @@ public class ApiUserController {
 	@RequestMapping("/register")
 	@ResponseBody
 	@RSATimestampCheck
-	public Map<String, Object> register(String username, String password, String name, String telephone, String publicKey, HttpSession session) {
+	public Map<String, Object> register(String username, String password, String name, String telephone, HttpSession session) {
 		KeyPair keyPair = (KeyPair) session.getAttribute(Messages.getString("RSAKeyPairSessionName")); //$NON-NLS-1$
 		return userService.register(username, password, name, telephone, keyPair.getPrivate());
+	}
+	
+	@RequestMapping("/login")
+	@ResponseBody
+	@RSATimestampCheck
+	public Map<String, Object> login(String username, String password, HttpSession session){
+		KeyPair keyPair = (KeyPair) session.getAttribute(Messages.getString("RSAKeyPairSessionName")); //$NON-NLS-1$
+		return userService.login(username, password, keyPair.getPrivate());
 	}
 }
