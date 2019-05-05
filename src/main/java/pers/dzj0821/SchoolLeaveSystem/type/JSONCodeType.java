@@ -10,5 +10,6 @@ public enum JSONCodeType {
 	RegisterTelephoneInvalid,
 	RegisterPasswordInvalid,
 	ServerError,
-	RegisterUsernameAlreadyExist
+	RegisterUsernameAlreadyExist,
+	SessionTimeout
 }

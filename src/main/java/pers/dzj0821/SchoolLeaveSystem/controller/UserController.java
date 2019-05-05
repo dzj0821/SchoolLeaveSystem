@@ -19,7 +19,8 @@ public class UserController {
 	public String register(Model model, HttpSession session) {
 		KeyPair keyPair = (KeyPair) session.getAttribute(Messages.getString("RSAKeyPairSessionName")); //$NON-NLS-1$
 		String publicKey = Base64.getEncoder().encodeToString(keyPair.getPublic().getEncoded());
-		model.addAttribute("publicKey", publicKey);
-		return "register";
+		model.addAttribute(Messages.getString("PublicKeyModelName"), publicKey); //$NON-NLS-1$
+		model.addAttribute(Messages.getString("RSACreateTimestampModelName"), session.getAttribute(Messages.getString("RSACreateTimestampSessionName"))); //$NON-NLS-1$ //$NON-NLS-2$
+		return Messages.getString("RegisterPageName"); //$NON-NLS-1$
 	}
 }

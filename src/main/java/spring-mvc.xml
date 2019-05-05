@@ -81,4 +81,18 @@
                </bean>
     	</mvc:message-converters>
   	</mvc:annotation-driven>
+  	
+  	<mvc:interceptors> 
+           <mvc:interceptor>
+                   <!-- /**的意思是所有文件夹及里面的子文件夹 ,/*是所有文件夹，不含子文件夹 , /是web项目的根目录--> 
+                   <mvc:mapping path="/**" /> 
+                   <!-- 需排除拦截的地址 -->  
+                   <!--  <mvc:exclude-mapping path="/userController/login"/>  -->
+                   <bean id="RSATimestampCheckInterceptor" class="pers.dzj0821.SchoolLeaveSystem.interceptor.RSATimestampCheckInterceptor"></bean> <!--这个类就是我们自定义的Interceptor -->
+          </mvc:interceptor> 
+          <mvc:interceptor>
+                   <mvc:mapping path="/**" /> 
+                   <bean id="OnlyForwardAccessInterceptor" class="pers.dzj0821.SchoolLeaveSystem.interceptor.OnlyForwardAccessInterceptor"></bean>
+          </mvc:interceptor> 
+    </mvc:interceptors>
 </beans>

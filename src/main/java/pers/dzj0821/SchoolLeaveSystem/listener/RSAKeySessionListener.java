@@ -3,6 +3,7 @@ package pers.dzj0821.SchoolLeaveSystem.listener;
 import java.security.KeyPair;
 
 import javax.servlet.annotation.WebListener;
+import javax.servlet.http.HttpSession;
 import javax.servlet.http.HttpSessionEvent;
 import javax.servlet.http.HttpSessionListener;
 
@@ -15,7 +16,9 @@ public class RSAKeySessionListener implements HttpSessionListener {
 	@Override
 	public void sessionCreated(HttpSessionEvent event) {
 		KeyPair keyPair = RSAUtil.genKeyPair();
-		event.getSession().setAttribute(Messages.getString("RSAKeyPairSessionName"), keyPair); //$NON-NLS-1$
+		HttpSession session = event.getSession();
+		session.setAttribute(Messages.getString("RSAKeyPairSessionName"), keyPair); //$NON-NLS-1$
+		session.setAttribute(Messages.getString("RSACreateTimestampSessionName"), System.currentTimeMillis()); //$NON-NLS-1$
 	}
 
 	@Override

@@ -25,6 +25,7 @@ function onSubmit(){
 姓名：<input type="text" name="name">
 手机号：<input type="text" name="telephone">
 <input id="publicKey" type='hidden' name="publicKey" value="${publicKey }" />
+<input type='hidden' name="timestamp" value="${timestamp }" />
 <input type="submit"/>
 </form>
 </body>
