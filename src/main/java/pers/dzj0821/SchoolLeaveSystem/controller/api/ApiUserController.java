@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import pers.dzj0821.SchoolLeaveSystem.Messages;
 import pers.dzj0821.SchoolLeaveSystem.annotation.RSATimestampCheck;
+import pers.dzj0821.SchoolLeaveSystem.pojo.json.JSONResult;
 import pers.dzj0821.SchoolLeaveSystem.service.UserService;
 
 @RequestMapping("/api/user")
@@ -34,6 +35,8 @@ public class ApiUserController {
 	@RSATimestampCheck
 	public Map<String, Object> login(String username, String password, HttpSession session){
 		KeyPair keyPair = (KeyPair) session.getAttribute(Messages.getString("RSAKeyPairSessionName")); //$NON-NLS-1$
-		return userService.login(username, password, keyPair.getPrivate());
+		JSONResult result = userService.login(username, password, keyPair.getPrivate());
+		session.setAttribute(Messages.getString("UserObjectSessionName"), result.get(Messages.getString("UserObjectSessionName")));
+		return result;
 	}
 }

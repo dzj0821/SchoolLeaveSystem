@@ -25,7 +25,7 @@ import pers.dzj0821.SchoolLeaveSystem.util.SHA256Util;
 
 @Service
 public class UserServiceImpl implements UserService {
-	
+
 	@Autowired
 	private UserDao userDao;
 	private Logger logger = LogManager.getLogger(UserServiceImpl.class);
@@ -36,8 +36,7 @@ public class UserServiceImpl implements UserService {
 			PrivateKey privateKey) {
 		// 验证输入
 		if (!Pattern.matches(Messages.getString("UsernameRegex"), username)) { //$NON-NLS-1$
-			return new JSONResult(JSONCodeType.RegisterUsernameInvalid,
-					Messages.getString("InvalidUsername"), null); //$NON-NLS-1$
+			return new JSONResult(JSONCodeType.RegisterUsernameInvalid, Messages.getString("InvalidUsername"), null); //$NON-NLS-1$
 		}
 		if (!Pattern.matches(Messages.getString("NameRegex"), name)) { //$NON-NLS-1$
 			System.out.println(name);
@@ -46,19 +45,21 @@ public class UserServiceImpl implements UserService {
 		if (!Pattern.matches(Messages.getString("TelephoneRegex"), telephone)) { //$NON-NLS-1$
 			return new JSONResult(JSONCodeType.RegisterTelephoneInvalid, Messages.getString("InvalidTelephone"), null); //$NON-NLS-1$
 		}
-		JSONResult Invalidpassword = new JSONResult(JSONCodeType.RegisterPasswordInvalid, Messages.getString("InvalidPassword"), null); //$NON-NLS-1$
+		JSONResult Invalidpassword = new JSONResult(JSONCodeType.RegisterPasswordInvalid,
+				Messages.getString("InvalidPassword"), null); //$NON-NLS-1$
 		String password = null;
-		//密码解码
+		// 密码解码
 		try {
 			password = new String(RSAUtil.decrypt(Base64.getDecoder().decode(base64RSAPassword), privateKey));
 		} catch (InvalidKeyException | IllegalBlockSizeException | BadPaddingException e) {
 			return Invalidpassword;
 		}
 		if (password == null || !Pattern.matches(Messages.getString("PasswordRegex"), password) //$NON-NLS-1$
-				|| Pattern.matches(Messages.getString("AllDigitalRegex"), password) || Pattern.matches(Messages.getString("AllLetterRegex"), password)) { //$NON-NLS-1$ //$NON-NLS-2$
+				|| Pattern.matches(Messages.getString("AllDigitalRegex"), password) //$NON-NLS-1$
+				|| Pattern.matches(Messages.getString("AllLetterRegex"), password)) { //$NON-NLS-1$
 			return Invalidpassword;
 		}
-		//验证用户名是否存在
+		// 验证用户名是否存在
 		User user = null;
 		try {
 			user = userDao.findUserByUsername(username);
@@ -66,8 +67,9 @@ public class UserServiceImpl implements UserService {
 			logger.warn(Messages.getString("SQLError"), e); //$NON-NLS-1$
 			return serverError;
 		}
-		if(user != null) {
-			return new JSONResult(JSONCodeType.RegisterUsernameAlreadyExist, Messages.getString("UsernameAlreadyExist"), null); //$NON-NLS-1$
+		if (user != null) {
+			return new JSONResult(JSONCodeType.RegisterUsernameAlreadyExist, Messages.getString("UsernameAlreadyExist"), //$NON-NLS-1$
+					null);
 		}
 		user = new User(username, SHA256Util.encrypt(password), name, telephone);
 		try {
@@ -84,9 +86,44 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public JSONResult login(String username, String password, PrivateKey privateKey) {
-		// TODO 自动生成的方法存根
-		return null;
+	public JSONResult login(String username, String base64RSAPassword, PrivateKey privateKey) {
+		// 验证输入
+		if (!Pattern.matches(Messages.getString("UsernameRegex"), username)) { //$NON-NLS-1$
+			return new JSONResult(JSONCodeType.RegisterUsernameInvalid, Messages.getString("InvalidUsername"), null); //$NON-NLS-1$
+		}
+		JSONResult Invalidpassword = new JSONResult(JSONCodeType.RegisterPasswordInvalid,
+				Messages.getString("InvalidPassword"), null); //$NON-NLS-1$
+		String password = null;
+		// 密码解码
+		try {
+			password = new String(RSAUtil.decrypt(Base64.getDecoder().decode(base64RSAPassword), privateKey));
+		} catch (InvalidKeyException | IllegalBlockSizeException | BadPaddingException e) {
+			return Invalidpassword;
+		}
+		if (password == null || !Pattern.matches(Messages.getString("PasswordRegex"), password) //$NON-NLS-1$
+				|| Pattern.matches(Messages.getString("AllDigitalRegex"), password) //$NON-NLS-1$
+				|| Pattern.matches(Messages.getString("AllLetterRegex"), password)) { //$NON-NLS-1$
+			return Invalidpassword;
+		}
+		// 验证用户名是否存在
+		User user = null;
+		try {
+			user = userDao.findUserByUsername(username);
+		} catch (Exception e) {
+			logger.warn(Messages.getString("SQLError"), e); //$NON-NLS-1$
+			return serverError;
+		}
+		if (user == null) {
+			return new JSONResult(JSONCodeType.UserNotFound, Messages.getString("UserNotFound"), //$NON-NLS-1$
+					null);
+		}
+		String sha256Password = SHA256Util.encrypt(password);
+		if(!sha256Password.equals(user.getHex256Password())) {
+			return new JSONResult(JSONCodeType.UsernameOrPasswordError, Messages.getString("UsernameOrPasswordError"), null); //$NON-NLS-1$
+		}
+		JSONResult result = new JSONResult(JSONCodeType.Success, Messages.getString("LoginSuccess"), null);
+		result.put(Messages.getString("UserObjectSessionName"), user);
+		return result;
 	}
 
 	@Override

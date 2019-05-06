@@ -4,7 +4,7 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>注册</title>
+<title>登录</title>
 <script src="${pageContext.request.contextPath}/js/jsencrypt.min.js"></script>
 <script>
 function onSubmit(){
@@ -18,12 +18,10 @@ function onSubmit(){
 </script>
 </head>
 <body>
-<h2>注册</h2>
-<form name="form" action="${pageContext.request.contextPath}/api/user/register" onsubmit="onSubmit()">
+<h2>登录</h2>
+<form name="form" action="${pageContext.request.contextPath}/api/user/login" onsubmit="onSubmit()">
 用户名：<input type="text" name="username"/>
 密码：<input id="password" type="password" name="password">
-姓名：<input type="text" name="name">
-手机号：<input type="text" name="telephone">
 <input id="publicKey" type='hidden' name="publicKey" value="${publicKey }" />
 <input type='hidden' name="timestamp" value="${timestamp }" />
 <input type="submit"/>

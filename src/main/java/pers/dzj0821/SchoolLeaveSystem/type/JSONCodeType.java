@@ -11,5 +11,7 @@ public enum JSONCodeType {
 	RegisterPasswordInvalid,
 	ServerError,
 	RegisterUsernameAlreadyExist,
-	SessionTimeout
+	SessionTimeout,
+	UserNotFound,
+	UsernameOrPasswordError
 }
