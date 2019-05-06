@@ -2,15 +2,15 @@
 Navicat MySQL Data Transfer
 
 Source Server         : localhost
-Source Server Version : 50723
+Source Server Version : 50724
 Source Host           : localhost:3306
 Source Database       : school_leave_system
 
 Target Server Type    : MYSQL
-Target Server Version : 50723
+Target Server Version : 50724
 File Encoding         : 65001
 
-Date: 2019-05-03 22:51:37
+Date: 2019-05-06 12:29:50
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -145,8 +145,11 @@ CREATE TABLE `user` (
   `type` int(1) NOT NULL COMMENT '用户类型\r\n0-超级管理员\r\n1-院级管理员\r\n2-班级管理员\r\n3-普通用户（学生）',
   `name` varchar(255) NOT NULL COMMENT '姓名',
   `telephone` varchar(11) NOT NULL COMMENT '电话',
+  `clazz_id` int(11) DEFAULT NULL,
   `client_token` varchar(64) DEFAULT NULL COMMENT '客户端保持登录验证用的token',
   `client_id` varchar(20) DEFAULT NULL COMMENT '客户端的唯一id',
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+  PRIMARY KEY (`id`),
+  KEY `clazz_id` (`clazz_id`),
+  CONSTRAINT `user_ibfk_1` FOREIGN KEY (`clazz_id`) REFERENCES `clazz` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
 SET FOREIGN_KEY_CHECKS=1;
