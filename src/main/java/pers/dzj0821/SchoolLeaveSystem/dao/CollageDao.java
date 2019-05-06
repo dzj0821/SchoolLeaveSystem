@@ -6,5 +6,5 @@ import pers.dzj0821.SchoolLeaveSystem.pojo.Collage;
 
 public interface CollageDao {
 	@Select("select * from collage where id = #{id}")
-	public Collage findCollageById(int id) throws Exception;
+	public Collage selectCollageById(int id) throws Exception;
 }

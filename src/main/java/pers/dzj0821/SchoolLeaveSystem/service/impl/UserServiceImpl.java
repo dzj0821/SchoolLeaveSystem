@@ -3,7 +3,6 @@ package pers.dzj0821.SchoolLeaveSystem.service.impl;
 import java.security.InvalidKeyException;
 import java.security.PrivateKey;
 import java.util.Base64;
-import java.util.HashMap;
 import java.util.regex.Pattern;
 
 import javax.crypto.BadPaddingException;
@@ -62,7 +61,7 @@ public class UserServiceImpl implements UserService {
 		// 验证用户名是否存在
 		User user = null;
 		try {
-			user = userDao.findUserByUsername(username);
+			user = userDao.selectUserByUsername(username);
 		} catch (Exception e) {
 			logger.warn(Messages.getString("SQLError"), e); //$NON-NLS-1$
 			return serverError;
@@ -73,7 +72,7 @@ public class UserServiceImpl implements UserService {
 		}
 		user = new User(username, SHA256Util.encrypt(password), name, telephone);
 		try {
-			userDao.addUser(user);
+			userDao.insertUser(user);
 		} catch (Exception e) {
 			logger.warn(Messages.getString("SQLError"), e); //$NON-NLS-1$
 			return serverError;
@@ -106,7 +105,7 @@ public class UserServiceImpl implements UserService {
 		// 验证用户名是否存在
 		User user = null;
 		try {
-			user = userDao.findUserByUsername(username);
+			user = userDao.selectUserByUsername(username);
 		} catch (Exception e) {
 			logger.warn(Messages.getString("SQLError"), e); //$NON-NLS-1$
 			return serverError;

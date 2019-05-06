@@ -9,11 +9,13 @@ public class User {
 	private UserType type;
 	private String name;
 	private String telephone;
+	private Clazz clazz;
 	private String clientToken;
 	private String clientId;
-	
-	public User() {}
-	
+
+	public User() {
+	}
+
 	public User(String username, String hex256Password, String name, String telephone) {
 		id = 0;
 		this.username = username;
@@ -28,7 +30,7 @@ public class User {
 	@Override
 	public String toString() {
 		return "User [id=" + id + ", username=" + username + ", hex256Password=" + hex256Password + ", type=" + type
-				+ ", name=" + name + ", telephone=" + telephone + ", clientToken=" + clientToken + ", clientId="
+				+ ", name=" + name + ", telephone=" + telephone + ",clazz=" + clazz + ", clientToken=" + clientToken + ", clientId="
 				+ clientId + "]";
 	}
 
@@ -78,6 +80,14 @@ public class User {
 
 	public void setTelephone(String telephone) {
 		this.telephone = telephone;
+	}
+
+	public Clazz getClazz() {
+		return clazz;
+	}
+
+	public void setClazz(Clazz clazz) {
+		this.clazz = clazz;
 	}
 
 	public String getClientToken() {

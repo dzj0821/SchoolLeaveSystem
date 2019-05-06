@@ -10,7 +10,7 @@ import pers.dzj0821.SchoolLeaveSystem.pojo.Major;
 public interface MajorDao {
 	@Select("select * from major where id = #{id}")
 	@Results({
-		@Result(column="collage_id", property="collage",one=@One(select="pers.dzj0821.SchoolLeaveSystem.dao.CollageDao.findCollageById"))
+		@Result(column="collage_id", property="collage",one=@One(select="pers.dzj0821.SchoolLeaveSystem.dao.CollageDao.selectCollageById"))
 	})
-	public Major findMajorById(int id) throws Exception;
+	public Major selectMajorById(int id) throws Exception;
 }
