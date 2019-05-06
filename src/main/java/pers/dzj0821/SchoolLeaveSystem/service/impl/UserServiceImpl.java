@@ -78,9 +78,7 @@ public class UserServiceImpl implements UserService {
 			logger.warn(Messages.getString("SQLError"), e); //$NON-NLS-1$
 			return serverError;
 		}
-		HashMap<String, Object> data = new HashMap<>();
-		data.put("id", user.getId()); //$NON-NLS-1$
-		JSONResult success = new JSONResult(JSONCodeType.Success, Messages.getString("RegisterSuccess"), data); //$NON-NLS-1$
+		JSONResult success = new JSONResult(JSONCodeType.Success, Messages.getString("RegisterSuccess"), null); //$NON-NLS-1$
 		success.put(Messages.getString("UserObjectSessionName"), user); //$NON-NLS-1$
 		return success;
 	}
