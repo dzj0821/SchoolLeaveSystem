@@ -38,6 +38,7 @@ public class UserServiceImpl implements UserService {
 			return new JSONResult(JSONCodeType.RegisterUsernameInvalid, Messages.getString("InvalidUsername"), null); //$NON-NLS-1$
 		}
 		if (!Pattern.matches(Messages.getString("NameRegex"), name)) { //$NON-NLS-1$
+			//TODO 删除调试代码
 			System.out.println(name);
 			return new JSONResult(JSONCodeType.RegisterNameInvalid, Messages.getString("InvalidName"), null); //$NON-NLS-1$
 		}
@@ -53,6 +54,7 @@ public class UserServiceImpl implements UserService {
 		} catch (InvalidKeyException | IllegalBlockSizeException | BadPaddingException e) {
 			return Invalidpassword;
 		}
+		//TODO 简化代码
 		if (password == null || !Pattern.matches(Messages.getString("PasswordRegex"), password) //$NON-NLS-1$
 				|| Pattern.matches(Messages.getString("AllDigitalRegex"), password) //$NON-NLS-1$
 				|| Pattern.matches(Messages.getString("AllLetterRegex"), password)) { //$NON-NLS-1$
@@ -97,6 +99,7 @@ public class UserServiceImpl implements UserService {
 		} catch (InvalidKeyException | IllegalBlockSizeException | BadPaddingException e) {
 			return Invalidpassword;
 		}
+		//TODO 简化代码
 		if (password == null || !Pattern.matches(Messages.getString("PasswordRegex"), password) //$NON-NLS-1$
 				|| Pattern.matches(Messages.getString("AllDigitalRegex"), password) //$NON-NLS-1$
 				|| Pattern.matches(Messages.getString("AllLetterRegex"), password)) { //$NON-NLS-1$
@@ -124,8 +127,38 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public JSONResult modify(String username, String password, String name, String telephone) {
-		// TODO 自动生成的方法存根
+	public JSONResult modify(User user, String base64RSAOldPassword, String base64RSANewPassword, String name, String telephone, PrivateKey privateKey) {
+		//开始验证
+		if(!Pattern.matches(Messages.getString("NameRegex"), name)) { //$NON-NLS-1$
+			return new JSONResult(JSONCodeType.RegisterNameInvalid, Messages.getString("InvalidName"), null); //$NON-NLS-1$
+		}
+		if (!Pattern.matches(Messages.getString("TelephoneRegex"), telephone)) { //$NON-NLS-1$
+			return new JSONResult(JSONCodeType.RegisterTelephoneInvalid, Messages.getString("InvalidTelephone"), null); //$NON-NLS-1$
+		}
+		JSONResult invalidOldPassword = new JSONResult(JSONCodeType.RegisterPasswordInvalid,
+				Messages.getString("InvalidOldPassword"), null); //$NON-NLS-1$
+		String oldPassword = null;
+		try {
+			oldPassword = new String(RSAUtil.decrypt(Base64.getDecoder().decode(base64RSAOldPassword), privateKey));
+		} catch (InvalidKeyException | IllegalBlockSizeException | BadPaddingException e) {
+			return invalidOldPassword;
+		}
+		if(!valifyPassword(oldPassword)) {
+			return invalidOldPassword;
+		}
+		JSONResult invalidNewPassword = new JSONResult(JSONCodeType.RegisterPasswordInvalid,
+				Messages.getString("InvalidNewPassword"), null); //$NON-NLS-1$
+		String newPassword = null;
+		try {
+			oldPassword = new String(RSAUtil.decrypt(Base64.getDecoder().decode(base64RSANewPassword), privateKey));
+		} catch (InvalidKeyException | IllegalBlockSizeException | BadPaddingException e) {
+			return invalidNewPassword;
+		}
+		if(!valifyPassword(newPassword)) {
+			return invalidNewPassword;
+		}
+		//验证完毕
+		
 		return null;
 	}
 
@@ -133,6 +166,15 @@ public class UserServiceImpl implements UserService {
 	public JSONResult logout() {
 		// TODO 自动生成的方法存根
 		return null;
+	}
+	
+	private boolean valifyPassword(String password) {
+		if(password == null) {
+			return false;
+		}
+		return Pattern.matches(Messages.getString("PasswordRegex"), password) //$NON-NLS-1$
+				&& !Pattern.matches(Messages.getString("AllDigitalRegex"), password) //$NON-NLS-1$
+				&& !Pattern.matches(Messages.getString("AllLetterRegex"), password); //$NON-NLS-1$
 	}
 
 }

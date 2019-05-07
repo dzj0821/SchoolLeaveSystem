@@ -10,6 +10,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import pers.dzj0821.SchoolLeaveSystem.Messages;
+import pers.dzj0821.SchoolLeaveSystem.annotation.UserTypeRequired;
+import pers.dzj0821.SchoolLeaveSystem.type.UserType;
 
 @Controller
 @RequestMapping("/user")
@@ -32,6 +34,12 @@ public class UserController {
 		model.addAttribute(Messages.getString("PublicKeyModelName"), publicKey); //$NON-NLS-1$
 		model.addAttribute(Messages.getString("RSACreateTimestampModelName"), //$NON-NLS-1$
 				session.getAttribute(Messages.getString("RSACreateTimestampSessionName"))); //$NON-NLS-1$
-		return Messages.getString("LoginPage");
+		return Messages.getString("LoginPage"); //$NON-NLS-1$
+	}
+	
+	@RequestMapping("/modify")
+	@UserTypeRequired(UserType.Normal)
+	public String modify() {
+		return Messages.getString("ModifyUserInfoPage");
 	}
 }
