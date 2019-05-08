@@ -5,6 +5,7 @@ import pers.dzj0821.SchoolLeaveSystem.type.UserType;
 public class User {
 	private int id;
 	private String username;
+	//TODO 更新名称
 	private String hex256Password;
 	private UserType type;
 	private String name;

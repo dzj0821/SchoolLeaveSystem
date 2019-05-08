@@ -51,6 +51,8 @@ public class ApiUserController {
 	public Map<String, Object> modify(String oldPassword, String newPassword, String name, String telephone, HttpSession session){
 		KeyPair keyPair = (KeyPair) session.getAttribute(Messages.getString("RSAKeyPairSessionName")); //$NON-NLS-1$
 		User user = (User) session.getAttribute(Messages.getString("UserObjectSessionName")); //$NON-NLS-1$
-		return userService.modify(user, oldPassword, newPassword, name, telephone, keyPair.getPrivate());
+		JSONResult result = userService.modify(user, oldPassword, newPassword, name, telephone, keyPair.getPrivate());
+		session.setAttribute(Messages.getString("UserObjectSessionName"), result.get(Messages.getString("UserObjectSessionName")));
+		return result;
 	}
 }

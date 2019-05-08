@@ -129,10 +129,16 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public JSONResult modify(User user, String base64RSAOldPassword, String base64RSANewPassword, String name, String telephone, PrivateKey privateKey) {
 		//开始验证
-		if(!Pattern.matches(Messages.getString("NameRegex"), name)) { //$NON-NLS-1$
+		if("".equals(name)) {
+			name = null;
+		}
+		if(name != null && !Pattern.matches(Messages.getString("NameRegex"), name)) { //$NON-NLS-1$
 			return new JSONResult(JSONCodeType.RegisterNameInvalid, Messages.getString("InvalidName"), null); //$NON-NLS-1$
 		}
-		if (!Pattern.matches(Messages.getString("TelephoneRegex"), telephone)) { //$NON-NLS-1$
+		if("".equals(telephone)) {
+			telephone = null;
+		}
+		if (telephone != null && !Pattern.matches(Messages.getString("TelephoneRegex"), telephone)) { //$NON-NLS-1$
 			return new JSONResult(JSONCodeType.RegisterTelephoneInvalid, Messages.getString("InvalidTelephone"), null); //$NON-NLS-1$
 		}
 		JSONResult invalidOldPassword = new JSONResult(JSONCodeType.RegisterPasswordInvalid,
@@ -141,6 +147,7 @@ public class UserServiceImpl implements UserService {
 		try {
 			oldPassword = new String(RSAUtil.decrypt(Base64.getDecoder().decode(base64RSAOldPassword), privateKey));
 		} catch (InvalidKeyException | IllegalBlockSizeException | BadPaddingException e) {
+			logger.info("throw", e);
 			return invalidOldPassword;
 		}
 		if(!valifyPassword(oldPassword)) {
@@ -150,16 +157,38 @@ public class UserServiceImpl implements UserService {
 				Messages.getString("InvalidNewPassword"), null); //$NON-NLS-1$
 		String newPassword = null;
 		try {
-			oldPassword = new String(RSAUtil.decrypt(Base64.getDecoder().decode(base64RSANewPassword), privateKey));
+			newPassword = new String(RSAUtil.decrypt(Base64.getDecoder().decode(base64RSANewPassword), privateKey));
 		} catch (InvalidKeyException | IllegalBlockSizeException | BadPaddingException e) {
 			return invalidNewPassword;
 		}
-		if(!valifyPassword(newPassword)) {
+		if("".equals(newPassword)) {
+			newPassword = null;
+		}
+		if(newPassword != null && !valifyPassword(newPassword)) {
 			return invalidNewPassword;
 		}
 		//验证完毕
-		
-		return null;
+		String sha256Password = SHA256Util.encrypt(oldPassword);
+		if(!user.getHex256Password().equals(sha256Password)) {
+			return new JSONResult(JSONCodeType.OLD_PASSWORD_ERROR, Messages.getString("OldPasswordError"), null);
+		}
+		User updateUser = new User();
+		updateUser.setId(user.getId());
+		if(newPassword != null) {
+			updateUser.setHex256Password(SHA256Util.encrypt(newPassword));
+		}
+		updateUser.setName(name);
+		updateUser.setTelephone(telephone);
+		try {
+			userDao.updateUserById(updateUser);
+			user = userDao.selectUserByUsername(user.getUsername());
+		} catch (Exception e) {
+			logger.warn(Messages.getString("SQLError"), e); //$NON-NLS-1$
+			return serverError;
+		}
+		JSONResult result = new JSONResult(JSONCodeType.Success, Messages.getString("ModifyUserInfoSuccess"), null);
+		result.put(Messages.getString("UserObjectSessionName"), user);
+		return result;
 	}
 
 	@Override
