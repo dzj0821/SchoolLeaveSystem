@@ -96,5 +96,9 @@
                    <mvc:mapping path="/**" /> 
                    <bean id="OnlyForwardAccessInterceptor" class="pers.dzj0821.SchoolLeaveSystem.interceptor.OnlyForwardAccessInterceptor"></bean>
           </mvc:interceptor> 
+          <mvc:interceptor>
+                   <mvc:mapping path="/**" /> 
+                   <bean id="UserTypeRequiredInterceptor" class="pers.dzj0821.SchoolLeaveSystem.interceptor.UserTypeRequiredInterceptor"></bean>
+          </mvc:interceptor> 
     </mvc:interceptors>
 </beans>

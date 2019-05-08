@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 
 @JsonFormat(shape = JsonFormat.Shape.NUMBER_INT)
 public enum JSONCodeType {
+	//TODO 规范名称
 	Success,
 	RegisterUsernameInvalid,
 	RegisterNameInvalid,
@@ -13,5 +14,7 @@ public enum JSONCodeType {
 	RegisterUsernameAlreadyExist,
 	SessionTimeout,
 	UserNotFound,
-	UsernameOrPasswordError
+	UsernameOrPasswordError,
+	AccessDenied,
+	OLD_PASSWORD_ERROR
 }
