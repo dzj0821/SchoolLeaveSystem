@@ -139,6 +139,7 @@ public class UserServiceImpl implements UserService {
 		try {
 			oldPassword = new String(RSAUtil.decrypt(Base64.getDecoder().decode(base64RSAOldPassword), privateKey));
 		} catch (InvalidKeyException | IllegalBlockSizeException | BadPaddingException e) {
+			//TODO 删除调试代码
 			logger.info("throw", e);
 			return invalidOldPassword;
 		}
@@ -173,6 +174,7 @@ public class UserServiceImpl implements UserService {
 		updateUser.setTelephone(telephone);
 		try {
 			userDao.updateUserById(updateUser);
+			//TODO 可以使用主键查询的地方使用主键进行查询
 			user = userDao.selectUserByUsername(user.getUsername());
 		} catch (Exception e) {
 			logger.warn(Messages.getString("SQLError"), e); //$NON-NLS-1$
