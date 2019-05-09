@@ -45,6 +45,12 @@ public class UserController {
 		model.addAttribute(Messages.getString("PublicKeyModelName"), publicKey); //$NON-NLS-1$
 		model.addAttribute(Messages.getString("RSACreateTimestampModelName"), //$NON-NLS-1$
 		session.getAttribute(Messages.getString("RSACreateTimestampSessionName"))); //$NON-NLS-1$
+		//TODO 添加nls标记
 		return Messages.getString("ModifyUserInfoPage");
+	}
+	
+	@RequestMapping("/info")
+	public String info(int id, Model model) {
+		return Messages.getString("UserInfoPage"); //$NON-NLS-1$
 	}
 }
