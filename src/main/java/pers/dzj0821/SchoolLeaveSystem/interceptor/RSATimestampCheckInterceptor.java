@@ -31,7 +31,7 @@ public class RSATimestampCheckInterceptor extends HandlerInterceptorAdapter {
 			}
 			if (clientRSACreateTimestampLong != (long) request.getSession()
 					.getAttribute(Messages.getString("RSACreateTimestampSessionName"))) { //$NON-NLS-1$
-				JSONResult result = new JSONResult(JSONCodeType.SessionTimeout, Messages.getString("SessionTimeout"), //$NON-NLS-1$
+				JSONResult result = new JSONResult(JSONCodeType.SESSION_TIMEOUT, Messages.getString("SessionTimeout"), //$NON-NLS-1$
 						null);
 				request.setAttribute(Messages.getString("NeedForwardResultRequestName"), result); //$NON-NLS-1$
 				request.getRequestDispatcher(Messages.getString("ForwardResultPath")).forward(request, response); //$NON-NLS-1$

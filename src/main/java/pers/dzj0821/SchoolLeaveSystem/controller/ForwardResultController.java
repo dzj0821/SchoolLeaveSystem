@@ -26,7 +26,7 @@ public class ForwardResultController {
 		JSONResult result = (JSONResult) request.getAttribute(Messages.getString("NeedForwardResultRequestName")); //$NON-NLS-1$
 		if(result == null) {
 			logger.warn(Messages.getString("ForwardResultMissingResult"));
-			return new JSONResult(JSONCodeType.ServerError, Messages.getString("ServerError"), null); //$NON-NLS-1$
+			return new JSONResult(JSONCodeType.SERVER_ERROR, Messages.getString("ServerError"), null); //$NON-NLS-1$
 		}
 		return result;
 	}

@@ -18,7 +18,7 @@ public interface UserDao {
 	})
 	User selectUserByUsername(String username) throws Exception;
 	
-	@Insert("insert into user(username, hex256_password, type, name, telephone) values(#{username}, #{hex256Password}, #{type}, #{name}, #{telephone})")
+	@Insert("insert into user(username, password, type, name, telephone) values(#{username}, #{password}, #{type}, #{name}, #{telephone})")
 	@Options(useGeneratedKeys=true, keyProperty="id")
 	int insertUser(User user) throws Exception;
 	
@@ -29,8 +29,8 @@ public interface UserDao {
 		public String updateUserById(User user) {
 			return new SQL() {{
 					UPDATE("user");
-					if(user.getHex256Password() != null) {
-						SET("hex256_password = #{hex256Password}");
+					if(user.getPassword() != null) {
+						SET("password = #{password}");
 					}
 					if(user.getName() != null) {
 						SET("name = #{name}");

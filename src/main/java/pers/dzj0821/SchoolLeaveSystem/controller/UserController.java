@@ -38,7 +38,7 @@ public class UserController {
 	}
 	
 	@RequestMapping("/modify")
-	@UserTypeRequired(UserType.Normal)
+	@UserTypeRequired(UserType.NORMAL_USER)
 	public String modify(Model model, HttpSession session) {
 		KeyPair keyPair = (KeyPair) session.getAttribute(Messages.getString("RSAKeyPairSessionName")); //$NON-NLS-1$
 		String publicKey = Base64.getEncoder().encodeToString(keyPair.getPublic().getEncoded());

@@ -5,8 +5,7 @@ import pers.dzj0821.SchoolLeaveSystem.type.UserType;
 public class User {
 	private int id;
 	private String username;
-	//TODO 更新名称
-	private String hex256Password;
+	private String password;
 	private UserType type;
 	private String name;
 	private String telephone;
@@ -17,11 +16,11 @@ public class User {
 	public User() {
 	}
 
-	public User(String username, String hex256Password, String name, String telephone) {
+	public User(String username, String password, String name, String telephone) {
 		id = 0;
 		this.username = username;
-		this.hex256Password = hex256Password;
-		type = UserType.Normal;
+		this.password = password;
+		type = UserType.NORMAL_USER;
 		this.name = name;
 		this.telephone = telephone;
 		clientToken = null;
@@ -30,7 +29,7 @@ public class User {
 
 	@Override
 	public String toString() {
-		return "User [id=" + id + ", username=" + username + ", hex256Password=" + hex256Password + ", type=" + type
+		return "User [id=" + id + ", username=" + username + ", password=" + password + ", type=" + type
 				+ ", name=" + name + ", telephone=" + telephone + ",clazz=" + clazz + ", clientToken=" + clientToken + ", clientId="
 				+ clientId + "]";
 	}
@@ -51,12 +50,12 @@ public class User {
 		this.username = username;
 	}
 
-	public String getHex256Password() {
-		return hex256Password;
+	public String getPassword() {
+		return password;
 	}
 
-	public void setHex256Password(String hex256Password) {
-		this.hex256Password = hex256Password;
+	public void setPassword(String password) {
+		this.password = password;
 	}
 
 	public UserType getType() {

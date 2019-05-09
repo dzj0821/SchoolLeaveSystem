@@ -28,24 +28,22 @@ public class UserServiceImpl implements UserService {
 	@Autowired
 	private UserDao userDao;
 	private Logger logger = LogManager.getLogger(UserServiceImpl.class);
-	private JSONResult serverError = new JSONResult(JSONCodeType.ServerError, Messages.getString("ServerError"), null); //$NON-NLS-1$
+	private JSONResult serverError = new JSONResult(JSONCodeType.SERVER_ERROR, Messages.getString("ServerError"), null); //$NON-NLS-1$
 
 	@Override
 	public JSONResult register(String username, String base64RSAPassword, String name, String telephone,
 			PrivateKey privateKey) {
 		// 验证输入
 		if (!Pattern.matches(Messages.getString("UsernameRegex"), username)) { //$NON-NLS-1$
-			return new JSONResult(JSONCodeType.RegisterUsernameInvalid, Messages.getString("InvalidUsername"), null); //$NON-NLS-1$
+			return new JSONResult(JSONCodeType.INVALID_USERNAME, Messages.getString("InvalidUsername"), null); //$NON-NLS-1$
 		}
 		if (!Pattern.matches(Messages.getString("NameRegex"), name)) { //$NON-NLS-1$
-			//TODO 删除调试代码
-			System.out.println(name);
-			return new JSONResult(JSONCodeType.RegisterNameInvalid, Messages.getString("InvalidName"), null); //$NON-NLS-1$
+			return new JSONResult(JSONCodeType.INVALID_NAME, Messages.getString("InvalidName"), null); //$NON-NLS-1$
 		}
 		if (!Pattern.matches(Messages.getString("TelephoneRegex"), telephone)) { //$NON-NLS-1$
-			return new JSONResult(JSONCodeType.RegisterTelephoneInvalid, Messages.getString("InvalidTelephone"), null); //$NON-NLS-1$
+			return new JSONResult(JSONCodeType.INVALID_TELEPHONE, Messages.getString("InvalidTelephone"), null); //$NON-NLS-1$
 		}
-		JSONResult Invalidpassword = new JSONResult(JSONCodeType.RegisterPasswordInvalid,
+		JSONResult Invalidpassword = new JSONResult(JSONCodeType.INVALID_PASSWORD,
 				Messages.getString("InvalidPassword"), null); //$NON-NLS-1$
 		String password = null;
 		// 密码解码
@@ -54,10 +52,7 @@ public class UserServiceImpl implements UserService {
 		} catch (InvalidKeyException | IllegalBlockSizeException | BadPaddingException e) {
 			return Invalidpassword;
 		}
-		//TODO 简化代码
-		if (password == null || !Pattern.matches(Messages.getString("PasswordRegex"), password) //$NON-NLS-1$
-				|| Pattern.matches(Messages.getString("AllDigitalRegex"), password) //$NON-NLS-1$
-				|| Pattern.matches(Messages.getString("AllLetterRegex"), password)) { //$NON-NLS-1$
+		if (!valifyPassword(password)) { //$NON-NLS-1$
 			return Invalidpassword;
 		}
 		// 验证用户名是否存在
@@ -69,7 +64,7 @@ public class UserServiceImpl implements UserService {
 			return serverError;
 		}
 		if (user != null) {
-			return new JSONResult(JSONCodeType.RegisterUsernameAlreadyExist, Messages.getString("UsernameAlreadyExist"), //$NON-NLS-1$
+			return new JSONResult(JSONCodeType.REGISTER_USERNAME_ALREADY_EXIST, Messages.getString("UsernameAlreadyExist"), //$NON-NLS-1$
 					null);
 		}
 		user = new User(username, SHA256Util.encrypt(password), name, telephone);
@@ -79,7 +74,7 @@ public class UserServiceImpl implements UserService {
 			logger.warn(Messages.getString("SQLError"), e); //$NON-NLS-1$
 			return serverError;
 		}
-		JSONResult success = new JSONResult(JSONCodeType.Success, Messages.getString("RegisterSuccess"), null); //$NON-NLS-1$
+		JSONResult success = new JSONResult(JSONCodeType.SUCCESS, Messages.getString("RegisterSuccess"), null); //$NON-NLS-1$
 		success.put(Messages.getString("UserObjectSessionName"), user); //$NON-NLS-1$
 		return success;
 	}
@@ -88,9 +83,9 @@ public class UserServiceImpl implements UserService {
 	public JSONResult login(String username, String base64RSAPassword, PrivateKey privateKey) {
 		// 验证输入
 		if (!Pattern.matches(Messages.getString("UsernameRegex"), username)) { //$NON-NLS-1$
-			return new JSONResult(JSONCodeType.RegisterUsernameInvalid, Messages.getString("InvalidUsername"), null); //$NON-NLS-1$
+			return new JSONResult(JSONCodeType.INVALID_USERNAME, Messages.getString("InvalidUsername"), null); //$NON-NLS-1$
 		}
-		JSONResult Invalidpassword = new JSONResult(JSONCodeType.RegisterPasswordInvalid,
+		JSONResult Invalidpassword = new JSONResult(JSONCodeType.INVALID_PASSWORD,
 				Messages.getString("InvalidPassword"), null); //$NON-NLS-1$
 		String password = null;
 		// 密码解码
@@ -99,10 +94,7 @@ public class UserServiceImpl implements UserService {
 		} catch (InvalidKeyException | IllegalBlockSizeException | BadPaddingException e) {
 			return Invalidpassword;
 		}
-		//TODO 简化代码
-		if (password == null || !Pattern.matches(Messages.getString("PasswordRegex"), password) //$NON-NLS-1$
-				|| Pattern.matches(Messages.getString("AllDigitalRegex"), password) //$NON-NLS-1$
-				|| Pattern.matches(Messages.getString("AllLetterRegex"), password)) { //$NON-NLS-1$
+		if (!valifyPassword(password)) { //$NON-NLS-1$
 			return Invalidpassword;
 		}
 		// 验证用户名是否存在
@@ -114,14 +106,14 @@ public class UserServiceImpl implements UserService {
 			return serverError;
 		}
 		if (user == null) {
-			return new JSONResult(JSONCodeType.UserNotFound, Messages.getString("UserNotFound"), //$NON-NLS-1$
+			return new JSONResult(JSONCodeType.USER_NOT_FOUND, Messages.getString("UserNotFound"), //$NON-NLS-1$
 					null);
 		}
 		String sha256Password = SHA256Util.encrypt(password);
-		if(!sha256Password.equals(user.getHex256Password())) {
-			return new JSONResult(JSONCodeType.UsernameOrPasswordError, Messages.getString("UsernameOrPasswordError"), null); //$NON-NLS-1$
+		if(!sha256Password.equals(user.getPassword())) {
+			return new JSONResult(JSONCodeType.USERNAME_OR_PASSWORD_ERROR, Messages.getString("UsernameOrPasswordError"), null); //$NON-NLS-1$
 		}
-		JSONResult result = new JSONResult(JSONCodeType.Success, Messages.getString("LoginSuccess"), null);
+		JSONResult result = new JSONResult(JSONCodeType.SUCCESS, Messages.getString("LoginSuccess"), null);
 		result.put(Messages.getString("UserObjectSessionName"), user);
 		return result;
 	}
@@ -133,15 +125,15 @@ public class UserServiceImpl implements UserService {
 			name = null;
 		}
 		if(name != null && !Pattern.matches(Messages.getString("NameRegex"), name)) { //$NON-NLS-1$
-			return new JSONResult(JSONCodeType.RegisterNameInvalid, Messages.getString("InvalidName"), null); //$NON-NLS-1$
+			return new JSONResult(JSONCodeType.INVALID_NAME, Messages.getString("InvalidName"), null); //$NON-NLS-1$
 		}
 		if("".equals(telephone)) {
 			telephone = null;
 		}
 		if (telephone != null && !Pattern.matches(Messages.getString("TelephoneRegex"), telephone)) { //$NON-NLS-1$
-			return new JSONResult(JSONCodeType.RegisterTelephoneInvalid, Messages.getString("InvalidTelephone"), null); //$NON-NLS-1$
+			return new JSONResult(JSONCodeType.INVALID_TELEPHONE, Messages.getString("InvalidTelephone"), null); //$NON-NLS-1$
 		}
-		JSONResult invalidOldPassword = new JSONResult(JSONCodeType.RegisterPasswordInvalid,
+		JSONResult invalidOldPassword = new JSONResult(JSONCodeType.INVALID_PASSWORD,
 				Messages.getString("InvalidOldPassword"), null); //$NON-NLS-1$
 		String oldPassword = null;
 		try {
@@ -153,7 +145,7 @@ public class UserServiceImpl implements UserService {
 		if(!valifyPassword(oldPassword)) {
 			return invalidOldPassword;
 		}
-		JSONResult invalidNewPassword = new JSONResult(JSONCodeType.RegisterPasswordInvalid,
+		JSONResult invalidNewPassword = new JSONResult(JSONCodeType.INVALID_PASSWORD,
 				Messages.getString("InvalidNewPassword"), null); //$NON-NLS-1$
 		String newPassword = null;
 		try {
@@ -169,13 +161,13 @@ public class UserServiceImpl implements UserService {
 		}
 		//验证完毕
 		String sha256Password = SHA256Util.encrypt(oldPassword);
-		if(!user.getHex256Password().equals(sha256Password)) {
+		if(!user.getPassword().equals(sha256Password)) {
 			return new JSONResult(JSONCodeType.OLD_PASSWORD_ERROR, Messages.getString("OldPasswordError"), null);
 		}
 		User updateUser = new User();
 		updateUser.setId(user.getId());
 		if(newPassword != null) {
-			updateUser.setHex256Password(SHA256Util.encrypt(newPassword));
+			updateUser.setPassword(SHA256Util.encrypt(newPassword));
 		}
 		updateUser.setName(name);
 		updateUser.setTelephone(telephone);
@@ -186,7 +178,7 @@ public class UserServiceImpl implements UserService {
 			logger.warn(Messages.getString("SQLError"), e); //$NON-NLS-1$
 			return serverError;
 		}
-		JSONResult result = new JSONResult(JSONCodeType.Success, Messages.getString("ModifyUserInfoSuccess"), null);
+		JSONResult result = new JSONResult(JSONCodeType.SUCCESS, Messages.getString("ModifyUserInfoSuccess"), null);
 		result.put(Messages.getString("UserObjectSessionName"), user);
 		return result;
 	}

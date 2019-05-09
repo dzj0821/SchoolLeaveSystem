@@ -2,15 +2,15 @@
 Navicat MySQL Data Transfer
 
 Source Server         : localhost
-Source Server Version : 50724
+Source Server Version : 50723
 Source Host           : localhost:3306
 Source Database       : school_leave_system
 
 Target Server Type    : MYSQL
-Target Server Version : 50724
+Target Server Version : 50723
 File Encoding         : 65001
 
-Date: 2019-05-06 12:29:50
+Date: 2019-05-09 08:21:35
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -141,7 +141,7 @@ DROP TABLE IF EXISTS `user`;
 CREATE TABLE `user` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `username` varchar(255) NOT NULL COMMENT '用户名',
-  `hex256_password` varchar(128) NOT NULL COMMENT 'hex256加密后的密码',
+  `password` varchar(128) NOT NULL COMMENT 'sha256加密后的密码',
   `type` int(1) NOT NULL COMMENT '用户类型\r\n0-超级管理员\r\n1-院级管理员\r\n2-班级管理员\r\n3-普通用户（学生）',
   `name` varchar(255) NOT NULL COMMENT '姓名',
   `telephone` varchar(11) NOT NULL COMMENT '电话',

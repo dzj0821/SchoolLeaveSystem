@@ -46,7 +46,7 @@ public class ApiUserController {
 	
 	@PostMapping("/modify")
 	@ResponseBody
-	@UserTypeRequired(UserType.Normal)
+	@UserTypeRequired(UserType.NORMAL_USER)
 	@RSATimestampCheck
 	public Map<String, Object> modify(String oldPassword, String newPassword, String name, String telephone, HttpSession session){
 		KeyPair keyPair = (KeyPair) session.getAttribute(Messages.getString("RSAKeyPairSessionName")); //$NON-NLS-1$
