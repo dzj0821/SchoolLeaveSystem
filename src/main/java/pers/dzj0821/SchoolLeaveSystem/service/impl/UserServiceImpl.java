@@ -200,4 +200,13 @@ public class UserServiceImpl implements UserService {
 				&& !Pattern.matches(Messages.getString("AllLetterRegex"), password); //$NON-NLS-1$
 	}
 
+	@Override
+	public JSONResult getUserInfo(int willGetUserId, User fromUser) {
+		//如果查看的不是自己的账号的信息
+		if(willGetUserId != fromUser.getId()) {
+			
+		}
+		return null;
+	}
+
 }

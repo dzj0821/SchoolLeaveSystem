@@ -25,7 +25,7 @@ public class ApiUserController {
 	
 	@Autowired
 	private UserService userService;
-	
+	//TODO 修改为PostMapping
 	@RequestMapping("/register")
 	@ResponseBody
 	@RSATimestampCheck
@@ -33,7 +33,7 @@ public class ApiUserController {
 		KeyPair keyPair = (KeyPair) session.getAttribute(Messages.getString("RSAKeyPairSessionName")); //$NON-NLS-1$
 		return userService.register(username, password, name, telephone, keyPair.getPrivate());
 	}
-	
+	//TODO 修改为PostMapping
 	@RequestMapping("/login")
 	@ResponseBody
 	@RSATimestampCheck
@@ -54,5 +54,13 @@ public class ApiUserController {
 		JSONResult result = userService.modify(user, oldPassword, newPassword, name, telephone, keyPair.getPrivate());
 		session.setAttribute(Messages.getString("UserObjectSessionName"), result.get(Messages.getString("UserObjectSessionName")));
 		return result;
+	}
+	
+	@PostMapping("/info")
+	@ResponseBody
+	@UserTypeRequired(UserType.NORMAL_USER)
+	public Map<String, Object> info(int id, HttpSession session){
+		User user = (User) session.getAttribute(Messages.getString("UserObjectSessionName")); //$NON-NLS-1$
+		return userService.getUserInfo(id, user);
 	}
 }

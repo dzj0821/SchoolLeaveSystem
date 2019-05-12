@@ -51,6 +51,7 @@ public class UserController {
 	
 	@RequestMapping("/info")
 	public String info(int id, Model model) {
+		//TODO 调用service层，完成视图
 		return Messages.getString("UserInfoPage"); //$NON-NLS-1$
 	}
 }
