@@ -14,6 +14,7 @@ import pers.dzj0821.SchoolLeaveSystem.pojo.User;
 public interface UserDao {
 	@Select("select * from user where username = #{username}")
 	@Results({
+		@Result(column="id", property="id", id=true),
 		@Result(column="clazz_id", property="clazz",one=@One(select="pers.dzj0821.SchoolLeaveSystem.dao.ClazzDao.selectClazzById"))
 	})
 	User selectUserByUsername(String username) throws Exception;
