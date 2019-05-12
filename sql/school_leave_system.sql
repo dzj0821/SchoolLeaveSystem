@@ -2,15 +2,15 @@
 Navicat MySQL Data Transfer
 
 Source Server         : localhost
-Source Server Version : 50723
+Source Server Version : 50724
 Source Host           : localhost:3306
 Source Database       : school_leave_system
 
 Target Server Type    : MYSQL
-Target Server Version : 50723
+Target Server Version : 50724
 File Encoding         : 65001
 
-Date: 2019-05-09 08:21:35
+Date: 2019-05-13 03:10:21
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -27,9 +27,9 @@ CREATE TABLE `clazz` (
   PRIMARY KEY (`id`),
   KEY `class_ibfk_1` (`grade_id`),
   KEY `class_ibfk_2` (`major_id`),
-  CONSTRAINT `clazz_ibfk_1` FOREIGN KEY (`grade_id`) REFERENCES `grade` (`year`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `clazz_ibfk_1` FOREIGN KEY (`grade_id`) REFERENCES `grade` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `clazz_ibfk_2` FOREIGN KEY (`major_id`) REFERENCES `major` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='班级表\r\n/*\r\nBEGIN\r\n    SET @count = (SELECT COUNT(*) FROM class WHERE grade_year = NEW.grade_year AND major_id = NEW.major_id AND no = NEW.no);\r\n    IF @count != 0 THEN\r\n        SIGNAL SQLSTATE ''45000''\r\n SET MESSAGE_TEXT = ''试图往班级表中插入重复的班级'';\r\n    END IF;\r\nEND\r\n*/';
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 COMMENT='班级表\r\n/*\r\nBEGIN\r\n    SET @count = (SELECT COUNT(*) FROM class WHERE grade_year = NEW.grade_year AND major_id = NEW.major_id AND no = NEW.no);\r\n    IF @count != 0 THEN\r\n        SIGNAL SQLSTATE ''45000''\r\n SET MESSAGE_TEXT = ''试图往班级表中插入重复的班级'';\r\n    END IF;\r\nEND\r\n*/';
 
 -- ----------------------------
 -- Table structure for collage
@@ -39,7 +39,7 @@ CREATE TABLE `collage` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(255) NOT NULL COMMENT '学院名称',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='学院表';
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 COMMENT='学院表';
 
 -- ----------------------------
 -- Table structure for grade
@@ -50,7 +50,7 @@ CREATE TABLE `grade` (
   `year` int(5) NOT NULL COMMENT '年级的年份',
   PRIMARY KEY (`id`),
   KEY `year` (`year`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='年级表';
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 COMMENT='年级表';
 
 -- ----------------------------
 -- Table structure for leave
@@ -102,7 +102,7 @@ CREATE TABLE `major` (
   PRIMARY KEY (`id`),
   KEY `belong_collage_id` (`collage_id`),
   CONSTRAINT `major_ibfk_1` FOREIGN KEY (`collage_id`) REFERENCES `collage` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='专业表';
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 COMMENT='专业表';
 
 -- ----------------------------
 -- Table structure for permission_clazz
@@ -111,13 +111,13 @@ DROP TABLE IF EXISTS `permission_clazz`;
 CREATE TABLE `permission_clazz` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `user_id` int(11) NOT NULL COMMENT '给予权限的用户id',
-  `class_id` int(11) NOT NULL COMMENT '给予X班级的权限',
+  `clazz_id` int(11) NOT NULL COMMENT '给予X班级的权限',
   PRIMARY KEY (`id`),
   KEY `user_id` (`user_id`),
-  KEY `class_id` (`class_id`),
+  KEY `class_id` (`clazz_id`),
   CONSTRAINT `permission_clazz_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `permission_clazz_ibfk_2` FOREIGN KEY (`class_id`) REFERENCES `clazz` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+  CONSTRAINT `permission_clazz_ibfk_2` FOREIGN KEY (`clazz_id`) REFERENCES `clazz` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Table structure for permission_collage
@@ -151,5 +151,5 @@ CREATE TABLE `user` (
   PRIMARY KEY (`id`),
   KEY `clazz_id` (`clazz_id`),
   CONSTRAINT `user_ibfk_1` FOREIGN KEY (`clazz_id`) REFERENCES `clazz` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
 SET FOREIGN_KEY_CHECKS=1;
