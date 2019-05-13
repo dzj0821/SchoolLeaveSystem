@@ -19,11 +19,20 @@ public interface UserDao {
 	})
 	User selectUserByUsername(String username) throws Exception;
 	
+	@Select("select * from user where id = #{id}")
+	@Results({
+		@Result(column="id", property="id", id=true),
+		@Result(column="clazz_id", property="clazz",one=@One(select="pers.dzj0821.SchoolLeaveSystem.dao.ClazzDao.selectClazzById"))
+	})
+	User selectUserById(int id) throws Exception;
+	
 	@Insert("insert into user(username, password, type, name, telephone) values(#{username}, #{password}, #{type}, #{name}, #{telephone})")
+	//用于在语句执行完毕后返回新插入的主键
 	@Options(useGeneratedKeys=true, keyProperty="id")
 	int insertUser(User user) throws Exception;
 	
 	@UpdateProvider(type=UserDaoProvider.class, method="updateUserById")
+	//默认返回受影响的行数
 	int updateUserById(User user) throws Exception;
 	
 	class UserDaoProvider {
