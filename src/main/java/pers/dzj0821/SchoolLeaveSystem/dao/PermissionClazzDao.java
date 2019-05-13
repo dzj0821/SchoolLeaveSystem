@@ -25,5 +25,5 @@ public interface PermissionClazzDao {
 		@Result(column = "user_id", property = "user", one = @One(select = "pers.dzj0821.SchoolLeaveSystem.dao.UserDao.selectUserById")),
 		@Result(column = "clazz_id", property = "clazz", one = @One(select = "pers.dzj0821.SchoolLeaveSystem.dao.ClazzDao.selectClazzById"))
 	})
-	public List<PermissionClazz> selectPermissionClazzByUserId(Integer userId) throws Exception;
+	public List<PermissionClazz> selectPermissionClazzesByUserId(Integer userId) throws Exception;
 }

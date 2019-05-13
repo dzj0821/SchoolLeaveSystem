@@ -3,6 +3,7 @@ package pers.dzj0821.SchoolLeaveSystem.service.impl;
 import java.security.InvalidKeyException;
 import java.security.PrivateKey;
 import java.util.Base64;
+import java.util.List;
 import java.util.regex.Pattern;
 
 import javax.crypto.BadPaddingException;
@@ -15,6 +16,8 @@ import org.springframework.stereotype.Service;
 
 import pers.dzj0821.SchoolLeaveSystem.Messages;
 import pers.dzj0821.SchoolLeaveSystem.dao.UserDao;
+import pers.dzj0821.SchoolLeaveSystem.pojo.PermissionClazz;
+import pers.dzj0821.SchoolLeaveSystem.pojo.PermissionCollage;
 import pers.dzj0821.SchoolLeaveSystem.pojo.User;
 import pers.dzj0821.SchoolLeaveSystem.pojo.json.JSONResult;
 import pers.dzj0821.SchoolLeaveSystem.service.UserService;
@@ -211,8 +214,43 @@ public class UserServiceImpl implements UserService {
 		if(willGetUserId == null) {
 			return new JSONResult(JSONCodeType.INVALID_PARAMS, Messages.getString("InvalidParams"), null);
 		}
-		//如果查看的不是自己的账号的信息
+		User willGetUser = null;
+		try {
+			willGetUser = userDao.selectUserById(willGetUserId);
+		} catch (Exception e) {
+			logger.warn(Messages.getString("ServerError"), e);
+			return serverError;
+		}
+		if(willGetUser == null) {
+			return new JSONResult(JSONCodeType.USER_NOT_FOUND, Messages.getString("UserNotFound"), null);
+		}
+		//如果查看的不是自己的账号信息 验证权限
 		if(willGetUserId != fromUser.getId()) {
+			JSONResult accessDenied = new JSONResult(JSONCodeType.ACCESS_DENIED, Messages.getString("AccessDenied"), null);
+			check:switch (fromUser.getType()) {
+			case NORMAL_USER:
+				return accessDenied;
+			case CLAZZ_ADMIN:
+				List<PermissionClazz> permissionClazzes = fromUser.getPermissionClazzes();
+				for (PermissionClazz permissionClazz : permissionClazzes) {
+					if(permissionClazz.getClazz().getId() == willGetUser.getClazz().getId()) {
+						break check;
+					}
+				}
+				return accessDenied;
+			case COLLAGE_ADMIN:
+				List<PermissionCollage> permissionCollages = fromUser.getPermissionCollages();
+				for (PermissionCollage permissionCollage : permissionCollages) {
+					if(permissionCollage.getId() == willGetUser.getClazz().getMajor().getCollage().getId()) {
+						break check;
+					}
+				}
+				return accessDenied;
+			case SUPER_ADMIN:
+				break check;
+			default:
+				return accessDenied;
+			}
 			
 		}
 		return null;

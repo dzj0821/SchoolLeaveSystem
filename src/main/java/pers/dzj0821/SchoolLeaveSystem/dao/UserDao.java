@@ -17,8 +17,8 @@ public interface UserDao {
 	@Results({
 		@Result(column = "id", property = "id", id = true),
 		@Result(column = "clazz_id", property = "clazz", one = @One(select = "pers.dzj0821.SchoolLeaveSystem.dao.ClazzDao.selectClazzById")),
-		@Result(column = "id", property = "permissionClazzes", many = @Many(select = "pers.dzj0821.SchoolLeaveSystem.dao.PermissionClazzDao.selectPermissionClazzByUserId")),
-		//TODO permissionCollages
+		@Result(column = "id", property = "permissionClazzes", many = @Many(select = "pers.dzj0821.SchoolLeaveSystem.dao.PermissionClazzDao.selectPermissionClazzesByUserId")),
+		@Result(column = "id", property = "permissionCollages", many = @Many(select = "pers.dzj0821.SchoolLeaveSystem.dao.PermissionCollageDao.selectPermissionCollagesByUserId"))
 	})
 	User selectUserByUsername(String username) throws Exception;
 	
