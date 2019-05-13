@@ -15,5 +15,5 @@ public interface UserService {
 	
 	public JSONResult logout();
 	
-	public JSONResult getUserInfo(int willGetUserId, User fromUser);
+	public JSONResult getUserInfo(Integer willGetUserId, User fromUser);
 }

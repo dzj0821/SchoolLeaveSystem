@@ -33,16 +33,23 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public JSONResult register(String username, String base64RSAPassword, String name, String telephone,
 			PrivateKey privateKey) {
+		//FIXME 非空验证
+		//TODO 通过注解进行参数验证
+		//TODO 经过所有验证后再判断是否返回
 		// 验证输入
 		if (!Pattern.matches(Messages.getString("UsernameRegex"), username)) { //$NON-NLS-1$
+			//TODO 使用JSONCodeType.INVALID_PARAMS替换
 			return new JSONResult(JSONCodeType.INVALID_USERNAME, Messages.getString("InvalidUsername"), null); //$NON-NLS-1$
 		}
 		if (!Pattern.matches(Messages.getString("NameRegex"), name)) { //$NON-NLS-1$
+			//TODO 使用JSONCodeType.INVALID_PARAMS替换
 			return new JSONResult(JSONCodeType.INVALID_NAME, Messages.getString("InvalidName"), null); //$NON-NLS-1$
 		}
 		if (!Pattern.matches(Messages.getString("TelephoneRegex"), telephone)) { //$NON-NLS-1$
+			//TODO 使用JSONCodeType.INVALID_PARAMS替换
 			return new JSONResult(JSONCodeType.INVALID_TELEPHONE, Messages.getString("InvalidTelephone"), null); //$NON-NLS-1$
 		}
+		//TODO 使用JSONCodeType.INVALID_PARAMS替换
 		JSONResult Invalidpassword = new JSONResult(JSONCodeType.INVALID_PASSWORD,
 				Messages.getString("InvalidPassword"), null); //$NON-NLS-1$
 		String password = null;
@@ -81,10 +88,14 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public JSONResult login(String username, String base64RSAPassword, PrivateKey privateKey) {
+		//FIXME 非空验证
+		//TODO 通过注解进行参数验证
 		// 验证输入
 		if (!Pattern.matches(Messages.getString("UsernameRegex"), username)) { //$NON-NLS-1$
+			//TODO 使用JSONCodeType.INVALID_PARAMS替换
 			return new JSONResult(JSONCodeType.INVALID_USERNAME, Messages.getString("InvalidUsername"), null); //$NON-NLS-1$
 		}
+		//TODO 使用JSONCodeType.INVALID_PARAMS替换
 		JSONResult Invalidpassword = new JSONResult(JSONCodeType.INVALID_PASSWORD,
 				Messages.getString("InvalidPassword"), null); //$NON-NLS-1$
 		String password = null;
@@ -120,17 +131,21 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public JSONResult modify(User user, String base64RSAOldPassword, String base64RSANewPassword, String name, String telephone, PrivateKey privateKey) {
+		//FIXME 非空验证
+		//TODO 通过注解进行参数验证
 		//开始验证
 		if("".equals(name)) {
 			name = null;
 		}
 		if(name != null && !Pattern.matches(Messages.getString("NameRegex"), name)) { //$NON-NLS-1$
+			//TODO 使用JSONCodeType.INVALID_PARAMS替换
 			return new JSONResult(JSONCodeType.INVALID_NAME, Messages.getString("InvalidName"), null); //$NON-NLS-1$
 		}
 		if("".equals(telephone)) {
 			telephone = null;
 		}
 		if (telephone != null && !Pattern.matches(Messages.getString("TelephoneRegex"), telephone)) { //$NON-NLS-1$
+			//TODO 使用JSONCodeType.INVALID_PARAMS替换
 			return new JSONResult(JSONCodeType.INVALID_TELEPHONE, Messages.getString("InvalidTelephone"), null); //$NON-NLS-1$
 		}
 		JSONResult invalidOldPassword = new JSONResult(JSONCodeType.INVALID_PASSWORD,
@@ -191,6 +206,18 @@ public class UserServiceImpl implements UserService {
 		return null;
 	}
 	
+	@Override
+	public JSONResult getUserInfo(Integer willGetUserId, User fromUser) {
+		if(willGetUserId == null) {
+			return new JSONResult(JSONCodeType.INVALID_PARAMS, Messages.getString("InvalidParams"), null);
+		}
+		//如果查看的不是自己的账号的信息
+		if(willGetUserId != fromUser.getId()) {
+			
+		}
+		return null;
+	}
+	
 	private boolean valifyPassword(String password) {
 		if(password == null) {
 			return false;
@@ -198,15 +225,6 @@ public class UserServiceImpl implements UserService {
 		return Pattern.matches(Messages.getString("PasswordRegex"), password) //$NON-NLS-1$
 				&& !Pattern.matches(Messages.getString("AllDigitalRegex"), password) //$NON-NLS-1$
 				&& !Pattern.matches(Messages.getString("AllLetterRegex"), password); //$NON-NLS-1$
-	}
-
-	@Override
-	public JSONResult getUserInfo(int willGetUserId, User fromUser) {
-		//如果查看的不是自己的账号的信息
-		if(willGetUserId != fromUser.getId()) {
-			
-		}
-		return null;
 	}
 
 }

@@ -59,8 +59,9 @@ public class ApiUserController {
 	@PostMapping("/info")
 	@ResponseBody
 	@UserTypeRequired(UserType.NORMAL_USER)
-	public Map<String, Object> info(int id, HttpSession session){
+	public Map<String, Object> info(Integer id, HttpSession session){
 		User user = (User) session.getAttribute(Messages.getString("UserObjectSessionName")); //$NON-NLS-1$
+		//TODO 拦截权限不足的返回值并转为response.sendError(403)
 		return userService.getUserInfo(id, user);
 	}
 }

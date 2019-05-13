@@ -5,6 +5,7 @@ import java.util.Date;
 import pers.dzj0821.SchoolLeaveSystem.type.LeaveType;
 
 public class Leave {
+	//TODO 将基础数据类型替换为包装类
 	private int id;
 	private User user;
 	private String clazzName;
