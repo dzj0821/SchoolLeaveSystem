@@ -4,6 +4,7 @@ import java.security.InvalidKeyException;
 import java.security.PrivateKey;
 import java.util.Base64;
 import java.util.List;
+import java.util.Map;
 import java.util.regex.Pattern;
 
 import javax.crypto.BadPaddingException;
@@ -13,6 +14,8 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import com.alibaba.fastjson.JSONObject;
 
 import pers.dzj0821.SchoolLeaveSystem.Messages;
 import pers.dzj0821.SchoolLeaveSystem.dao.UserDao;
@@ -251,9 +254,9 @@ public class UserServiceImpl implements UserService {
 			default:
 				return accessDenied;
 			}
-			
 		}
-		return null;
+		Map<String, Object> map = JSONObject.toJavaObject(JSONObject.parseObject(JSONObject.toJSONString(willGetUser)), Map.class);
+		return new JSONResult(JSONCodeType.SUCCESS, null, map);
 	}
 	
 	private boolean valifyPassword(String password) {
