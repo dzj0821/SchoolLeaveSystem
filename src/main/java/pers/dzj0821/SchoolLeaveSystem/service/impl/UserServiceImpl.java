@@ -22,6 +22,7 @@ import pers.dzj0821.SchoolLeaveSystem.pojo.PermissionClazz;
 import pers.dzj0821.SchoolLeaveSystem.pojo.PermissionCollage;
 import pers.dzj0821.SchoolLeaveSystem.pojo.User;
 import pers.dzj0821.SchoolLeaveSystem.pojo.json.JSONResult;
+import pers.dzj0821.SchoolLeaveSystem.pojo.view.UserInfoView;
 import pers.dzj0821.SchoolLeaveSystem.service.UserService;
 import pers.dzj0821.SchoolLeaveSystem.type.JSONCodeType;
 import pers.dzj0821.SchoolLeaveSystem.util.RSAUtil;
@@ -254,9 +255,11 @@ public class UserServiceImpl implements UserService {
 				return accessDenied;
 			}
 		}
+		
 		ObjectMapper mapper = new ObjectMapper();
 		@SuppressWarnings("unchecked")
-		Map<String, Object> map = mapper.convertValue(willGetUser, Map.class);
+		//屏蔽不应给用户显示的内容
+		Map<String, Object> map = mapper.convertValue(new UserInfoView(willGetUser), Map.class);
 		return new JSONResult(JSONCodeType.SUCCESS, null, map);
 	}
 	

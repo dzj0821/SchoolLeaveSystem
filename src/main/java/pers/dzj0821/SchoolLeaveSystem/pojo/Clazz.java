@@ -7,6 +7,11 @@ public class Clazz {
 	private Grade grade;
 	private Major major;
 
+	public String clazzFullName() {
+		//如：2015级网络工程1班
+		return grade.getYear() + "级" + major.getCollage().getName() + major.getName() + no + "班";
+	}
+	
 	@Override
 	public String toString() {
 		return "Class [id=" + id + ", no=" + no + ", grade=" + grade + ", major=" + major + "]";
