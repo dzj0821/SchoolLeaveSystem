@@ -10,8 +10,11 @@ import java.util.regex.Pattern;
 import javax.crypto.BadPaddingException;
 import javax.crypto.IllegalBlockSizeException;
 
+import org.apache.commons.beanutils.BeanMap;
+import org.apache.commons.beanutils.BeanUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.codehaus.jackson.map.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -255,7 +258,9 @@ public class UserServiceImpl implements UserService {
 				return accessDenied;
 			}
 		}
-		Map<String, Object> map = JSONObject.toJavaObject(JSONObject.parseObject(JSONObject.toJSONString(willGetUser)), Map.class);
+		ObjectMapper mapper = new ObjectMapper();
+		@SuppressWarnings("unchecked")
+		Map<String, Object> map = mapper.convertValue(willGetUser, Map.class);
 		return new JSONResult(JSONCodeType.SUCCESS, null, map);
 	}
 	
