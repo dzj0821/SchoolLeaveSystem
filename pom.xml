@@ -219,6 +219,7 @@
 
 	</dependencies>
 
+<!-- 暂未使用
 	<build>
 		<finalName>SchoolLeaveSystem</finalName>
 		<plugins>
@@ -234,5 +235,5 @@
 			</plugin>
 		</plugins>
 	</build>
-
+ -->
 </project>

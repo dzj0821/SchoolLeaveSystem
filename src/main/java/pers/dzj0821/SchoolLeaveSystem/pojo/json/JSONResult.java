@@ -5,15 +5,22 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+import pers.dzj0821.SchoolLeaveSystem.Messages;
 import pers.dzj0821.SchoolLeaveSystem.type.JSONCodeType;
 
 public class JSONResult extends HashMap<String, Object> {
 	private static final long serialVersionUID = 1L;
+	private static final String CODE_KEY_NAME = "code";
+	public static final JSONResult SERVER_ERROR = new JSONResult(JSONCodeType.SERVER_ERROR, Messages.getString("ServerError"), null); //$NON-NLS-1$
 
 	public JSONResult(JSONCodeType codeType, String message, Map<String, Object> data) {
-		put("code", codeType);
+		put(CODE_KEY_NAME, codeType);
 		put("message", message);
 		put("data", data);
+	}
+	
+	public JSONCodeType getCode() {
+		return (JSONCodeType) get(CODE_KEY_NAME);
 	}
 	
 	//意义不明的重写

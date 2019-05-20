@@ -1,15 +1,11 @@
 package pers.dzj0821.SchoolLeaveSystem.pojo.view;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonFormat.Shape;
-
 import pers.dzj0821.SchoolLeaveSystem.pojo.User;
 import pers.dzj0821.SchoolLeaveSystem.type.UserType;
 
 public class UserInfoView {
 	private Integer id;
 	private String username;
-	@JsonFormat(shape = Shape.NUMBER_INT)
 	private UserType type;
 	private String name;
 	private String telephone;

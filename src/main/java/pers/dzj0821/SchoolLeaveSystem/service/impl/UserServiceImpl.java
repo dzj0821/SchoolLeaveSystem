@@ -3,8 +3,8 @@ package pers.dzj0821.SchoolLeaveSystem.service.impl;
 import java.security.InvalidKeyException;
 import java.security.PrivateKey;
 import java.util.Base64;
+import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.regex.Pattern;
 
 import javax.crypto.BadPaddingException;
@@ -12,7 +12,6 @@ import javax.crypto.IllegalBlockSizeException;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.codehaus.jackson.map.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -34,7 +33,6 @@ public class UserServiceImpl implements UserService {
 	@Autowired
 	private UserDao userDao;
 	private Logger logger = LogManager.getLogger(UserServiceImpl.class);
-	private JSONResult serverError = new JSONResult(JSONCodeType.SERVER_ERROR, Messages.getString("ServerError"), null); //$NON-NLS-1$
 
 	@Override
 	public JSONResult register(String username, String base64RSAPassword, String name, String telephone,
@@ -74,7 +72,7 @@ public class UserServiceImpl implements UserService {
 			user = userDao.selectUserByUsername(username);
 		} catch (Exception e) {
 			logger.warn(Messages.getString("SQLError"), e); //$NON-NLS-1$
-			return serverError;
+			return JSONResult.SERVER_ERROR;
 		}
 		if (user != null) {
 			return new JSONResult(JSONCodeType.REGISTER_USERNAME_ALREADY_EXIST, Messages.getString("UsernameAlreadyExist"), //$NON-NLS-1$
@@ -85,7 +83,7 @@ public class UserServiceImpl implements UserService {
 			userDao.insertUser(user);
 		} catch (Exception e) {
 			logger.warn(Messages.getString("SQLError"), e); //$NON-NLS-1$
-			return serverError;
+			return JSONResult.SERVER_ERROR;
 		}
 		JSONResult success = new JSONResult(JSONCodeType.SUCCESS, Messages.getString("RegisterSuccess"), null); //$NON-NLS-1$
 		success.put(Messages.getString("UserObjectSessionName"), user); //$NON-NLS-1$
@@ -120,7 +118,7 @@ public class UserServiceImpl implements UserService {
 			user = userDao.selectUserByUsername(username);
 		} catch (Exception e) {
 			logger.warn(Messages.getString("SQLError"), e); //$NON-NLS-1$
-			return serverError;
+			return JSONResult.SERVER_ERROR;
 		}
 		if (user == null) {
 			return new JSONResult(JSONCodeType.USER_NOT_FOUND, Messages.getString("UserNotFound"), //$NON-NLS-1$
@@ -130,8 +128,8 @@ public class UserServiceImpl implements UserService {
 		if(!sha256Password.equals(user.getPassword())) {
 			return new JSONResult(JSONCodeType.USERNAME_OR_PASSWORD_ERROR, Messages.getString("UsernameOrPasswordError"), null); //$NON-NLS-1$
 		}
-		JSONResult result = new JSONResult(JSONCodeType.SUCCESS, Messages.getString("LoginSuccess"), null);
-		result.put(Messages.getString("UserObjectSessionName"), user);
+		JSONResult result = new JSONResult(JSONCodeType.SUCCESS, Messages.getString("LoginSuccess"), null); //$NON-NLS-1$
+		result.put(Messages.getString("UserObjectSessionName"), user); //$NON-NLS-1$
 		return result;
 	}
 
@@ -140,14 +138,14 @@ public class UserServiceImpl implements UserService {
 		//FIXME 非空验证
 		//TODO 通过注解进行参数验证
 		//开始验证
-		if("".equals(name)) {
+		if("".equals(name)) { //$NON-NLS-1$
 			name = null;
 		}
 		if(name != null && !Pattern.matches(Messages.getString("NameRegex"), name)) { //$NON-NLS-1$
 			//TODO 使用JSONCodeType.INVALID_PARAMS替换
 			return new JSONResult(JSONCodeType.INVALID_NAME, Messages.getString("InvalidName"), null); //$NON-NLS-1$
 		}
-		if("".equals(telephone)) {
+		if("".equals(telephone)) { //$NON-NLS-1$
 			telephone = null;
 		}
 		if (telephone != null && !Pattern.matches(Messages.getString("TelephoneRegex"), telephone)) { //$NON-NLS-1$
@@ -160,8 +158,6 @@ public class UserServiceImpl implements UserService {
 		try {
 			oldPassword = new String(RSAUtil.decrypt(Base64.getDecoder().decode(base64RSAOldPassword), privateKey));
 		} catch (InvalidKeyException | IllegalBlockSizeException | BadPaddingException e) {
-			//TODO 删除调试代码
-			logger.info("throw", e);
 			return invalidOldPassword;
 		}
 		if(!valifyPassword(oldPassword)) {
@@ -175,7 +171,7 @@ public class UserServiceImpl implements UserService {
 		} catch (InvalidKeyException | IllegalBlockSizeException | BadPaddingException e) {
 			return invalidNewPassword;
 		}
-		if("".equals(newPassword)) {
+		if("".equals(newPassword)) { //$NON-NLS-1$
 			newPassword = null;
 		}
 		if(newPassword != null && !valifyPassword(newPassword)) {
@@ -184,7 +180,7 @@ public class UserServiceImpl implements UserService {
 		//验证完毕
 		String sha256Password = SHA256Util.encrypt(oldPassword);
 		if(!user.getPassword().equals(sha256Password)) {
-			return new JSONResult(JSONCodeType.OLD_PASSWORD_ERROR, Messages.getString("OldPasswordError"), null);
+			return new JSONResult(JSONCodeType.OLD_PASSWORD_ERROR, Messages.getString("OldPasswordError"), null); //$NON-NLS-1$
 		}
 		User updateUser = new User();
 		updateUser.setId(user.getId());
@@ -199,10 +195,10 @@ public class UserServiceImpl implements UserService {
 			user = userDao.selectUserByUsername(user.getUsername());
 		} catch (Exception e) {
 			logger.warn(Messages.getString("SQLError"), e); //$NON-NLS-1$
-			return serverError;
+			return JSONResult.SERVER_ERROR;
 		}
-		JSONResult result = new JSONResult(JSONCodeType.SUCCESS, Messages.getString("ModifyUserInfoSuccess"), null);
-		result.put(Messages.getString("UserObjectSessionName"), user);
+		JSONResult result = new JSONResult(JSONCodeType.SUCCESS, Messages.getString("ModifyUserInfoSuccess"), null); //$NON-NLS-1$
+		result.put(Messages.getString("UserObjectSessionName"), user); //$NON-NLS-1$
 		return result;
 	}
 
@@ -215,21 +211,21 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public JSONResult getUserInfo(Integer willGetUserId, User fromUser) {
 		if(willGetUserId == null) {
-			return new JSONResult(JSONCodeType.INVALID_PARAMS, Messages.getString("InvalidParams"), null);
+			return new JSONResult(JSONCodeType.INVALID_PARAMS, Messages.getString("InvalidParams"), null); //$NON-NLS-1$
 		}
 		User willGetUser = null;
 		try {
 			willGetUser = userDao.selectUserById(willGetUserId);
 		} catch (Exception e) {
-			logger.warn(Messages.getString("ServerError"), e);
-			return serverError;
+			logger.warn(Messages.getString("ServerError"), e); //$NON-NLS-1$
+			return JSONResult.SERVER_ERROR;
 		}
 		if(willGetUser == null) {
-			return new JSONResult(JSONCodeType.USER_NOT_FOUND, Messages.getString("UserNotFound"), null);
+			return new JSONResult(JSONCodeType.USER_NOT_FOUND, Messages.getString("UserNotFound"), null); //$NON-NLS-1$
 		}
 		//如果查看的不是自己的账号信息 验证权限
 		if(willGetUserId != fromUser.getId()) {
-			JSONResult accessDenied = new JSONResult(JSONCodeType.ACCESS_DENIED, Messages.getString("AccessDenied"), null);
+			JSONResult accessDenied = new JSONResult(JSONCodeType.ACCESS_DENIED, Messages.getString("AccessDenied"), null); //$NON-NLS-1$
 			check:switch (fromUser.getType()) {
 			case NORMAL_USER:
 				return accessDenied;
@@ -255,12 +251,9 @@ public class UserServiceImpl implements UserService {
 				return accessDenied;
 			}
 		}
-		
-		ObjectMapper mapper = new ObjectMapper();
-		@SuppressWarnings("unchecked")
-		//屏蔽不应给用户显示的内容
-		Map<String, Object> map = mapper.convertValue(new UserInfoView(willGetUser), Map.class);
-		return new JSONResult(JSONCodeType.SUCCESS, null, map);
+		HashMap<String, Object> data = new HashMap<String, Object>();
+		data.put(Messages.getString("UserInfoDataUserName"), new UserInfoView(willGetUser)); //$NON-NLS-1$
+		return new JSONResult(JSONCodeType.SUCCESS, null, data);
 	}
 	
 	private boolean valifyPassword(String password) {
