@@ -8,7 +8,7 @@ public class Leave {
 	//TODO 将基础数据类型替换为包装类
 	private int id;
 	private User user;
-	private String clazzName;
+	private Clazz clazz;
 	private int telephone;
 	private Date startDate;
 	private int startLesson;
@@ -22,7 +22,7 @@ public class Leave {
 
 	@Override
 	public String toString() {
-		return "Leave [id=" + id + ", user=" + user + ", clazzName=" + clazzName + ", telephone=" + telephone
+		return "Leave [id=" + id + ", user=" + user + ", clazz=" + clazz + ", telephone=" + telephone
 				+ ", startDate=" + startDate + ", startLesson=" + startLesson + ", endDate=" + endDate + ", endLesson="
 				+ endLesson + ", reason=" + reason + ", createTime=" + createTime + ", type=" + type + ", reviewer="
 				+ reviewer + ", reviewTime=" + reviewTime + "]";
@@ -44,12 +44,12 @@ public class Leave {
 		this.user = user;
 	}
 
-	public String getClassName() {
-		return clazzName;
+	public Clazz getClazz() {
+		return clazz;
 	}
 
-	public void setClassName(String className) {
-		this.clazzName = className;
+	public void setClazz(Clazz clazz) {
+		this.clazz = clazz;
 	}
 
 	public int getTelephone() {

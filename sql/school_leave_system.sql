@@ -2,15 +2,15 @@
 Navicat MySQL Data Transfer
 
 Source Server         : localhost
-Source Server Version : 50724
+Source Server Version : 50723
 Source Host           : localhost:3306
 Source Database       : school_leave_system
 
 Target Server Type    : MYSQL
-Target Server Version : 50724
+Target Server Version : 50723
 File Encoding         : 65001
 
-Date: 2019-05-13 03:10:21
+Date: 2019-05-21 15:59:42
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -59,7 +59,7 @@ DROP TABLE IF EXISTS `leave`;
 CREATE TABLE `leave` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `user_id` int(11) NOT NULL COMMENT '请假用户的id',
-  `clazz_name` varchar(255) NOT NULL COMMENT '请假学生请假时的完整班级名，如2019级计算机与信息工程学院软件工程1班',
+  `clazz_id` int(11) NOT NULL COMMENT '请假学生请假当时的班级id',
   `telephone` int(11) NOT NULL COMMENT '请假学生请假时的电话',
   `start_date` date NOT NULL COMMENT '请假的开始日期',
   `start_lesson` int(2) NOT NULL COMMENT '从第X节课开始请假',
@@ -73,8 +73,10 @@ CREATE TABLE `leave` (
   PRIMARY KEY (`id`),
   KEY `user_id` (`user_id`),
   KEY `reviewer_id` (`reviewer_id`),
+  KEY `clazz_id` (`clazz_id`),
   CONSTRAINT `leave_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `leave_ibfk_2` FOREIGN KEY (`reviewer_id`) REFERENCES `user` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+  CONSTRAINT `leave_ibfk_2` FOREIGN KEY (`reviewer_id`) REFERENCES `user` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `leave_ibfk_3` FOREIGN KEY (`clazz_id`) REFERENCES `clazz` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- ----------------------------
@@ -117,7 +119,7 @@ CREATE TABLE `permission_clazz` (
   KEY `class_id` (`clazz_id`),
   CONSTRAINT `permission_clazz_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `permission_clazz_ibfk_2` FOREIGN KEY (`clazz_id`) REFERENCES `clazz` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Table structure for permission_collage
@@ -151,5 +153,5 @@ CREATE TABLE `user` (
   PRIMARY KEY (`id`),
   KEY `clazz_id` (`clazz_id`),
   CONSTRAINT `user_ibfk_1` FOREIGN KEY (`clazz_id`) REFERENCES `clazz` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
 SET FOREIGN_KEY_CHECKS=1;
