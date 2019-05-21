@@ -213,6 +213,9 @@ public class UserServiceImpl implements UserService {
 		if(willGetUserId == null) {
 			return new JSONResult(JSONCodeType.INVALID_PARAMS, Messages.getString("InvalidParams"), null); //$NON-NLS-1$
 		}
+		if(fromUser == null) {
+			return JSONResult.ACCESS_DENIED;
+		}
 		User willGetUser = null;
 		try {
 			willGetUser = userDao.selectUserById(willGetUserId);
@@ -225,10 +228,9 @@ public class UserServiceImpl implements UserService {
 		}
 		//如果查看的不是自己的账号信息 验证权限
 		if(willGetUserId != fromUser.getId()) {
-			JSONResult accessDenied = new JSONResult(JSONCodeType.ACCESS_DENIED, Messages.getString("AccessDenied"), null); //$NON-NLS-1$
 			check:switch (fromUser.getType()) {
 			case NORMAL_USER:
-				return accessDenied;
+				return JSONResult.ACCESS_DENIED;
 			case CLAZZ_ADMIN:
 				List<PermissionClazz> permissionClazzes = fromUser.getPermissionClazzes();
 				for (PermissionClazz permissionClazz : permissionClazzes) {
@@ -236,7 +238,7 @@ public class UserServiceImpl implements UserService {
 						break check;
 					}
 				}
-				return accessDenied;
+				return JSONResult.ACCESS_DENIED;
 			case COLLAGE_ADMIN:
 				List<PermissionCollage> permissionCollages = fromUser.getPermissionCollages();
 				for (PermissionCollage permissionCollage : permissionCollages) {
@@ -244,11 +246,11 @@ public class UserServiceImpl implements UserService {
 						break check;
 					}
 				}
-				return accessDenied;
+				return JSONResult.ACCESS_DENIED;
 			case SUPER_ADMIN:
 				break check;
 			default:
-				return accessDenied;
+				return JSONResult.ACCESS_DENIED;
 			}
 		}
 		HashMap<String, Object> data = new HashMap<String, Object>();

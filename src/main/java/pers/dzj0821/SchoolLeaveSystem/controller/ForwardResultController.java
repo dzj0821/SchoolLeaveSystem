@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import pers.dzj0821.SchoolLeaveSystem.Messages;
 import pers.dzj0821.SchoolLeaveSystem.annotation.OnlyForwardAccess;
 import pers.dzj0821.SchoolLeaveSystem.pojo.json.JSONResult;
-import pers.dzj0821.SchoolLeaveSystem.type.JSONCodeType;
 
 @Controller
 public class ForwardResultController {
@@ -26,7 +25,7 @@ public class ForwardResultController {
 		JSONResult result = (JSONResult) request.getAttribute(Messages.getString("NeedForwardResultRequestName")); //$NON-NLS-1$
 		if(result == null) {
 			logger.warn(Messages.getString("ForwardResultMissingResult"));
-			return new JSONResult(JSONCodeType.SERVER_ERROR, Messages.getString("ServerError"), null); //$NON-NLS-1$
+			return JSONResult.SERVER_ERROR;
 		}
 		return result;
 	}

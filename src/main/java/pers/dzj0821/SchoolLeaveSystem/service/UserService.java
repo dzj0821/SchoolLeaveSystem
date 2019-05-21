@@ -14,6 +14,13 @@ public interface UserService {
 	public JSONResult modify(User user, String base64RSAOldPassword, String base64RSANewPassword, String name, String telephone, PrivateKey privateKey);
 	
 	public JSONResult logout();
-	
+	/**
+	 * 某用户请求根据id获取另一用户信息
+	 * @param willGetUserId 请求获取的用户id
+	 * @param fromUser 发起请求的用户
+	 * @return ACCESS_DENIED 发起请求的用户权限不足
+	 *  <br>USER_NOT_FOUND 目标用户不存在
+	 *  <br>SUCCESS 请求成功，数据在data.user内，类型为UserInfoView
+	 */
 	public JSONResult getUserInfo(Integer willGetUserId, User fromUser);
 }

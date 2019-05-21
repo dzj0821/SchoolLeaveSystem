@@ -74,8 +74,7 @@ public class ApiUserController {
 			try {
 				response.sendError(403);
 			} catch (IOException e) {
-				logger.warn(Messages.getString("SQLError"), e); //$NON-NLS-1$
-				return JSONResult.SERVER_ERROR;
+				logger.warn(e);
 			}
 			return null;
 		}
