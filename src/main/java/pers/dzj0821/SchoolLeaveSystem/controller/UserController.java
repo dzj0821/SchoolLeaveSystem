@@ -14,8 +14,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import pers.dzj0821.SchoolLeaveSystem.Messages;
 import pers.dzj0821.SchoolLeaveSystem.adapter.HttpSessionAdapter;
+import pers.dzj0821.SchoolLeaveSystem.adapter.ModelAdapter;
 import pers.dzj0821.SchoolLeaveSystem.annotation.UserTypeRequired;
 import pers.dzj0821.SchoolLeaveSystem.pojo.json.JSONResult;
+import pers.dzj0821.SchoolLeaveSystem.pojo.view.UserInfoView;
 import pers.dzj0821.SchoolLeaveSystem.service.UserService;
 import pers.dzj0821.SchoolLeaveSystem.type.JSONCodeType;
 import pers.dzj0821.SchoolLeaveSystem.type.UserType;
@@ -54,20 +56,20 @@ public class UserController {
 		model.addAttribute(Messages.getString("PublicKeyModelName"), publicKey); //$NON-NLS-1$
 		model.addAttribute(Messages.getString("RSACreateTimestampModelName"), //$NON-NLS-1$
 		session.getAttribute(Messages.getString("RSACreateTimestampSessionName"))); //$NON-NLS-1$
-		//TODO 添加nls标记
-		return Messages.getString("ModifyUserInfoPage");
+		return Messages.getString("ModifyUserInfoPage"); //$NON-NLS-1$
 	}
 	
 	@GetMapping("/info")
 	public String info(Integer id, Model model, HttpServletRequest request, HttpSession session) {
 		HttpSessionAdapter sessionAdapter = new HttpSessionAdapter(session);
+		ModelAdapter modelAdapter = new ModelAdapter(model);
 		JSONResult result = userService.getUserInfo(id, sessionAdapter.getUser());
 		if(result.getCode() == JSONCodeType.SUCCESS) {
-			//TODO 封装model
-			model.addAttribute("userInfoView", result.getData().get(Messages.getString("UserInfoDataUserName")));
-			return "user/info";
+			UserInfoView view = (UserInfoView) result.getData().get(Messages.getString("UserInfoDataUserName")); //$NON-NLS-1$
+			modelAdapter.setUserInfoView(view);
+			return Messages.getString("UserInfoPage"); //$NON-NLS-1$
 		}
-		model.addAttribute("result", result);
-		return "error";
+		modelAdapter.setResult(result);
+		return Messages.getString("ErrorPage"); //$NON-NLS-1$
 	}
 }

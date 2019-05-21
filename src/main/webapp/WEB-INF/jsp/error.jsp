@@ -7,7 +7,7 @@
 <title>错误</title>
 </head>
 <body>
-<p>错误代码：${result.code }</p>
+<p>错误代码：${result.code.code }</p>
 <p>错误信息：${result.message }</p>
 </body>
 </html>

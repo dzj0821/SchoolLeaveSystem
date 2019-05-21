@@ -1,20 +1,32 @@
 package pers.dzj0821.SchoolLeaveSystem.type;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonValue;
 
-@JsonFormat(shape = JsonFormat.Shape.NUMBER_INT)
 public enum JSONCodeType {
-	SUCCESS,
-	INVALID_USERNAME,
-	INVALID_NAME,
-	INVALID_TELEPHONE,
-	INVALID_PASSWORD,
-	SERVER_ERROR,
-	REGISTER_USERNAME_ALREADY_EXIST,
-	SESSION_TIMEOUT,
-	USER_NOT_FOUND,
-	USERNAME_OR_PASSWORD_ERROR,
-	ACCESS_DENIED,
-	OLD_PASSWORD_ERROR,
-	INVALID_PARAMS
+	SUCCESS(100),
+	
+	INVALID_USERNAME(200),
+	INVALID_NAME(201),
+	INVALID_TELEPHONE(202),
+	INVALID_PASSWORD(203),
+	INVALID_PARAMS(204),
+	
+	SERVER_ERROR(300),
+	
+	REGISTER_USERNAME_ALREADY_EXIST(400),
+	SESSION_TIMEOUT(401),
+	USER_NOT_FOUND(402),
+	USERNAME_OR_PASSWORD_ERROR(403),
+	ACCESS_DENIED(404),
+	OLD_PASSWORD_ERROR(405),
+	;
+	
+	private int code;
+	private JSONCodeType(int code) {
+		this.code = code;
+	}
+	@JsonValue
+	public int getCode() {
+		return code;
+	}
 }

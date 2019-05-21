@@ -1,18 +1,24 @@
 package pers.dzj0821.SchoolLeaveSystem.type;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonValue;
 
-@JsonFormat(shape = JsonFormat.Shape.NUMBER_INT)
 public enum UserType {
-	SUPER_ADMIN("超级管理员"),
-	COLLAGE_ADMIN("学院管理员"),
-	CLAZZ_ADMIN("班级管理员"),
-	NORMAL_USER("普通用户");
+	SUPER_ADMIN(0, "超级管理员"),
+	COLLAGE_ADMIN(1, "学院管理员"),
+	CLAZZ_ADMIN(2, "班级管理员"),
+	NORMAL_USER(3, "普通用户");
 	
+	private int code;
 	private String name;
 	
-	private UserType(String name) {
+	private UserType(int code, String name) {
+		this.code = code;
 		this.name = name;
+	}
+	
+	@JsonValue
+	public int getCode() {
+		return code;
 	}
 	
 	public String getName() {
