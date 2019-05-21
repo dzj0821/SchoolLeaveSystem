@@ -146,7 +146,7 @@
 			<version>[1.2.31,)</version>
 		</dependency>
 		<!-- log end -->
-		
+
 		<!-- 映入JSON -->
 		<dependency>
 			<groupId>org.codehaus.jackson</groupId>
@@ -209,9 +209,17 @@
 			<artifactId>jackson-databind</artifactId>
 			<version>${jackson.version}</version>
 		</dependency>
+		<!-- bean转换Map工具类 -->
+		<dependency>
+			<groupId>commons-beanutils</groupId>
+			<artifactId>commons-beanutils</artifactId>
+			<version>1.9.3</version>
+		</dependency>
+
 
 	</dependencies>
 
+<!-- 暂未使用
 	<build>
 		<finalName>SchoolLeaveSystem</finalName>
 		<plugins>
@@ -227,5 +235,5 @@
 			</plugin>
 		</plugins>
 	</build>
-
+ -->
 </project>

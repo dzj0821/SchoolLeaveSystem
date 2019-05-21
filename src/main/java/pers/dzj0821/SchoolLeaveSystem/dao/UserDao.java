@@ -1,6 +1,7 @@
 package pers.dzj0821.SchoolLeaveSystem.dao;
 
 import org.apache.ibatis.annotations.Insert;
+import org.apache.ibatis.annotations.Many;
 import org.apache.ibatis.annotations.One;
 import org.apache.ibatis.annotations.Options;
 import org.apache.ibatis.annotations.Result;
@@ -14,15 +15,28 @@ import pers.dzj0821.SchoolLeaveSystem.pojo.User;
 public interface UserDao {
 	@Select("select * from user where username = #{username}")
 	@Results({
-		@Result(column="clazz_id", property="clazz",one=@One(select="pers.dzj0821.SchoolLeaveSystem.dao.ClazzDao.selectClazzById"))
+		@Result(column = "id", property = "id", id = true),
+		@Result(column = "clazz_id", property = "clazz", one = @One(select = "pers.dzj0821.SchoolLeaveSystem.dao.ClazzDao.selectClazzById")),
+		@Result(column = "id", property = "permissionClazzes", many = @Many(select = "pers.dzj0821.SchoolLeaveSystem.dao.PermissionClazzDao.selectPermissionClazzesByUserId")),
+		@Result(column = "id", property = "permissionCollages", many = @Many(select = "pers.dzj0821.SchoolLeaveSystem.dao.PermissionCollageDao.selectPermissionCollagesByUserId"))
 	})
 	User selectUserByUsername(String username) throws Exception;
 	
+	@Select("select * from user where id = #{id}")
+	@Results({
+		@Result(column = "id", property = "id", id = true),
+		@Result(column = "clazz_id", property = "clazz", one = @One(select = "pers.dzj0821.SchoolLeaveSystem.dao.ClazzDao.selectClazzById")),
+		@Result(column = "id", property = "permissionClazzes", many = @Many(select = "pers.dzj0821.SchoolLeaveSystem.dao.PermissionClazzDao.selectPermissionClazzesByUserId"))
+	})
+	User selectUserById(Integer id) throws Exception;
+	
 	@Insert("insert into user(username, password, type, name, telephone) values(#{username}, #{password}, #{type}, #{name}, #{telephone})")
-	@Options(useGeneratedKeys=true, keyProperty="id")
+	//用于在语句执行完毕后返回新插入的主键
+	@Options(useGeneratedKeys = true, keyProperty = "id")
 	int insertUser(User user) throws Exception;
 	
-	@UpdateProvider(type=UserDaoProvider.class, method="updateUserById")
+	@UpdateProvider(type = UserDaoProvider.class, method = "updateUserById")
+	//默认返回受影响的行数
 	int updateUserById(User user) throws Exception;
 	
 	class UserDaoProvider {

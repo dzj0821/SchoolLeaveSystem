@@ -1,11 +1,17 @@
 package pers.dzj0821.SchoolLeaveSystem.pojo;
 
 public class Clazz {
+	//TODO 将基础数据类型替换为包装类
 	private int id;
 	private int no;
 	private Grade grade;
 	private Major major;
 
+	public String clazzFullName() {
+		//如：2015级网络工程1班
+		return grade.getYear() + "级" + major.getCollage().getName() + major.getName() + no + "班";
+	}
+	
 	@Override
 	public String toString() {
 		return "Class [id=" + id + ", no=" + no + ", grade=" + grade + ", major=" + major + "]";

@@ -1,8 +1,11 @@
 package pers.dzj0821.SchoolLeaveSystem.pojo;
 
+import java.util.List;
+
 import pers.dzj0821.SchoolLeaveSystem.type.UserType;
 
 public class User {
+	//TODO 将基础数据类型替换为包装类
 	private int id;
 	private String username;
 	private String password;
@@ -12,6 +15,8 @@ public class User {
 	private Clazz clazz;
 	private String clientToken;
 	private String clientId;
+	private List<PermissionClazz> permissionClazzes;
+	private List<PermissionCollage> permissionCollages;
 
 	public User() {
 	}
@@ -105,4 +110,21 @@ public class User {
 	public void setClientId(String clientId) {
 		this.clientId = clientId;
 	}
+
+	public List<PermissionClazz> getPermissionClazzes() {
+		return permissionClazzes;
+	}
+
+	public void setPermissionClazzes(List<PermissionClazz> permissionClazzes) {
+		this.permissionClazzes = permissionClazzes;
+	}
+
+	public List<PermissionCollage> getPermissionCollages() {
+		return permissionCollages;
+	}
+
+	public void setPermissionCollages(List<PermissionCollage> permissionCollages) {
+		this.permissionCollages = permissionCollages;
+	}
+	
 }

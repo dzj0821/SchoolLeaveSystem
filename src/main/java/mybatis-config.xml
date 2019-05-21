@@ -10,7 +10,8 @@
         <setting name="mapUnderscoreToCamelCase" value="true"/>
         <!-- 代理 -->
         <setting name="proxyFactory" value="CGLIB"/>
-        <setting name="lazyLoadingEnabled" value="true"/>
+        <!-- 懒加载 -->
+        <setting name="lazyLoadingEnabled" value="false"/>
     </settings>
     <!-- 指定使用枚举序号转换 -->
     <typeHandlers>

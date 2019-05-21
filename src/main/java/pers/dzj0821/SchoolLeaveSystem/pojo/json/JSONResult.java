@@ -5,15 +5,34 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+import pers.dzj0821.SchoolLeaveSystem.Messages;
 import pers.dzj0821.SchoolLeaveSystem.type.JSONCodeType;
-
+//TODO get方法不从map中取，而是在set时复制一份引用
 public class JSONResult extends HashMap<String, Object> {
 	private static final long serialVersionUID = 1L;
+	private static final String CODE_KEY_NAME = "code";
+	private static final String DATA_KEY_NAME = "data";
+	private static final String MESSAGE_KEY_NAME = "message";
+	public static final JSONResult SERVER_ERROR = new JSONResult(JSONCodeType.SERVER_ERROR, Messages.getString("ServerError"), null); //$NON-NLS-1$
+	public static final JSONResult ACCESS_DENIED = new JSONResult(JSONCodeType.ACCESS_DENIED, Messages.getString("AccessDenied"), null);
 
 	public JSONResult(JSONCodeType codeType, String message, Map<String, Object> data) {
-		put("code", codeType);
-		put("message", message);
-		put("data", data);
+		put(CODE_KEY_NAME, codeType);
+		put(MESSAGE_KEY_NAME, message);
+		put(DATA_KEY_NAME, data);
+	}
+	
+	public JSONCodeType getCode() {
+		return (JSONCodeType) get(CODE_KEY_NAME);
+	}
+	
+	public String getMessage() {
+		return (String) get(MESSAGE_KEY_NAME);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public Map<String, Object> getData(){
+		return (Map<String, Object>) get(DATA_KEY_NAME);
 	}
 	
 	//意义不明的重写
