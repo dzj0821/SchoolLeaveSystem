@@ -2,15 +2,15 @@
 Navicat MySQL Data Transfer
 
 Source Server         : localhost
-Source Server Version : 50723
+Source Server Version : 50724
 Source Host           : localhost:3306
 Source Database       : school_leave_system
 
 Target Server Type    : MYSQL
-Target Server Version : 50723
+Target Server Version : 50724
 File Encoding         : 65001
 
-Date: 2019-05-21 15:59:42
+Date: 2019-05-24 17:42:16
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -77,6 +77,19 @@ CREATE TABLE `leave` (
   CONSTRAINT `leave_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `leave_ibfk_2` FOREIGN KEY (`reviewer_id`) REFERENCES `user` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `leave_ibfk_3` FOREIGN KEY (`clazz_id`) REFERENCES `clazz` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- ----------------------------
+-- Table structure for leave_image
+-- ----------------------------
+DROP TABLE IF EXISTS `leave_image`;
+CREATE TABLE `leave_image` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `path` mediumtext NOT NULL,
+  `leave_id` int(11) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `leave_id` (`leave_id`),
+  CONSTRAINT `leave_image_ibfk_1` FOREIGN KEY (`leave_id`) REFERENCES `leave` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- ----------------------------
