@@ -49,23 +49,33 @@ public class LeaveServiceImpl implements LeaveService {
 		}
 		// 获取日历对象，通过日历对象获取当前日期
 		Calendar currentCalendar = Calendar.getInstance();
+		int currentYear = currentCalendar.get(Calendar.YEAR);
+		int currentMonth = currentCalendar.get(Calendar.MONTH);
+		int currentDay = currentCalendar.get(Calendar.DATE);
+		// 这个月的最后一天
+		int lastDay = currentCalendar.getActualMaximum(Calendar.DATE);
+		// 验证日期
+		// 因为Calendar的月份从0开始，所以startMonth和endMonth减1
+		//TODO 优化判断流程
+		if (startYear < currentYear || startYear >= currentYear + 3 || startMonth - 1 < currentMonth || startMonth > 12
+				|| startDay < currentDay || startDay > lastDay || endYear < currentYear || endYear >= currentYear + 3
+				|| endMonth - 1 < currentMonth || endMonth > 12 || endDay < currentDay || endDay > lastDay) {
+			return new JSONResult(JSONCodeType.INVALID_PARAMS, "日期不符合要求", null);
+		}
 		// 只有年月日用于比较的Calendar
 		Calendar currentCompareCalendar = Calendar.getInstance();
 		currentCompareCalendar.clear();
 		// 设置为当前日期
-		currentCompareCalendar.set(currentCalendar.get(Calendar.YEAR), currentCalendar.get(Calendar.MONTH),
-				currentCalendar.get(Calendar.DATE));
+		currentCompareCalendar.set(currentYear, currentMonth, currentDay);
 		// 请假开始日期的Calendar
 		Calendar startCalendar = Calendar.getInstance();
 		startCalendar.clear();
-		startCalendar.set(startYear, startMonth, startDay);
+		startCalendar.set(startYear, startMonth - 1, startDay);
 		// 请假结束日期的Calendar
 		Calendar endCalendar = Calendar.getInstance();
 		endCalendar.clear();
-		endCalendar.set(endYear, endMonth, endDay);
+		endCalendar.set(endYear, endMonth - 1, endDay);
 		// 请假开始日期和截止日期都必须在申请日期之后，且截止日期不能在开始日期之前
-		logger.info(currentCompareCalendar.compareTo(startCalendar));
-		logger.info(currentCompareCalendar.compareTo(endCalendar));
 		if (currentCompareCalendar.compareTo(startCalendar) > 0 || currentCompareCalendar.compareTo(endCalendar) > 0) {
 			// TODO 外部化字符串
 			return new JSONResult(JSONCodeType.INVALID_PARAMS, "请假开始和截止日期不能小于今天", null);
@@ -96,10 +106,12 @@ public class LeaveServiceImpl implements LeaveService {
 		// 验证部分结束
 		// 转换日期格式
 		DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-		Formatter formatter = new Formatter();
-		String startDateString = formatter.format("%04d-%02d-%02d", startYear, startMonth, startDay).toString();
-		String endDateString = formatter.format("%04d-%02d-%02d", endYear, endMonth, endDay).toString();
-		formatter.close();
+		Formatter startDateFormatter = new Formatter();
+		String startDateString = startDateFormatter.format("%04d-%02d-%02d", startYear, startMonth, startDay).toString();
+		startDateFormatter.close();
+		Formatter endDateFormatter = new Formatter();
+		String endDateString = endDateFormatter.format("%04d-%02d-%02d", endYear, endMonth, endDay).toString();
+		endDateFormatter.close();
 		Date startDate = null;
 		Date endDate = null;
 		try {
@@ -109,7 +121,7 @@ public class LeaveServiceImpl implements LeaveService {
 			logger.warn(e);
 			return JSONResult.SERVER_ERROR;
 		}
-		//记录请假申请
+		// 记录请假申请
 		Leave leave = new Leave(0, user, user.getClazz(), user.getTelephone(), startDate, startLesson, endDate,
 				endLesson, reason, null, LeaveType.WAIT, null, null, null);
 		try {
@@ -122,29 +134,31 @@ public class LeaveServiceImpl implements LeaveService {
 		// 保存图片
 		if (images != null) {
 			for (int i = 0; i < images.length; i++) {
-				//改变文件名
-				String imageName = SHA256Util.encrypt(SHA256Util.encrypt(Integer.toString(leave.getId())) + Integer.toString(i));
+				// 改变文件名
+				String imageName = SHA256Util
+						.encrypt(SHA256Util.encrypt(Integer.toString(leave.getId())) + Integer.toString(i));
 				String path = null;
 				String originalFilename = images[i].getOriginalFilename();
-				if(originalFilename.endsWith(".jpg")) {
+				if (originalFilename.endsWith(".jpg")) {
 					path = "upload/" + imageName + ".jpg";
 				} else {
 					path = "upload/" + imageName + ".png";
 				}
 				File file = new File(path);
-				//创建必须目录
-				if(!file.mkdirs()) {
+				// 创建必须目录
+				if (!file.mkdirs()) {
+					logger.warn("创建目录失败");
 					return JSONResult.SERVER_ERROR;
 				}
 				try {
-					//保存文件
+					// 保存文件
 					images[i].transferTo(new File(path));
 				} catch (IllegalStateException | IOException e) {
 					logger.warn(e);
 					return JSONResult.SERVER_ERROR;
 				}
 				LeaveImage leaveImage = new LeaveImage(0, path, leave);
-				//插入数据库
+				// 插入数据库
 				try {
 					leaveImageDao.insertLeaveImage(leaveImage);
 				} catch (Exception e) {
@@ -155,5 +169,4 @@ public class LeaveServiceImpl implements LeaveService {
 		}
 		return new JSONResult(JSONCodeType.SUCCESS, "申请成功，等待管理员审核", null);
 	}
-
 }

@@ -25,6 +25,11 @@ function addImage(){
 	line.append(input);
 	document.getElementById("images").append(line);
 }
+
+function clearImages(){
+	document.getElementById("images").innerHTML = "";
+	image_count = 0;
+}
 </script>
 </head>
 <body>
@@ -89,6 +94,7 @@ function addImage(){
 <div id="images">
 </div>
 <button type="button" onclick="addImage()">添加图片</button>
+<a href="javascript:clearImages()">清空</a>
 <br>
 <input type="submit"/>
 </form>
