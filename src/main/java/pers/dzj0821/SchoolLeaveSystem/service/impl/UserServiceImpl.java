@@ -34,6 +34,9 @@ import pers.dzj0821.SchoolLeaveSystem.util.SHA256Util;
  */
 @Service
 public class UserServiceImpl implements UserService {
+	private static final String USERNAME_REGEX = "^[0-9]{6,10}$";
+	private static final String NAME_REGEX = "[\\u4e00-\\u9fa5]{2,4}";
+	private static final String TELEPHONE_REGEX = "^(13|14|15|17|18|19)[0-9]{9}$";
 
 	@Autowired
 	private UserDao userDao;
@@ -44,13 +47,13 @@ public class UserServiceImpl implements UserService {
 			PrivateKey privateKey) {
 		//TODO 通过注解进行参数验证
 		// 验证输入
-		if (!Pattern.matches("^[0-9]{6,10}$", username)) { //$NON-NLS-1$
+		if (!Pattern.matches(USERNAME_REGEX, username)) { //$NON-NLS-1$
 			return new JSONResult(JSONCodeType.INVALID_PARAMS, Messages.getString("InvalidUsername"), null); //$NON-NLS-1$
 		}
-		if (!Pattern.matches("[\\u4e00-\\u9fa5]{2,4}", name)) { //$NON-NLS-1$
+		if (!Pattern.matches(NAME_REGEX, name)) { //$NON-NLS-1$
 			return new JSONResult(JSONCodeType.INVALID_PARAMS, Messages.getString("InvalidName"), null); //$NON-NLS-1$
 		}
-		if (!Pattern.matches("^(13|14|15|17|18|19)[0-9]{9}$", telephone)) { //$NON-NLS-1$
+		if (!Pattern.matches(TELEPHONE_REGEX, telephone)) { //$NON-NLS-1$
 			return new JSONResult(JSONCodeType.INVALID_PARAMS, Messages.getString("InvalidTelephone"), null); //$NON-NLS-1$
 		}
 		JSONResult Invalidpassword = new JSONResult(JSONCodeType.INVALID_PARAMS,
@@ -94,7 +97,7 @@ public class UserServiceImpl implements UserService {
 	public JSONResult login(String username, String base64RSAPassword, PrivateKey privateKey) {
 		//TODO 通过注解进行参数验证
 		// 验证输入
-		if (!Pattern.matches(Messages.getString("UsernameRegex"), username)) { //$NON-NLS-1$
+		if (!Pattern.matches(USERNAME_REGEX, username)) { //$NON-NLS-1$
 			return new JSONResult(JSONCodeType.INVALID_PARAMS, Messages.getString("InvalidUsername"), null); //$NON-NLS-1$
 		}
 		JSONResult Invalidpassword = new JSONResult(JSONCodeType.INVALID_PARAMS,
@@ -138,13 +141,13 @@ public class UserServiceImpl implements UserService {
 		if("".equals(name)) { //$NON-NLS-1$
 			name = null;
 		}
-		if(name != null && !Pattern.matches(Messages.getString("NameRegex"), name)) { //$NON-NLS-1$
+		if(name != null && !Pattern.matches(NAME_REGEX, name)) { //$NON-NLS-1$
 			return new JSONResult(JSONCodeType.INVALID_PARAMS, Messages.getString("InvalidName"), null); //$NON-NLS-1$
 		}
 		if("".equals(telephone)) { //$NON-NLS-1$
 			telephone = null;
 		}
-		if (telephone != null && !Pattern.matches("^(13|14|15|17|18|19)[0-9]{9}$", telephone)) { //$NON-NLS-1$
+		if (telephone != null && !Pattern.matches(TELEPHONE_REGEX, telephone)) { //$NON-NLS-1$
 			return new JSONResult(JSONCodeType.INVALID_PARAMS, Messages.getString("InvalidTelephone"), null); //$NON-NLS-1$
 		}
 		//密码解密
