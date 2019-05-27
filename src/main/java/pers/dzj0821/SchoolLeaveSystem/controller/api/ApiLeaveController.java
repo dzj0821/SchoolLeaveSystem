@@ -36,6 +36,6 @@ public class ApiLeaveController {
 		HttpSessionAdapter sessionAdapter = new HttpSessionAdapter(session);
 		User user = sessionAdapter.getUser();
 		return leaveService.create(user, startYear, startMonth, startDay, startLesson, endYear, endMonth, endDay, endLesson,
-				reason, images);
+				reason, images, session.getServletContext().getRealPath("/"));
 	}
 }

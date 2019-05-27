@@ -38,7 +38,7 @@ public class LeaveServiceImpl implements LeaveService {
 
 	@Override
 	public JSONResult create(User user, int startYear, int startMonth, int startDay, int startLesson, int endYear,
-			int endMonth, int endDay, int endLesson, String reason, CommonsMultipartFile[] images) {
+			int endMonth, int endDay, int endLesson, String reason, CommonsMultipartFile[] images, String systemPath) {
 		// 不是普通用户不能请假
 		if (user.getType() != UserType.NORMAL_USER) {
 			return JSONResult.ACCESS_DENIED;
@@ -109,6 +109,7 @@ public class LeaveServiceImpl implements LeaveService {
 		Formatter startDateFormatter = new Formatter();
 		String startDateString = startDateFormatter.format("%04d-%02d-%02d", startYear, startMonth, startDay).toString();
 		startDateFormatter.close();
+		//Formatter不能重复使用
 		Formatter endDateFormatter = new Formatter();
 		String endDateString = endDateFormatter.format("%04d-%02d-%02d", endYear, endMonth, endDay).toString();
 		endDateFormatter.close();
@@ -134,25 +135,26 @@ public class LeaveServiceImpl implements LeaveService {
 		// 保存图片
 		if (images != null) {
 			for (int i = 0; i < images.length; i++) {
-				// 改变文件名
+				// 根据请假的id和图片序号改变文件名
 				String imageName = SHA256Util
 						.encrypt(SHA256Util.encrypt(Integer.toString(leave.getId())) + Integer.toString(i));
-				String path = null;
+				//保存在upload目录下
+				String path = "upload/";
 				String originalFilename = images[i].getOriginalFilename();
 				if (originalFilename.endsWith(".jpg")) {
-					path = "upload/" + imageName + ".jpg";
+					path += imageName + ".jpg";
 				} else {
-					path = "upload/" + imageName + ".png";
+					path = imageName + ".png";
 				}
-				File file = new File(path);
-				// 创建必须目录
-				if (!file.mkdirs()) {
+				File file = new File(systemPath, path);
+				// 如果目录不存在且创建目录失败
+				if (!file.exists() && !file.mkdirs()) {
 					logger.warn("创建目录失败");
 					return JSONResult.SERVER_ERROR;
 				}
 				try {
 					// 保存文件
-					images[i].transferTo(new File(path));
+					images[i].transferTo(file);
 				} catch (IllegalStateException | IOException e) {
 					logger.warn(e);
 					return JSONResult.SERVER_ERROR;
