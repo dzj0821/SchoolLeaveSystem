@@ -2,15 +2,15 @@
 Navicat MySQL Data Transfer
 
 Source Server         : localhost
-Source Server Version : 50724
+Source Server Version : 50723
 Source Host           : localhost:3306
 Source Database       : school_leave_system
 
 Target Server Type    : MYSQL
-Target Server Version : 50724
+Target Server Version : 50723
 File Encoding         : 65001
 
-Date: 2019-05-24 17:42:16
+Date: 2019-05-27 09:32:23
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -60,7 +60,7 @@ CREATE TABLE `leave` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `user_id` int(11) NOT NULL COMMENT '请假用户的id',
   `clazz_id` int(11) NOT NULL COMMENT '请假学生请假当时的班级id',
-  `telephone` int(11) NOT NULL COMMENT '请假学生请假时的电话',
+  `telephone` varchar(11) NOT NULL COMMENT '请假学生请假时的电话',
   `start_date` date NOT NULL COMMENT '请假的开始日期',
   `start_lesson` int(2) NOT NULL COMMENT '从第X节课开始请假',
   `end_date` date NOT NULL COMMENT '请假的结束日期',
