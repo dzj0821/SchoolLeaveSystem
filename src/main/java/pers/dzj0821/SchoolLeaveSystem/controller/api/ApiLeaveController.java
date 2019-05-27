@@ -1,0 +1,41 @@
+package pers.dzj0821.SchoolLeaveSystem.controller.api;
+
+import java.util.Map;
+
+import javax.servlet.http.HttpSession;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.commons.CommonsMultipartFile;
+
+import pers.dzj0821.SchoolLeaveSystem.adapter.HttpSessionAdapter;
+import pers.dzj0821.SchoolLeaveSystem.annotation.UserTypeRequired;
+import pers.dzj0821.SchoolLeaveSystem.pojo.User;
+import pers.dzj0821.SchoolLeaveSystem.service.LeaveService;
+import pers.dzj0821.SchoolLeaveSystem.type.UserType;
+
+@RequestMapping("/api/leave")
+@Controller
+public class ApiLeaveController {
+
+	@Autowired
+	private LeaveService leaveService;
+
+	@PostMapping("/create")
+	@UserTypeRequired(UserType.NORMAL_USER)
+	@ResponseBody
+	public Map<String, Object> create(@RequestParam int startYear, @RequestParam int startMonth,
+			@RequestParam int startDay, @RequestParam int startLesson, @RequestParam int endYear,
+			@RequestParam int endMonth, @RequestParam int endDay, @RequestParam int endLesson,
+			@RequestParam String reason, @RequestParam(value = "image", required = false) CommonsMultipartFile[] images,
+			HttpSession session) {
+		HttpSessionAdapter sessionAdapter = new HttpSessionAdapter(session);
+		User user = sessionAdapter.getUser();
+		return leaveService.create(user, startYear, startMonth, startDay, startLesson, endYear, endMonth, endDay, endLesson,
+				reason, images, session.getServletContext().getRealPath("/"));
+	}
+}

@@ -21,7 +21,7 @@ import pers.dzj0821.SchoolLeaveSystem.pojo.view.UserInfoView;
 import pers.dzj0821.SchoolLeaveSystem.service.UserService;
 import pers.dzj0821.SchoolLeaveSystem.type.JSONCodeType;
 import pers.dzj0821.SchoolLeaveSystem.type.UserType;
-
+//TODO 修改为get形式
 @Controller
 @RequestMapping("/user")
 public class UserController {

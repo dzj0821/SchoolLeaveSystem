@@ -20,6 +20,7 @@ public class UserTypeRequiredInterceptor extends HandlerInterceptorAdapter {
 		}
 		UserType needUserType = userTypeRequired.value();
 		User user = (User) request.getSession().getAttribute(Messages.getString("UserObjectSessionName"));
+		//FIXME 修改检查方式为code
 		if(user == null || user.getType().ordinal() > needUserType.ordinal()) {
 			response.sendError(403);
 			return false;
