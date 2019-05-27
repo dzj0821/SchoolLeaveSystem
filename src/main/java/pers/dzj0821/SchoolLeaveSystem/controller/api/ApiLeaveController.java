@@ -18,6 +18,11 @@ import pers.dzj0821.SchoolLeaveSystem.pojo.User;
 import pers.dzj0821.SchoolLeaveSystem.service.LeaveService;
 import pers.dzj0821.SchoolLeaveSystem.type.UserType;
 
+/**
+ * 请假模块的api接口
+ * @author dzj0821
+ *
+ */
 @RequestMapping("/api/leave")
 @Controller
 public class ApiLeaveController {
@@ -25,6 +30,21 @@ public class ApiLeaveController {
 	@Autowired
 	private LeaveService leaveService;
 
+	/**
+	 * 创建假条
+	 * @param startYear 请假起始年份
+	 * @param startMonth 请假起始月份
+	 * @param startDay 请假起始日期
+	 * @param startLesson 请假开始第X节课
+	 * @param endYear 请假结束年份
+	 * @param endMonth 请假结束月份
+	 * @param endDay 请假结束日期
+	 * @param endLesson 请假开始第Y节课
+	 * @param reason 请假原因
+	 * @param images 请假附件图片数组
+	 * @param session
+	 * @return
+	 */
 	@PostMapping("/create")
 	@UserTypeRequired(UserType.NORMAL_USER)
 	@ResponseBody

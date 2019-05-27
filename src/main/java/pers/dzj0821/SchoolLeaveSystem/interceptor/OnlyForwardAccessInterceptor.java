@@ -16,6 +16,7 @@ public class OnlyForwardAccessInterceptor extends HandlerInterceptorAdapter {
 		if(((HandlerMethod)handler).getMethodAnnotation(OnlyForwardAccess.class) == null) {
 			return true;
 		}
+		//如果访问类型不是转发
 		if(request.getDispatcherType() != DispatcherType.FORWARD) {
 			response.sendError(404);
 			return false;

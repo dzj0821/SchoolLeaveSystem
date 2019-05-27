@@ -11,10 +11,19 @@ import pers.dzj0821.SchoolLeaveSystem.Messages;
 import pers.dzj0821.SchoolLeaveSystem.annotation.UserTypeRequired;
 import pers.dzj0821.SchoolLeaveSystem.type.UserType;
 //TODO 使用自定义EL函数在JSP中取值
+/**
+ * 请假模块页面的Controller
+ * @author dzj0821
+ *
+ */
 @Controller
 @RequestMapping("/leave")
 public class LeaveController {
-	
+	/**
+	 * 创建假条页面
+	 * @param model
+	 * @return
+	 */
 	@GetMapping("/create")
 	@UserTypeRequired(UserType.NORMAL_USER)
 	public String create(Model model) {

@@ -27,6 +27,11 @@ import pers.dzj0821.SchoolLeaveSystem.type.LeaveType;
 import pers.dzj0821.SchoolLeaveSystem.type.UserType;
 import pers.dzj0821.SchoolLeaveSystem.util.SHA256Util;
 
+/**
+ * 请假模块的逻辑实现
+ * @author dzj0821
+ *
+ */
 @Service
 public class LeaveServiceImpl implements LeaveService {
 	private Logger logger = LogManager.getLogger(LeaveServiceImpl.class);

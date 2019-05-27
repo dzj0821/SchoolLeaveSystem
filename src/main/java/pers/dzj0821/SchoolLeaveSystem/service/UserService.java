@@ -6,21 +6,55 @@ import pers.dzj0821.SchoolLeaveSystem.pojo.User;
 import pers.dzj0821.SchoolLeaveSystem.pojo.json.JSONResult;
 
 public interface UserService {
-	//密码经过RSA加密
+	/**
+	 * 注册逻辑
+	 * @param username 用户名
+	 * @param base64RSAPassword 经过RSA加密后再Base64的密码
+	 * @param name 姓名
+	 * @param telephone 电话
+	 * @param privateKey 解密密码用的私钥
+	 * @return
+	 * REGISTER_USERNAME_ALREADY_EXIST 用户名已存在<br>
+	 */
 	public JSONResult register(String username, String base64RSAPassword, String name, String telephone, PrivateKey privateKey);
 	
+	/**
+	 * 登录逻辑
+	 * @param username 用户名
+	 * @param base64RSApassword 经过RSA加密后再Base64的密码
+	 * @param privateKey 解密密码用的私钥
+	 * @return
+	 * USER_NOT_FOUND 用户不存在<br>
+	 * USERNAME_OR_PASSWORD_ERROR 用户名或密码错误
+	 */
 	public JSONResult login(String username, String base64RSApassword, PrivateKey privateKey);
 	
+	/**
+	 * 修改用户资料逻辑
+	 * @param user 发起请求的用户
+	 * @param base64RSAOldPassword 旧密码
+	 * @param base64RSANewPassword 新密码
+	 * @param name 姓名
+	 * @param telephone 电话
+	 * @param privateKey 解密密码用的私钥
+	 * @return
+	 * OLD_PASSWORD_ERROR 旧密码错误
+	 */
 	public JSONResult modify(User user, String base64RSAOldPassword, String base64RSANewPassword, String name, String telephone, PrivateKey privateKey);
 	
+	/**
+	 * 登出逻辑
+	 * @return
+	 * ACCESS_DENIED 用户未登录
+	 */
 	public JSONResult logout();
 	/**
 	 * 某用户请求根据id获取另一用户信息
 	 * @param willGetUserId 请求获取的用户id
 	 * @param fromUser 发起请求的用户
-	 * @return ACCESS_DENIED 发起请求的用户权限不足
-	 *  <br>USER_NOT_FOUND 目标用户不存在
-	 *  <br>SUCCESS 请求成功，数据在data.user内，类型为UserInfoView
+	 * @return
+	 * ACCESS_DENIED 发起请求的用户权限不足<br>
+	 * USER_NOT_FOUND 目标用户不存在
 	 */
-	public JSONResult getUserInfo(Integer willGetUserId, User fromUser);
+	public JSONResult getUserInfo(int willGetUserId, User fromUser);
 }

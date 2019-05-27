@@ -20,9 +20,8 @@ public interface LeaveService {
 	 * @param reason 请假原因
 	 * @param images 请假原因附件图片，可能为null
 	 * @param systemPath 项目路径
-	 * @return 处理结果，可能有<br>
+	 * @return 
 	 * ACCESS_DENIED 用户不为普通用户
-	 * INVALID_PARAMS 参数不正确，具体信息由message字段给出
 	 * 
 	 */
 	public JSONResult create(User user, int startYear, int startMonth, int startDay, int startLesson, int endYear, int endMonth, int endDay, int endLesson, String reason, CommonsMultipartFile[] images, String systemPath);

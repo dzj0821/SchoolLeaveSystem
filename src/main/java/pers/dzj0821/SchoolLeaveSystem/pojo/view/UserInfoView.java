@@ -26,8 +26,12 @@ public class UserInfoView {
 		}
 	}
 	
-	//TODO toString方法
-	
+	@Override
+	public String toString() {
+		return "UserInfoView [id=" + id + ", username=" + username + ", type=" + type + ", name=" + name
+				+ ", telephone=" + telephone + ", clazzFullName=" + clazzFullName + "]";
+	}
+
 	public Integer getId() {
 		return id;
 	}

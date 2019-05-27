@@ -3,21 +3,41 @@ package pers.dzj0821.SchoolLeaveSystem.type;
 import com.fasterxml.jackson.annotation.JsonValue;
 
 public enum JSONCodeType {
+	/**
+	 * 成功
+	 */
 	SUCCESS(100),
-	
-	INVALID_USERNAME(200),
-	INVALID_NAME(201),
-	INVALID_TELEPHONE(202),
-	INVALID_PASSWORD(203),
-	INVALID_PARAMS(204),
-	
+	/**
+	 * 参数不合法
+	 */
+	INVALID_PARAMS(200),
+	/**
+	 * 服务器错误
+	 */
 	SERVER_ERROR(300),
-	
+	/**
+	 * 用户名已存在
+	 */
 	REGISTER_USERNAME_ALREADY_EXIST(400),
+	/**
+	 * 会话超时
+	 */
 	SESSION_TIMEOUT(401),
+	/**
+	 * 用户不存在
+	 */
 	USER_NOT_FOUND(402),
+	/**
+	 * 用户名或密码错误
+	 */
 	USERNAME_OR_PASSWORD_ERROR(403),
+	/**
+	 * 拒绝访问
+	 */
 	ACCESS_DENIED(404),
+	/**
+	 * 旧密码错误
+	 */
 	OLD_PASSWORD_ERROR(405),
 	;
 	

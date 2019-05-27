@@ -14,6 +14,11 @@ import pers.dzj0821.SchoolLeaveSystem.Messages;
 import pers.dzj0821.SchoolLeaveSystem.annotation.OnlyForwardAccess;
 import pers.dzj0821.SchoolLeaveSystem.pojo.json.JSONResult;
 
+/**
+ * 用于拦截器返回JSON结果
+ * @author dzj0821
+ *
+ */
 @Controller
 public class ForwardResultController {
 	private Logger logger = LogManager.getLogger(ForwardResultController.class);
