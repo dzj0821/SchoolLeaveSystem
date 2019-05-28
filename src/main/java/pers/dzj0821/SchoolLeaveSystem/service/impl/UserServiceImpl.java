@@ -267,4 +267,12 @@ public class UserServiceImpl implements UserService {
 				&& !Pattern.matches("^[a-zA-Z]*$", password); //$NON-NLS-1$
 	}
 
+	@Override
+	public JSONResult batchRegister(String username) {
+		// TODO Auto-generated method stub
+		
+		
+		return null;
+	}
+
 }

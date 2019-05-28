@@ -1,5 +1,7 @@
 package pers.dzj0821.SchoolLeaveSystem.controller.api;
 
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.forwardedUrl;
+
 import java.io.IOException;
 import java.security.KeyPair;
 import java.util.Map;
@@ -133,5 +135,26 @@ public class ApiUserController {
 			return null;
 		}
 		return result;
+	}
+	/**
+	 * 批量注册功能
+	 * @param username 用户名
+	 * @param password 密码
+	 * @param name 姓名
+	 * @param telephone 电话
+	 * @param session 框架传入的会话session
+	 * @return JSON结果
+	 */
+	@PostMapping("/batchRegister")
+	@ResponseBody
+	public Map<String, Object> batchRegister(@RequestParam String username) {
+		String[] res = username.split("\n\r");
+		String password="111111";
+		String name,telephone;
+		for (int i = 0; i < res.length; i++) {			
+			return userService.batchRegister(res[i]);
+		}
+		
+		return null;
 	}
 }
