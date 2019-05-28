@@ -29,6 +29,7 @@ import pers.dzj0821.SchoolLeaveSystem.util.SHA256Util;
 
 /**
  * 请假模块的逻辑实现
+ * 
  * @author dzj0821
  *
  */
@@ -61,7 +62,7 @@ public class LeaveServiceImpl implements LeaveService {
 		int lastDay = currentCalendar.getActualMaximum(Calendar.DATE);
 		// 验证日期
 		// 因为Calendar的月份从0开始，所以startMonth和endMonth减1
-		//TODO 优化判断流程
+		// TODO 优化判断流程
 		if (startYear < currentYear || startYear >= currentYear + 3 || startMonth - 1 < currentMonth || startMonth > 12
 				|| startDay < currentDay || startDay > lastDay || endYear < currentYear || endYear >= currentYear + 3
 				|| endMonth - 1 < currentMonth || endMonth > 12 || endDay < currentDay || endDay > lastDay) {
@@ -112,9 +113,10 @@ public class LeaveServiceImpl implements LeaveService {
 		// 转换日期格式
 		DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 		Formatter startDateFormatter = new Formatter();
-		String startDateString = startDateFormatter.format("%04d-%02d-%02d", startYear, startMonth, startDay).toString();
+		String startDateString = startDateFormatter.format("%04d-%02d-%02d", startYear, startMonth, startDay)
+				.toString();
 		startDateFormatter.close();
-		//Formatter不能重复使用
+		// Formatter不能重复使用
 		Formatter endDateFormatter = new Formatter();
 		String endDateString = endDateFormatter.format("%04d-%02d-%02d", endYear, endMonth, endDay).toString();
 		endDateFormatter.close();
@@ -143,7 +145,7 @@ public class LeaveServiceImpl implements LeaveService {
 				// 根据请假的id和图片序号改变文件名
 				String imageName = SHA256Util
 						.encrypt(SHA256Util.encrypt(Integer.toString(leave.getId())) + Integer.toString(i));
-				//保存在upload目录下
+				// 保存在upload目录下
 				String path = "upload/";
 				String originalFilename = images[i].getOriginalFilename();
 				if (originalFilename.endsWith(".jpg")) {
@@ -175,5 +177,34 @@ public class LeaveServiceImpl implements LeaveService {
 			}
 		}
 		return new JSONResult(JSONCodeType.SUCCESS, "申请成功，等待管理员审核", null);
+	}
+
+	@Override
+	public JSONResult cancel(User user, int id) {
+		// 权限验证
+		if (user == null || user.getType() != UserType.NORMAL_USER) {
+			return JSONResult.ACCESS_DENIED;
+		}
+		// 获取请假记录
+		Leave leave = null;
+		try {
+			leave = leaveDao.selectLeaveById(id);
+		} catch (Exception e) {
+			logger.warn(e);
+			return JSONResult.SERVER_ERROR;
+		}
+		if (leave == null) {
+			return new JSONResult(JSONCodeType.DATA_NOT_FOUND, "记录不存在", null);
+		}
+		// 如果不是自己的申请
+		if (leave.getUser().getId() != user.getId()) {
+			return JSONResult.ACCESS_DENIED;
+		}
+		// 只有待审核状态才能取消
+		if (leave.getType() != LeaveType.WAIT) {
+			return JSONResult.ACCESS_DENIED;
+		}
+		return null;
+
 	}
 }

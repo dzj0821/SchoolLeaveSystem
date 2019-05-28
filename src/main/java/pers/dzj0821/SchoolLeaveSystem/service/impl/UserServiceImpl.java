@@ -121,7 +121,7 @@ public class UserServiceImpl implements UserService {
 			return JSONResult.SERVER_ERROR;
 		}
 		if (user == null) {
-			return new JSONResult(JSONCodeType.USER_NOT_FOUND, Messages.getString("UserNotFound"), //$NON-NLS-1$
+			return new JSONResult(JSONCodeType.DATA_NOT_FOUND, Messages.getString("UserNotFound"), //$NON-NLS-1$
 					null);
 		}
 		//判断密码是否一致
@@ -225,7 +225,7 @@ public class UserServiceImpl implements UserService {
 		}
 		//如果没有这个用户
 		if(willGetUser == null) {
-			return new JSONResult(JSONCodeType.USER_NOT_FOUND, Messages.getString("UserNotFound"), null); //$NON-NLS-1$
+			return new JSONResult(JSONCodeType.DATA_NOT_FOUND, Messages.getString("UserNotFound"), null); //$NON-NLS-1$
 		}
 		//如果查看的不是自己的账号信息 验证权限
 		if(willGetUserId != fromUser.getId()) {

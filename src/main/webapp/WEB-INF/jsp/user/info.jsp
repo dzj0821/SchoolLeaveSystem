@@ -12,6 +12,7 @@
 <p>用户类型：${userInfoView.type.name }</p>
 <p>姓名：${userInfoView.name }</p>
 <p>电话：${userInfoView.telephone }</p>
+<!-- 班级可能为null -->
 <p>班级：${userInfoView.clazzFullName }</p>
 </body>
 </html>
