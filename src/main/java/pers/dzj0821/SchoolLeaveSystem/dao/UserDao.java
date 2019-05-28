@@ -43,6 +43,9 @@ public interface UserDao {
 		public String updateUserById(User user) {
 			return new SQL() {{
 					UPDATE("user");
+					if(user.getUsername() != null) {
+						SET("username = #{username}");
+					}
 					if(user.getPassword() != null) {
 						SET("password = #{password}");
 					}
@@ -54,6 +57,15 @@ public interface UserDao {
 					}
 					if(user.getType() != null) {
 						SET("type = #{type}");
+					}
+					if(user.getClazz() != null) {
+						SET("clazz_id = #{clazz.id}");
+					}
+					if(user.getClientId() != null) {
+						SET("client_id = #{clientId}");
+					}
+					if(user.getClientToken() != null) {
+						SET("client_token = #{clientToken}");
 					}
 					WHERE("id = #{id}");
 			}}.toString();

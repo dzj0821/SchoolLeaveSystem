@@ -1,7 +1,7 @@
 package pers.dzj0821.SchoolLeaveSystem.pojo;
 
 public class PermissionClazz {
-	private int id;
+	private Integer id;
 	private User user;
 	private Clazz clazz;
 
@@ -10,11 +10,11 @@ public class PermissionClazz {
 		return "PermissionClazz [id=" + id + ", user=" + user + ", clazz=" + clazz + "]";
 	}
 
-	public int getId() {
+	public Integer getId() {
 		return id;
 	}
 
-	public void setId(int id) {
+	public void setId(Integer id) {
 		this.id = id;
 	}
 

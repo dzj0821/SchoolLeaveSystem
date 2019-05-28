@@ -1,13 +1,13 @@
 package pers.dzj0821.SchoolLeaveSystem.pojo;
 
 public class LeaveImage {
-	private int id;
+	private Integer id;
 	private String path;
 	private Leave leave;
 	
 	public LeaveImage() {}
 	
-	public LeaveImage(int id, String path, Leave leave) {
+	public LeaveImage(Integer id, String path, Leave leave) {
 		this.id = id;
 		this.path = path;
 		this.leave = leave;
@@ -17,10 +17,10 @@ public class LeaveImage {
 	public String toString() {
 		return "LeaveImage [id=" + id + ", path=" + path + ", leave=" + leave + "]";
 	}
-	public int getId() {
+	public Integer getId() {
 		return id;
 	}
-	public void setId(int id) {
+	public void setId(Integer id) {
 		this.id = id;
 	}
 	public String getPath() {

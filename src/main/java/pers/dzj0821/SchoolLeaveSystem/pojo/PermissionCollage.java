@@ -1,7 +1,7 @@
 package pers.dzj0821.SchoolLeaveSystem.pojo;
 
 public class PermissionCollage {
-	private int id;
+	private Integer id;
 	private User user;
 	private Collage collage;
 	
@@ -10,10 +10,10 @@ public class PermissionCollage {
 		return "PermissionCollage [id=" + id + ", user=" + user + ", collage=" + collage + "]";
 	}
 	
-	public int getId() {
+	public Integer getId() {
 		return id;
 	}
-	public void setId(int id) {
+	public void setId(Integer id) {
 		this.id = id;
 	}
 	public User getUser() {

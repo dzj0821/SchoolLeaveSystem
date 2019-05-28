@@ -5,7 +5,7 @@ import java.util.List;
 import pers.dzj0821.SchoolLeaveSystem.type.UserType;
 
 public class User {
-	private int id;
+	private Integer id;
 	private String username;
 	private String password;
 	private UserType type;
@@ -38,11 +38,11 @@ public class User {
 				+ clientId + "]";
 	}
 
-	public int getId() {
+	public Integer getId() {
 		return id;
 	}
 
-	public void setId(int id) {
+	public void setId(Integer id) {
 		this.id = id;
 	}
 

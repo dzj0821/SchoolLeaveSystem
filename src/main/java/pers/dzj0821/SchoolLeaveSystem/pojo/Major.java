@@ -1,7 +1,7 @@
 package pers.dzj0821.SchoolLeaveSystem.pojo;
 
 public class Major {
-	private int id;
+	private Integer id;
 	private String name;
 	private Collage collage;
 
@@ -10,11 +10,11 @@ public class Major {
 		return "Major [id=" + id + ", name=" + name + ", collage=" + collage + "]";
 	}
 
-	public int getId() {
+	public Integer getId() {
 		return id;
 	}
 
-	public void setId(int id) {
+	public void setId(Integer id) {
 		this.id = id;
 	}
 

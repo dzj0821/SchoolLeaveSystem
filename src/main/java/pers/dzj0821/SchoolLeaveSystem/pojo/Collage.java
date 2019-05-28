@@ -1,7 +1,7 @@
 package pers.dzj0821.SchoolLeaveSystem.pojo;
 
 public class Collage {
-	private int id;
+	private Integer id;
 	private String name;
 
 	@Override
@@ -9,11 +9,11 @@ public class Collage {
 		return "Collage [id=" + id + ", name=" + name + "]";
 	}
 
-	public int getId() {
+	public Integer getId() {
 		return id;
 	}
 
-	public void setId(int id) {
+	public void setId(Integer id) {
 		this.id = id;
 	}
 

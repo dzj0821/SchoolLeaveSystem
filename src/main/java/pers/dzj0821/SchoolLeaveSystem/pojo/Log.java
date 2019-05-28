@@ -3,7 +3,7 @@ package pers.dzj0821.SchoolLeaveSystem.pojo;
 import java.util.Date;
 
 public class Log {
-	private int id;
+	private Integer id;
 	private User user;
 	private String ip;
 	private String action;
@@ -16,11 +16,11 @@ public class Log {
 				+ ", time=" + time + "]";
 	}
 
-	public int getId() {
+	public Integer getId() {
 		return id;
 	}
 
-	public void setId(int id) {
+	public void setId(Integer id) {
 		this.id = id;
 	}
 

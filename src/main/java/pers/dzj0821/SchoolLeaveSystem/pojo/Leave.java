@@ -6,14 +6,14 @@ import java.util.List;
 import pers.dzj0821.SchoolLeaveSystem.type.LeaveType;
 
 public class Leave {
-	private int id;
+	private Integer id;
 	private User user;
 	private Clazz clazz;
 	private String telephone;
 	private Date startDate;
-	private int startLesson;
+	private Integer startLesson;
 	private Date endDate;
-	private int endLesson;
+	private Integer endLesson;
 	private String reason;
 	private Date createTime;
 	private LeaveType type;
@@ -24,8 +24,8 @@ public class Leave {
 	public Leave() {
 	}
 
-	public Leave(int id, User user, Clazz clazz, String telephone, Date startDate, int startLesson, Date endDate,
-			int endLesson, String reason, Date createTime, LeaveType type, User reviewer, Date reviewTime,
+	public Leave(Integer id, User user, Clazz clazz, String telephone, Date startDate, Integer startLesson, Date endDate,
+			Integer endLesson, String reason, Date createTime, LeaveType type, User reviewer, Date reviewTime,
 			List<LeaveImage> leaveImages) {
 		this.id = id;
 		this.user = user;
@@ -51,11 +51,11 @@ public class Leave {
 				+ ", reviewTime=" + reviewTime + "]";
 	}
 
-	public int getId() {
+	public Integer getId() {
 		return id;
 	}
 
-	public void setId(int id) {
+	public void setId(Integer id) {
 		this.id = id;
 	}
 
@@ -91,11 +91,11 @@ public class Leave {
 		this.startDate = startDate;
 	}
 
-	public int getStartLesson() {
+	public Integer getStartLesson() {
 		return startLesson;
 	}
 
-	public void setStartLesson(int startLesson) {
+	public void setStartLesson(Integer startLesson) {
 		this.startLesson = startLesson;
 	}
 
@@ -107,11 +107,11 @@ public class Leave {
 		this.endDate = endDate;
 	}
 
-	public int getEndLesson() {
+	public Integer getEndLesson() {
 		return endLesson;
 	}
 
-	public void setEndLesson(int endLesson) {
+	public void setEndLesson(Integer endLesson) {
 		this.endLesson = endLesson;
 	}
 
