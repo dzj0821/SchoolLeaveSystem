@@ -44,10 +44,11 @@ public interface UserService {
 	
 	/**
 	 * 登出逻辑
+	 * @param user 需要登出的用户
 	 * @return
 	 * ACCESS_DENIED 用户未登录
 	 */
-	public JSONResult logout();
+	public JSONResult logout(User user);
 	/**
 	 * 某用户请求根据id获取另一用户信息
 	 * @param willGetUserId 请求获取的用户id

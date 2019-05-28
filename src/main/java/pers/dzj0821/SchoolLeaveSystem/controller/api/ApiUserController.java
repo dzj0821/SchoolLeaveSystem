@@ -134,4 +134,21 @@ public class ApiUserController {
 		}
 		return result;
 	}
+	
+	/**
+	 * 用户登出
+	 * @param session
+	 * @return
+	 */
+	@PostMapping("/logout")
+	@ResponseBody
+	public Map<String, Object> logout(HttpSession session){
+		HttpSessionAdapter sessionAdapter = new HttpSessionAdapter(session);
+		User user = sessionAdapter.getUser();
+		JSONResult result = userService.logout(user);
+		if(result.getCode() == JSONCodeType.SUCCESS) {
+			sessionAdapter.setUser(null);
+		}
+		return result;
+	}
 }

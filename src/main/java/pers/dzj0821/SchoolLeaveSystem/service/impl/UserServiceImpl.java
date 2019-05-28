@@ -202,9 +202,11 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public JSONResult logout() {
-		//TODO 待实现
-		throw new RuntimeException();
+	public JSONResult logout(User user) {
+		if(user == null) {
+			return new JSONResult(JSONCodeType.ACCESS_DENIED, "尚未登录", null);
+		}
+		return new JSONResult(JSONCodeType.SUCCESS, "登出成功", null);
 	}
 	
 	@Override
