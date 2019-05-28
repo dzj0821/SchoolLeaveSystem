@@ -202,9 +202,17 @@ public class LeaveServiceImpl implements LeaveService {
 		}
 		// 只有待审核状态才能取消
 		if (leave.getType() != LeaveType.WAIT) {
-			return JSONResult.ACCESS_DENIED;
+			return new JSONResult(JSONCodeType.ACCESS_DENIED, "记录非待审核状态", null);
 		}
-		return null;
-
+		Leave updateLeave = new Leave();
+		updateLeave.setId(leave.getId());
+		updateLeave.setType(LeaveType.CANCEL);
+		try {
+			leaveDao.updateLeaveById(updateLeave);
+		} catch (Exception e) {
+			logger.warn(e);
+			return JSONResult.SERVER_ERROR;
+		}
+		return new JSONResult(JSONCodeType.SUCCESS, "取消成功", null);
 	}
 }
