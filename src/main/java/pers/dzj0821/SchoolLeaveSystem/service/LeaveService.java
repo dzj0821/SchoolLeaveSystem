@@ -7,7 +7,7 @@ import pers.dzj0821.SchoolLeaveSystem.pojo.json.JSONResult;
 
 public interface LeaveService {
 	/**
-	 * 创建假条
+	 * 创建请假申请
 	 * @param user 申请请假的用户，保证不为null
 	 * @param startYear 请假开始年份
 	 * @param startMonth 请假开始月份
@@ -25,4 +25,12 @@ public interface LeaveService {
 	 * 
 	 */
 	public JSONResult create(User user, int startYear, int startMonth, int startDay, int startLesson, int endYear, int endMonth, int endDay, int endLesson, String reason, CommonsMultipartFile[] images, String systemPath);
+	
+	/**
+	 * 取消请假申请
+	 * @param user 发起请求的用户
+	 * @param id 申请取消的请假id
+	 * @return
+	 */
+	public JSONResult cancel(User user, int id);
 }

@@ -24,9 +24,9 @@ public enum JSONCodeType {
 	 */
 	SESSION_TIMEOUT(401),
 	/**
-	 * 用户不存在
+	 * 数据不存在
 	 */
-	USER_NOT_FOUND(402),
+	DATA_NOT_FOUND(402),
 	/**
 	 * 用户名或密码错误
 	 */
