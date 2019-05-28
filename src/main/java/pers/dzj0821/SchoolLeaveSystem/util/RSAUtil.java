@@ -20,8 +20,8 @@ import pers.dzj0821.SchoolLeaveSystem.Messages;
 public class RSAUtil {
 	private static Logger logger = LogManager.getLogger(RSAUtil.class);
 	private final static int keyLength = 1024;
-	private static KeyPairGenerator generator;
-	private static Cipher cipher;
+	private static KeyPairGenerator generator;//KeyPairGenerator 类用于生成公钥和私钥对。
+	private static Cipher cipher;//Cipher为密码进行加密、解密
 	
 	static {
 		try {

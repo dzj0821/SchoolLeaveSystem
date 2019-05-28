@@ -30,6 +30,7 @@ public class UserController {
 
 	@RequestMapping("/register")
 	public String register(Model model, HttpSession session) {
+		/*KeyPair 生成公钥的工具类*/
 		KeyPair keyPair = (KeyPair) session.getAttribute(Messages.getString("RSAKeyPairSessionName")); //$NON-NLS-1$
 		String publicKey = Base64.getEncoder().encodeToString(keyPair.getPublic().getEncoded());
 		model.addAttribute(Messages.getString("PublicKeyModelName"), publicKey); //$NON-NLS-1$

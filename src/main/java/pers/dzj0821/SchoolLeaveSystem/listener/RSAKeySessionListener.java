@@ -13,6 +13,8 @@ import pers.dzj0821.SchoolLeaveSystem.util.RSAUtil;
 @WebListener
 public class RSAKeySessionListener implements HttpSessionListener {
 
+	/*每次创建一个session时，都会创建一个RSA密钥*/
+	/*currentTimeMillis() ：获得当前的时间*/
 	@Override
 	public void sessionCreated(HttpSessionEvent event) {
 		KeyPair keyPair = RSAUtil.genKeyPair();
