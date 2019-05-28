@@ -58,4 +58,18 @@ public class ApiLeaveController {
 		return leaveService.create(user, startYear, startMonth, startDay, startLesson, endYear, endMonth, endDay, endLesson,
 				reason, images, session.getServletContext().getRealPath("/"));
 	}
+	
+	/**
+	 * 取消请假申请
+	 * @param id 需要取消的请假id
+	 * @param session
+	 * @return
+	 */
+	@PostMapping("/cancel")
+	@ResponseBody
+	public Map<String, Object> cancel(@RequestParam int id, HttpSession session){
+		HttpSessionAdapter sessionAdapter = new HttpSessionAdapter(session);
+		User user = sessionAdapter.getUser();
+		return leaveService.cancel(user, id);
+	}
 }

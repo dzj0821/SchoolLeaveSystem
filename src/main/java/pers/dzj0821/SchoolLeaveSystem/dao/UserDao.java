@@ -11,7 +11,7 @@ import org.apache.ibatis.annotations.UpdateProvider;
 import org.apache.ibatis.jdbc.SQL;
 
 import pers.dzj0821.SchoolLeaveSystem.pojo.User;
-
+//TODO 一对多使用懒加载
 public interface UserDao {
 	@Select("select * from user where username = #{username}")
 	@Results({
