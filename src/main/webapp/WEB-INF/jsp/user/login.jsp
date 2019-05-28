@@ -19,7 +19,7 @@ function onSubmit(){
 </head>
 <body>
 <h2>登录</h2>
-<form name="form" action="${pageContext.request.contextPath}/api/user/login" onsubmit="onSubmit()">
+<form name="form" action="${pageContext.request.contextPath}/api/user/login" onsubmit="onSubmit()" method="POST">
 用户名：<input type="text" name="username"/>
 密码：<input id="password" type="password" name="password">
 <input id="publicKey" type='hidden' name="publicKey" value="${publicKey }" />

@@ -19,7 +19,7 @@ function onSubmit(){
 </head>
 <body>
 <h2>注册</h2>
-<form name="form" action="${pageContext.request.contextPath}/api/user/register" onsubmit="onSubmit()">
+<form name="form" action="${pageContext.request.contextPath}/api/user/register" onsubmit="onSubmit()" method="POST">
 用户名：<input type="text" name="username"/>
 密码：<input id="password" type="password" name="password">
 姓名：<input type="text" name="name">

@@ -1,38 +1,61 @@
 package pers.dzj0821.SchoolLeaveSystem.pojo;
 
 import java.util.Date;
+import java.util.List;
 
 import pers.dzj0821.SchoolLeaveSystem.type.LeaveType;
 
 public class Leave {
-	//TODO 将基础数据类型替换为包装类
-	private int id;
+	private Integer id;
 	private User user;
-	private String clazzName;
-	private int telephone;
+	private Clazz clazz;
+	private String telephone;
 	private Date startDate;
-	private int startLesson;
+	private Integer startLesson;
 	private Date endDate;
-	private int endLesson;
+	private Integer endLesson;
 	private String reason;
 	private Date createTime;
 	private LeaveType type;
 	private User reviewer;
 	private Date reviewTime;
+	private List<LeaveImage> leaveImages;
+
+	public Leave() {
+	}
+
+	public Leave(Integer id, User user, Clazz clazz, String telephone, Date startDate, Integer startLesson, Date endDate,
+			Integer endLesson, String reason, Date createTime, LeaveType type, User reviewer, Date reviewTime,
+			List<LeaveImage> leaveImages) {
+		this.id = id;
+		this.user = user;
+		this.clazz = clazz;
+		this.telephone = telephone;
+		this.startDate = startDate;
+		this.startLesson = startLesson;
+		this.endDate = endDate;
+		this.endLesson = endLesson;
+		this.reason = reason;
+		this.createTime = createTime;
+		this.type = type;
+		this.reviewer = reviewer;
+		this.reviewTime = reviewTime;
+		this.leaveImages = leaveImages;
+	}
 
 	@Override
 	public String toString() {
-		return "Leave [id=" + id + ", user=" + user + ", clazzName=" + clazzName + ", telephone=" + telephone
-				+ ", startDate=" + startDate + ", startLesson=" + startLesson + ", endDate=" + endDate + ", endLesson="
-				+ endLesson + ", reason=" + reason + ", createTime=" + createTime + ", type=" + type + ", reviewer="
-				+ reviewer + ", reviewTime=" + reviewTime + "]";
+		return "Leave [id=" + id + ", user=" + user + ", clazz=" + clazz + ", telephone=" + telephone + ", startDate="
+				+ startDate + ", startLesson=" + startLesson + ", endDate=" + endDate + ", endLesson=" + endLesson
+				+ ", reason=" + reason + ", createTime=" + createTime + ", type=" + type + ", reviewer=" + reviewer
+				+ ", reviewTime=" + reviewTime + "]";
 	}
 
-	public int getId() {
+	public Integer getId() {
 		return id;
 	}
 
-	public void setId(int id) {
+	public void setId(Integer id) {
 		this.id = id;
 	}
 
@@ -44,19 +67,19 @@ public class Leave {
 		this.user = user;
 	}
 
-	public String getClassName() {
-		return clazzName;
+	public Clazz getClazz() {
+		return clazz;
 	}
 
-	public void setClassName(String className) {
-		this.clazzName = className;
+	public void setClazz(Clazz clazz) {
+		this.clazz = clazz;
 	}
 
-	public int getTelephone() {
+	public String getTelephone() {
 		return telephone;
 	}
 
-	public void setTelephone(int telephone) {
+	public void setTelephone(String telephone) {
 		this.telephone = telephone;
 	}
 
@@ -68,11 +91,11 @@ public class Leave {
 		this.startDate = startDate;
 	}
 
-	public int getStartLesson() {
+	public Integer getStartLesson() {
 		return startLesson;
 	}
 
-	public void setStartLesson(int startLesson) {
+	public void setStartLesson(Integer startLesson) {
 		this.startLesson = startLesson;
 	}
 
@@ -84,11 +107,11 @@ public class Leave {
 		this.endDate = endDate;
 	}
 
-	public int getEndLesson() {
+	public Integer getEndLesson() {
 		return endLesson;
 	}
 
-	public void setEndLesson(int endLesson) {
+	public void setEndLesson(Integer endLesson) {
 		this.endLesson = endLesson;
 	}
 
@@ -130,5 +153,13 @@ public class Leave {
 
 	public void setReviewTime(Date reviewTime) {
 		this.reviewTime = reviewTime;
+	}
+
+	public List<LeaveImage> getLeaveImages() {
+		return leaveImages;
+	}
+
+	public void setLeaveImages(List<LeaveImage> leaveImages) {
+		this.leaveImages = leaveImages;
 	}
 }

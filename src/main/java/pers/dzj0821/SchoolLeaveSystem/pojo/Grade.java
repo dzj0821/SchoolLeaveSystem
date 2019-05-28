@@ -1,28 +1,27 @@
 package pers.dzj0821.SchoolLeaveSystem.pojo;
 
 public class Grade {
-	//TODO 将基础数据类型替换为包装类
-	private int id;
-	private int year;
+	private Integer id;
+	private Integer year;
 
 	@Override
 	public String toString() {
 		return "Grade [id=" + id + ", year=" + year + "]";
 	}
 
-	public int getId() {
+	public Integer getId() {
 		return id;
 	}
 
-	public void setId(int id) {
+	public void setId(Integer id) {
 		this.id = id;
 	}
 
-	public int getYear() {
+	public Integer getYear() {
 		return year;
 	}
 
-	public void setYear(int year) {
+	public void setYear(Integer year) {
 		this.year = year;
 	}
 

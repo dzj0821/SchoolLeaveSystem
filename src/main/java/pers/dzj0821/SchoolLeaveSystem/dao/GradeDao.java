@@ -6,5 +6,5 @@ import pers.dzj0821.SchoolLeaveSystem.pojo.Grade;
 
 public interface GradeDao {
 	@Select("select * from grade where id = #{id}")
-	public Grade selectGradeById(Integer id) throws Exception;
+	public Grade selectGradeById(int id) throws Exception;
 }

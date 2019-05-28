@@ -28,7 +28,7 @@ public interface UserDao {
 		@Result(column = "clazz_id", property = "clazz", one = @One(select = "pers.dzj0821.SchoolLeaveSystem.dao.ClazzDao.selectClazzById")),
 		@Result(column = "id", property = "permissionClazzes", many = @Many(select = "pers.dzj0821.SchoolLeaveSystem.dao.PermissionClazzDao.selectPermissionClazzesByUserId"))
 	})
-	User selectUserById(Integer id) throws Exception;
+	User selectUserById(int id) throws Exception;
 	
 	@Insert("insert into user(username, password, type, name, telephone) values(#{username}, #{password}, #{type}, #{name}, #{telephone})")
 	//用于在语句执行完毕后返回新插入的主键
@@ -43,6 +43,9 @@ public interface UserDao {
 		public String updateUserById(User user) {
 			return new SQL() {{
 					UPDATE("user");
+					if(user.getUsername() != null) {
+						SET("username = #{username}");
+					}
 					if(user.getPassword() != null) {
 						SET("password = #{password}");
 					}
@@ -54,6 +57,15 @@ public interface UserDao {
 					}
 					if(user.getType() != null) {
 						SET("type = #{type}");
+					}
+					if(user.getClazz() != null) {
+						SET("clazz_id = #{clazz.id}");
+					}
+					if(user.getClientId() != null) {
+						SET("client_id = #{clientId}");
+					}
+					if(user.getClientToken() != null) {
+						SET("client_token = #{clientToken}");
 					}
 					WHERE("id = #{id}");
 			}}.toString();

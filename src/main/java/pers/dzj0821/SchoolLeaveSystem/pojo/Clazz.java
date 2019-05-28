@@ -1,9 +1,8 @@
 package pers.dzj0821.SchoolLeaveSystem.pojo;
 
 public class Clazz {
-	//TODO 将基础数据类型替换为包装类
-	private int id;
-	private int no;
+	private Integer id;
+	private Integer no;
 	private Grade grade;
 	private Major major;
 
@@ -17,19 +16,19 @@ public class Clazz {
 		return "Class [id=" + id + ", no=" + no + ", grade=" + grade + ", major=" + major + "]";
 	}
 
-	public int getId() {
+	public Integer getId() {
 		return id;
 	}
 
-	public void setId(int id) {
+	public void setId(Integer id) {
 		this.id = id;
 	}
 
-	public int getNo() {
+	public Integer getNo() {
 		return no;
 	}
 
-	public void setNo(int no) {
+	public void setNo(Integer no) {
 		this.no = no;
 	}
 

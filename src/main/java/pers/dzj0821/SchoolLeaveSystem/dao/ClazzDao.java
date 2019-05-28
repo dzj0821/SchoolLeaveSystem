@@ -14,5 +14,5 @@ public interface ClazzDao {
 		@Result(column = "grade_id", property = "grade", one=@One(select = "pers.dzj0821.SchoolLeaveSystem.dao.GradeDao.selectGradeById")),
 		@Result(column = "major_id", property = "major", one=@One(select = "pers.dzj0821.SchoolLeaveSystem.dao.MajorDao.selectMajorById"))
 	})
-	Clazz selectClazzById(Integer id) throws Exception;
+	Clazz selectClazzById(int id) throws Exception;
 }
