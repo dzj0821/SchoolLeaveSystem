@@ -131,7 +131,7 @@ public class LeaveServiceImpl implements LeaveService {
 		}
 		// 记录请假申请
 		Leave leave = new Leave(0, user, user.getClazz(), user.getTelephone(), startDate, startLesson, endDate,
-				endLesson, reason, null, LeaveType.WAIT, null, null, null);
+				endLesson, reason, null, LeaveType.WAIT, null, null);
 		try {
 			int id = leaveDao.insertLeave(leave);
 			leave.setId(id);

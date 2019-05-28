@@ -16,5 +16,5 @@ public interface PermissionCollageDao {
 		@Result(column = "user_id", property = "user", one = @One(select = "pers.dzj0821.SchoolLeaveSystem.dao.UserDao.selectUserById")),
 		@Result(column = "collage_id", property = "collage", one = @One(select = "pers.dzj0821.SchoolLeaveSystem.dao.CollageDao.selectCollageById"))
 	})
-	public  List<PermissionCollage> selectPermissionCollagesByUserId(int userId);
+	public  List<PermissionCollage> selectPermissionCollagesByUserId(int userId) throws Exception;
 }

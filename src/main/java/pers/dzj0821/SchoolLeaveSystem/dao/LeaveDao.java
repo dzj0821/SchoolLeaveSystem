@@ -47,9 +47,14 @@ public interface LeaveDao {
 				if(leave.getStartDate() != null) {
 					SET("start_date = #{startDate}");
 				}
-				//TODO 包装类进行null判断
+				if(leave.getStartLesson() != null) {
+					SET("start_lesson = #{startLesson}");
+				}
 				if(leave.getEndDate() != null) {
 					SET("end_date = #{endDate}");
+				}
+				if(leave.getEndLesson() != null) {
+					SET("end_lesson = #{endLesson}");
 				}
 				if(leave.getReason() != null) {
 					SET("reason = #{reason}");

@@ -1,7 +1,6 @@
 package pers.dzj0821.SchoolLeaveSystem.dao;
 
 import org.apache.ibatis.annotations.Insert;
-import org.apache.ibatis.annotations.Many;
 import org.apache.ibatis.annotations.One;
 import org.apache.ibatis.annotations.Options;
 import org.apache.ibatis.annotations.Result;
@@ -11,14 +10,12 @@ import org.apache.ibatis.annotations.UpdateProvider;
 import org.apache.ibatis.jdbc.SQL;
 
 import pers.dzj0821.SchoolLeaveSystem.pojo.User;
-//TODO 一对多使用懒加载
+
 public interface UserDao {
 	@Select("select * from user where username = #{username}")
 	@Results({
 		@Result(column = "id", property = "id", id = true),
 		@Result(column = "clazz_id", property = "clazz", one = @One(select = "pers.dzj0821.SchoolLeaveSystem.dao.ClazzDao.selectClazzById")),
-		@Result(column = "id", property = "permissionClazzes", many = @Many(select = "pers.dzj0821.SchoolLeaveSystem.dao.PermissionClazzDao.selectPermissionClazzesByUserId")),
-		@Result(column = "id", property = "permissionCollages", many = @Many(select = "pers.dzj0821.SchoolLeaveSystem.dao.PermissionCollageDao.selectPermissionCollagesByUserId"))
 	})
 	User selectUserByUsername(String username) throws Exception;
 	
@@ -26,7 +23,6 @@ public interface UserDao {
 	@Results({
 		@Result(column = "id", property = "id", id = true),
 		@Result(column = "clazz_id", property = "clazz", one = @One(select = "pers.dzj0821.SchoolLeaveSystem.dao.ClazzDao.selectClazzById")),
-		@Result(column = "id", property = "permissionClazzes", many = @Many(select = "pers.dzj0821.SchoolLeaveSystem.dao.PermissionClazzDao.selectPermissionClazzesByUserId"))
 	})
 	User selectUserById(int id) throws Exception;
 	

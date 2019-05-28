@@ -16,6 +16,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import pers.dzj0821.SchoolLeaveSystem.Messages;
+import pers.dzj0821.SchoolLeaveSystem.dao.PermissionClazzDao;
+import pers.dzj0821.SchoolLeaveSystem.dao.PermissionCollageDao;
 import pers.dzj0821.SchoolLeaveSystem.dao.UserDao;
 import pers.dzj0821.SchoolLeaveSystem.pojo.PermissionClazz;
 import pers.dzj0821.SchoolLeaveSystem.pojo.PermissionCollage;
@@ -24,6 +26,7 @@ import pers.dzj0821.SchoolLeaveSystem.pojo.json.JSONResult;
 import pers.dzj0821.SchoolLeaveSystem.pojo.view.UserInfoView;
 import pers.dzj0821.SchoolLeaveSystem.service.UserService;
 import pers.dzj0821.SchoolLeaveSystem.type.JSONCodeType;
+import pers.dzj0821.SchoolLeaveSystem.type.UserType;
 import pers.dzj0821.SchoolLeaveSystem.util.RSAUtil;
 import pers.dzj0821.SchoolLeaveSystem.util.SHA256Util;
 
@@ -40,6 +43,10 @@ public class UserServiceImpl implements UserService {
 
 	@Autowired
 	private UserDao userDao;
+	@Autowired
+	private PermissionClazzDao permissionClazzDao;
+	@Autowired
+	private PermissionCollageDao permissionCollageDao;
 	private Logger logger = LogManager.getLogger(UserServiceImpl.class);
 
 	@Override
@@ -81,7 +88,7 @@ public class UserServiceImpl implements UserService {
 					null);
 		}
 		//验证结束 用户信息存入数据库
-		user = new User(username, SHA256Util.encrypt(password), name, telephone);
+		user = new User(null, username, SHA256Util.encrypt(password), UserType.NORMAL_USER, name, telephone, null, null, null);
 		try {
 			userDao.insertUser(user);
 		} catch (Exception e) {
@@ -234,7 +241,13 @@ public class UserServiceImpl implements UserService {
 				return JSONResult.ACCESS_DENIED;
 			case CLAZZ_ADMIN:
 				//验证被查询的用户是否是属于查询者管理的班级
-				List<PermissionClazz> permissionClazzes = fromUser.getPermissionClazzes();
+				List<PermissionClazz> permissionClazzes = null;
+				try {
+					permissionClazzes = permissionClazzDao.selectPermissionClazzesByUserId(fromUser.getId());
+				} catch (Exception e) {
+					logger.warn(e);
+					return JSONResult.SERVER_ERROR;
+				}
 				for (PermissionClazz permissionClazz : permissionClazzes) {
 					if(permissionClazz.getClazz().getId() == willGetUser.getClazz().getId()) {
 						break check;
@@ -242,7 +255,13 @@ public class UserServiceImpl implements UserService {
 				}
 				return JSONResult.ACCESS_DENIED;
 			case COLLAGE_ADMIN:
-				List<PermissionCollage> permissionCollages = fromUser.getPermissionCollages();
+				List<PermissionCollage> permissionCollages = null;
+				try {
+					permissionCollages = permissionCollageDao.selectPermissionCollagesByUserId(fromUser.getId());
+				} catch (Exception e) {
+					logger.warn(e);
+					return JSONResult.SERVER_ERROR;
+				}
 				for (PermissionCollage permissionCollage : permissionCollages) {
 					if(permissionCollage.getId() == willGetUser.getClazz().getMajor().getCollage().getId()) {
 						break check;

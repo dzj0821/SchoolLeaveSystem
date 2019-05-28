@@ -1,7 +1,5 @@
 package pers.dzj0821.SchoolLeaveSystem.pojo;
 
-import java.util.List;
-
 import pers.dzj0821.SchoolLeaveSystem.type.UserType;
 
 public class User {
@@ -14,21 +12,20 @@ public class User {
 	private Clazz clazz;
 	private String clientToken;
 	private String clientId;
-	private List<PermissionClazz> permissionClazzes;
-	private List<PermissionCollage> permissionCollages;
 
-	public User() {
-	}
+	public User() {}
 
-	public User(String username, String password, String name, String telephone) {
-		id = 0;
+	public User(Integer id, String username, String password, UserType type, String name, String telephone, Clazz clazz,
+			String clientToken, String clientId) {
+		this.id = id;
 		this.username = username;
 		this.password = password;
-		type = UserType.NORMAL_USER;
+		this.type = type;
 		this.name = name;
 		this.telephone = telephone;
-		clientToken = null;
-		clientId = null;
+		this.clazz = clazz;
+		this.clientToken = clientToken;
+		this.clientId = clientId;
 	}
 
 	@Override
@@ -109,21 +106,4 @@ public class User {
 	public void setClientId(String clientId) {
 		this.clientId = clientId;
 	}
-
-	public List<PermissionClazz> getPermissionClazzes() {
-		return permissionClazzes;
-	}
-
-	public void setPermissionClazzes(List<PermissionClazz> permissionClazzes) {
-		this.permissionClazzes = permissionClazzes;
-	}
-
-	public List<PermissionCollage> getPermissionCollages() {
-		return permissionCollages;
-	}
-
-	public void setPermissionCollages(List<PermissionCollage> permissionCollages) {
-		this.permissionCollages = permissionCollages;
-	}
-	
 }
