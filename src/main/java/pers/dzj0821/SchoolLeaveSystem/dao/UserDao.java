@@ -28,7 +28,7 @@ public interface UserDao {
 		@Result(column = "clazz_id", property = "clazz", one = @One(select = "pers.dzj0821.SchoolLeaveSystem.dao.ClazzDao.selectClazzById")),
 		@Result(column = "id", property = "permissionClazzes", many = @Many(select = "pers.dzj0821.SchoolLeaveSystem.dao.PermissionClazzDao.selectPermissionClazzesByUserId"))
 	})
-	User selectUserById(Integer id) throws Exception;
+	User selectUserById(int id) throws Exception;
 	
 	@Insert("insert into user(username, password, type, name, telephone) values(#{username}, #{password}, #{type}, #{name}, #{telephone})")
 	//用于在语句执行完毕后返回新插入的主键

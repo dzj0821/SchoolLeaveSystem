@@ -17,7 +17,7 @@ public interface PermissionClazzDao {
 		@Result(column = "user_id", property = "user", one = @One(select = "pers.dzj0821.SchoolLeaveSystem.dao.UserDao.selectUserById")),
 		@Result(column = "clazz_id", property = "clazz", one = @One(select = "pers.dzj0821.SchoolLeaveSystem.dao.ClazzDao.selectClazzById"))
 	})
-	public PermissionClazz selectPermissionClazzByUserIdAndClazzId(@Param("user_id")Integer userId, @Param("clazz_id")Integer clazzId) throws Exception;
+	public PermissionClazz selectPermissionClazzByUserIdAndClazzId(@Param("user_id")int userId, @Param("clazz_id")int clazzId) throws Exception;
 	
 	@Select("select * from permission_clazz where user_id = #{user_id}")
 	@Results({
@@ -25,5 +25,5 @@ public interface PermissionClazzDao {
 		@Result(column = "user_id", property = "user", one = @One(select = "pers.dzj0821.SchoolLeaveSystem.dao.UserDao.selectUserById")),
 		@Result(column = "clazz_id", property = "clazz", one = @One(select = "pers.dzj0821.SchoolLeaveSystem.dao.ClazzDao.selectClazzById"))
 	})
-	public List<PermissionClazz> selectPermissionClazzesByUserId(Integer userId) throws Exception;
+	public List<PermissionClazz> selectPermissionClazzesByUserId(int userId) throws Exception;
 }
