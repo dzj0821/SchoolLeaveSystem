@@ -13,6 +13,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.interceptor.TransactionAspectSupport;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -147,14 +148,24 @@ public class ApiUserController {
 	 */
 	@PostMapping("/batchRegister")
 	@ResponseBody
-	public Map<String, Object> batchRegister(@RequestParam String username) {
-		String[] res = username.split("\n\r");
-		String password="111111";
-		String name,telephone;
-		for (int i = 0; i < res.length; i++) {			
-			return userService.batchRegister(res[i]);
-		}
+	public String batchRegister(@RequestParam String username, @RequestParam String password, HttpSession session) {
 		
-		return null;
+		
+		String[] res = username.split("\n");
+		//从session中获取用于解密密码的RSA密钥对
+				HttpSessionAdapter sessionAdapter = new HttpSessionAdapter(session);
+				KeyPair keyPair = sessionAdapter.getRSAKeyPair();
+
+		try {
+			for (int i = 0; i < res.length-1; i++) {
+				userService.batchRegister(res[i],password, keyPair.getPrivate());
+			}
+		} catch (Exception e) {
+			  e.printStackTrace();     
+	          TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();//就是这一句了，加上之后，如果doDbStuff2()抛了异常,                                                                                 
+	          return "error！";
+		}												
+		return "success";		
+		
 	}
 }

@@ -63,13 +63,13 @@ public class UserController {
 	 */
 	@GetMapping("/batchRegister")
 	public String batchRegister(Model model, HttpSession session) {
-		//HttpSessionAdapter sessionAdapter = new HttpSessionAdapter(session);
-		//KeyPair keyPair = sessionAdapter.getRSAKeyPair();
+		HttpSessionAdapter sessionAdapter = new HttpSessionAdapter(session);
+		KeyPair keyPair = sessionAdapter.getRSAKeyPair();
 		// 将RSA公钥Base64加密后放入页面中
-		/*String publicKey = Base64.getEncoder().encodeToString(keyPair.getPublic().getEncoded());
+		String publicKey = Base64.getEncoder().encodeToString(keyPair.getPublic().getEncoded());
 		model.addAttribute(Messages.getString("PublicKeyModelName"), publicKey); //$NON-NLS-1$
 		model.addAttribute(Messages.getString("RSACreateTimestampModelName"), //$NON-NLS-1$
-				sessionAdapter.getRSACreateTimestamp());*/
+				sessionAdapter.getRSACreateTimestamp());
 		
 		
 		return "user/batchRegister"; //$NON-NLS-1$
