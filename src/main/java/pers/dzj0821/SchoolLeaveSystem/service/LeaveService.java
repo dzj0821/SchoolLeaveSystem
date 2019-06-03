@@ -4,6 +4,7 @@ import org.springframework.web.multipart.commons.CommonsMultipartFile;
 
 import pers.dzj0821.SchoolLeaveSystem.pojo.User;
 import pers.dzj0821.SchoolLeaveSystem.pojo.json.JSONResult;
+import pers.dzj0821.SchoolLeaveSystem.type.LeaveType;
 
 public interface LeaveService {
 	/**
@@ -33,4 +34,6 @@ public interface LeaveService {
 	 * @return
 	 */
 	public JSONResult cancel(User user, int id);
+	
+	public JSONResult list(User user, Integer clazzId, Integer userId, LeaveType type);
 }

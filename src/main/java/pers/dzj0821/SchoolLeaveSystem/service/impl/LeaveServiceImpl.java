@@ -215,4 +215,17 @@ public class LeaveServiceImpl implements LeaveService {
 		}
 		return new JSONResult(JSONCodeType.SUCCESS, "取消成功", null);
 	}
+
+	@Override
+	public JSONResult list(User user, Integer clazzId, Integer userId, LeaveType type) {
+		//如果用户未登录
+		if(user == null) {
+			return JSONResult.ACCESS_DENIED;
+		}
+		//普通用户只能查询自己的记录，如果查询其他记录拒绝查询
+		if(user.getType() == UserType.NORMAL_USER && (clazzId != null || userId != null || type != null)) {
+			return JSONResult.ACCESS_DENIED;
+		}
+		return null;
+	}
 }

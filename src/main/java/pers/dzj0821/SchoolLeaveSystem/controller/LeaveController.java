@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import pers.dzj0821.SchoolLeaveSystem.Messages;
 import pers.dzj0821.SchoolLeaveSystem.annotation.UserTypeRequired;
+import pers.dzj0821.SchoolLeaveSystem.type.LeaveType;
 import pers.dzj0821.SchoolLeaveSystem.type.UserType;
 //TODO 使用自定义EL函数在JSP中取值
 /**
@@ -44,5 +45,10 @@ public class LeaveController {
 		model.addAttribute("currentDay", currentDay);
 		model.addAttribute("lastDay", lastDay);
 		return Messages.getString("CreateLeavePage");
+	}
+	
+	@GetMapping("/list")
+	public String list(Integer clazzId, Integer userId, LeaveType type) {
+		return "list";
 	}
 }

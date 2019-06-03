@@ -1,5 +1,7 @@
 package pers.dzj0821.SchoolLeaveSystem.dao;
 
+import java.util.List;
+
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Many;
 import org.apache.ibatis.annotations.One;
@@ -7,6 +9,7 @@ import org.apache.ibatis.annotations.Options;
 import org.apache.ibatis.annotations.Result;
 import org.apache.ibatis.annotations.Results;
 import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.SelectProvider;
 import org.apache.ibatis.annotations.UpdateProvider;
 import org.apache.ibatis.jdbc.SQL;
 import org.apache.ibatis.mapping.FetchType;
@@ -30,6 +33,9 @@ public interface LeaveDao {
 
 	@UpdateProvider(type = LeaveProvider.class, method = "updateLeaveById")
 	public int updateLeaveById(Leave leave) throws Exception;
+	
+	@SelectProvider(type = LeaveProvider.class, method = "selectLeaveByLeave")
+	public List<Leave> selectLeaveByLeave(Leave leave) throws Exception;
 
 	class LeaveProvider {
 		public String updateLeaveById(Leave leave) {
@@ -72,6 +78,14 @@ public interface LeaveDao {
 					SET("review_time = #{reviewTime}");
 				}
 				WHERE("id = #{id}");
+			}}.toString();
+		}
+		
+		public String selectLeaveByLeave(Leave leave) {
+			return new SQL() {{
+				SELECT("*");
+				FROM("`leave`");
+				//TODO 未完成
 			}}.toString();
 		}
 	}
