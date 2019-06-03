@@ -226,6 +226,7 @@ public class LeaveServiceImpl implements LeaveService {
 		if(user.getType() == UserType.NORMAL_USER && (clazzId != null || userId != null || type != null)) {
 			return JSONResult.ACCESS_DENIED;
 		}
+		
 		return null;
 	}
 }
