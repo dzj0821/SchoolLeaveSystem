@@ -40,4 +40,6 @@ public interface LeaveService {
 	 * 
 	 */
 	public JSONResult info(User user, int id);
+	
+	public JSONResult review(User user, int id, boolean access);
 }

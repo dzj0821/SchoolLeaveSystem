@@ -305,4 +305,17 @@ public class LeaveServiceImpl implements LeaveService {
 		JSONResult result = new JSONResult(JSONCodeType.SUCCESS, "查询成功", map);
 		return result;
 	}
+
+	@Override
+	public JSONResult review(User user, int id, boolean access) {
+		//TODO 权限验证
+		Leave leave = new Leave(id, null, null, null, null, null, null, null, null, null, access ? LeaveType.PASS : LeaveType.NOT_PASS, null, null);
+		try {
+			leaveDao.updateLeaveById(leave);
+		} catch (Exception e) {
+			logger.warn(e);
+			return JSONResult.SERVER_ERROR;
+		}
+		return new JSONResult(JSONCodeType.SUCCESS, "审核成功", null);
+	}
 }
