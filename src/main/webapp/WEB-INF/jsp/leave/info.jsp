@@ -6,7 +6,7 @@
 <head>
 
 <title>审核</title>
-
+<%@ include file="/WEB-INF/jsp/include/head.jsp"%>
 </head>
 
 <body class="gray-bg">
