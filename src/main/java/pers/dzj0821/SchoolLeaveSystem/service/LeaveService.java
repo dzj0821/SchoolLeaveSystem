@@ -2,7 +2,6 @@ package pers.dzj0821.SchoolLeaveSystem.service;
 
 import org.springframework.web.multipart.commons.CommonsMultipartFile;
 
-import pers.dzj0821.SchoolLeaveSystem.pojo.Leave;
 import pers.dzj0821.SchoolLeaveSystem.pojo.User;
 import pers.dzj0821.SchoolLeaveSystem.pojo.json.JSONResult;
 
@@ -34,19 +33,11 @@ public interface LeaveService {
 	 * @return
 	 */
 	public JSONResult cancel(User user, int id);
-	/**
-	 *请假审核 
-	 * @param user 审批请假的用户，保证不为null
-	 * @param leave 请假记录
-	 * @param id 审批对象id
-	 * 
-	 */
-	public JSONResult cudit(Leave leave,User user,int id);
+	
 	/**
 	 *请假信息查询 
 	 * 
 	 * 
 	 */
-	public JSONResult selectLeaveById(int id);
-	public JSONResult getImgUrl(int id);
+	public JSONResult info(User user, int id);
 }

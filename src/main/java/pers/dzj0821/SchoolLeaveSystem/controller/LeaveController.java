@@ -18,9 +18,12 @@ import pers.dzj0821.SchoolLeaveSystem.adapter.HttpSessionAdapter;
 import pers.dzj0821.SchoolLeaveSystem.adapter.ModelAdapter;
 import pers.dzj0821.SchoolLeaveSystem.annotation.UserTypeRequired;
 import pers.dzj0821.SchoolLeaveSystem.pojo.Leave;
+import pers.dzj0821.SchoolLeaveSystem.pojo.LeaveImage;
+import pers.dzj0821.SchoolLeaveSystem.pojo.User;
 import pers.dzj0821.SchoolLeaveSystem.pojo.json.JSONResult;
 import pers.dzj0821.SchoolLeaveSystem.pojo.view.LeaveInfoView;
 import pers.dzj0821.SchoolLeaveSystem.service.LeaveService;
+import pers.dzj0821.SchoolLeaveSystem.type.JSONCodeType;
 import pers.dzj0821.SchoolLeaveSystem.type.UserType;
 //TODO 使用自定义EL函数在JSP中取值
 /**
@@ -65,17 +68,25 @@ public class LeaveController {
 	 * 审核界面
 	 * 
 	 */
-	@GetMapping("/audit")
-	public String audit(Model model, HttpServletRequest request, HttpSession session){
+	@GetMapping("/info")
+	public String info(@RequestParam int id, Model model, HttpServletRequest request, HttpSession session){
 		HttpSessionAdapter sessionAdapter = new HttpSessionAdapter(session);
+		User user = sessionAdapter.getUser();
+		JSONResult result = leaveService.info(user, id);
 		ModelAdapter modelAdapter = new ModelAdapter(model);
-		JSONResult result=leaveService.selectLeaveById(2);		
-		Leave leaves  =  (Leave) result.getData().get("leaves");
-		LeaveInfoView leaveInfoView=new LeaveInfoView(leaves);
-		JSONResult imgUrl=leaveService.getImgUrl(leaves.getId());
-		model.addAttribute("imgUrl", imgUrl);
-		model.addAttribute("leaves", leaveInfoView);
-		return "leave/audit";
+		if(result.getCode() != JSONCodeType.SUCCESS) {
+			modelAdapter.setResult(result);
+			return "error";
+		}
+		Leave leave = (Leave) result.getData().get("leave");
+		@SuppressWarnings("unchecked")
+		List<LeaveImage> leaveImages = (List<LeaveImage>) result.getData().get("leaveImages");
+		for (LeaveImage leaveImage : leaveImages) {
+			System.out.println(leaveImage.getPath());
+		}
+		LeaveInfoView leaveInfoView = new LeaveInfoView(leave, leaveImages);
+		model.addAttribute("leaveInfoView", leaveInfoView);
+		return "leave/info";
 	}
 	
 }

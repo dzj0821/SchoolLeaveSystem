@@ -13,15 +13,18 @@ import java.util.List;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.omg.PortableInterceptor.SUCCESSFUL;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.commons.CommonsMultipartFile;
 
 import pers.dzj0821.SchoolLeaveSystem.dao.LeaveDao;
 import pers.dzj0821.SchoolLeaveSystem.dao.LeaveImageDao;
+import pers.dzj0821.SchoolLeaveSystem.dao.PermissionClazzDao;
+import pers.dzj0821.SchoolLeaveSystem.dao.PermissionCollageDao;
 import pers.dzj0821.SchoolLeaveSystem.pojo.Leave;
 import pers.dzj0821.SchoolLeaveSystem.pojo.LeaveImage;
+import pers.dzj0821.SchoolLeaveSystem.pojo.PermissionClazz;
+import pers.dzj0821.SchoolLeaveSystem.pojo.PermissionCollage;
 import pers.dzj0821.SchoolLeaveSystem.pojo.User;
 import pers.dzj0821.SchoolLeaveSystem.pojo.json.JSONResult;
 import pers.dzj0821.SchoolLeaveSystem.service.LeaveService;
@@ -44,6 +47,11 @@ public class LeaveServiceImpl implements LeaveService {
 	private LeaveDao leaveDao;
 	@Autowired
 	private LeaveImageDao leaveImageDao;
+	@Autowired
+	private PermissionClazzDao permissionClazzDao;
+	@Autowired
+	private PermissionCollageDao permissionCollageDao;
+	
 
 	@Override
 	public JSONResult create(User user, int startYear, int startMonth, int startDay, int startLesson, int endYear,
@@ -134,10 +142,9 @@ public class LeaveServiceImpl implements LeaveService {
 		}
 		// 记录请假申请
 		Leave leave = new Leave(0, user, user.getClazz(), user.getTelephone(), startDate, startLesson, endDate,
-				endLesson, reason, null, LeaveType.WAIT, null, null, null);
+				endLesson, reason, null, LeaveType.WAIT, null, null);
 		try {
-			int id = leaveDao.insertLeave(leave);
-			leave.setId(id);
+			leaveDao.insertLeave(leave);
 		} catch (Exception e) {
 			logger.warn(e);
 			return JSONResult.SERVER_ERROR;
@@ -200,6 +207,7 @@ public class LeaveServiceImpl implements LeaveService {
 			return new JSONResult(JSONCodeType.DATA_NOT_FOUND, "记录不存在", null);
 		}
 		// 如果不是自己的申请
+		//FIXME equals
 		if (leave.getUser().getId() != user.getId()) {
 			return JSONResult.ACCESS_DENIED;
 		}
@@ -220,47 +228,81 @@ public class LeaveServiceImpl implements LeaveService {
 	}
 
 	@Override
-	public JSONResult cudit(Leave leave, User user, int id) {
-		// TODO Auto-generated method stub
-		try {
-			leave =leaveDao.selectLeaveById(id);
-		} catch (Exception e) {
-			// TODO: handle exception
+	public JSONResult info(User user, int id) {
+		//未登录
+		if(user == null) {
+			return JSONResult.ACCESS_DENIED;
 		}
-		JSONResult result;
-		
-		
-		return null;
-	}
-
-	@Override
-	public JSONResult selectLeaveById(int id) {
-		Leave leaves=null;
-				try {
-					leaves =leaveDao.selectLeaveById(id);
-				} catch (Exception e) {
-					return JSONResult.SERVER_ERROR;
-				}
-			
-		HashMap<String, Object>	map=new HashMap<String, Object>();
-		map.put("leaves", leaves);
-		JSONResult result=new JSONResult(JSONCodeType.SUCCESS,"查询成功", map);
-		return result;
-	}
-
-	@Override
-	public JSONResult getImgUrl(int id) {
-		// TODO Auto-generated method stub
-		List<LeaveImage> leaveImage;
+		//查询
+		Leave leave = null;
 		try {
-			leaveImage=leaveImageDao.selectLeaveImagesByLeaveId(id);
+			leave = leaveDao.selectLeaveById(id);
 		} catch (Exception e) {
-			// TODO: handle exception
+			logger.warn(e);
 			return JSONResult.SERVER_ERROR;
 		}
-		HashMap<String, Object>	map=new HashMap<String, Object>();
-		map.put("leaveImage", leaveImage);
-		JSONResult result=new JSONResult(JSONCodeType.SUCCESS,"查询成功", map);
+		//记录不存在
+		if(leave == null) {
+			return new JSONResult(JSONCodeType.DATA_NOT_FOUND, "请假记录不存在", null);
+		}
+		//普通用户查看非自己的记录
+		if(user.getType() == UserType.NORMAL_USER && !leave.getUser().getId().equals(user.getId())) {
+			return JSONResult.ACCESS_DENIED;
+		}
+		//如果是班级管理员
+		if(user.getType() == UserType.CLAZZ_ADMIN) {
+			//获取班级权限
+			List<PermissionClazz> permissionClazzs = null;
+			try {
+				permissionClazzs = permissionClazzDao.selectPermissionClazzesByUserId(user.getId());
+			} catch (Exception e) {
+				logger.warn(e);
+				return JSONResult.SERVER_ERROR;
+			}
+			boolean access = false;
+			for (PermissionClazz permissionClazz : permissionClazzs) {
+				if(permissionClazz.getClazz().getId().equals(leave.getClazz().getId())) {
+					access = true;
+					break;
+				}
+			}
+			//如果请假者所在班级不在管理的班级
+			if(!access) {
+				return JSONResult.ACCESS_DENIED;
+			}
+		}
+		if(user.getType() == UserType.COLLAGE_ADMIN) {
+			//获取院级权限
+			List<PermissionCollage> permissionCollages = null;
+			try {
+				permissionCollages = permissionCollageDao.selectPermissionCollagesByUserId(user.getId());
+			} catch (Exception e) {
+				logger.warn(e);
+				return JSONResult.SERVER_ERROR;
+			}
+			boolean access = false;
+			for (PermissionCollage permissionCollage : permissionCollages) {
+				if(permissionCollage.getCollage().getId().equals(leave.getClazz().getMajor().getCollage().getId())) {
+					access = true;
+					break;
+				}
+			}
+			//如果请假者所在班级不在管理的院级
+			if(!access) {
+				return JSONResult.ACCESS_DENIED;
+			}
+		}
+		List<LeaveImage> leaveImages = null;
+		try {
+			leaveImages = leaveImageDao.selectLeaveImagesByLeaveId(leave.getId());
+		} catch (Exception e) {
+			logger.warn(e);
+			return JSONResult.SERVER_ERROR;
+		}
+		HashMap<String, Object> map = new HashMap<String, Object>();
+		map.put("leave", leave);
+		map.put("leaveImages", leaveImages);
+		JSONResult result = new JSONResult(JSONCodeType.SUCCESS, "查询成功", map);
 		return result;
 	}
 }

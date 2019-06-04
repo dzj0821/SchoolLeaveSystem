@@ -1,7 +1,6 @@
 package pers.dzj0821.SchoolLeaveSystem.dao;
 
 import org.apache.ibatis.annotations.Insert;
-import org.apache.ibatis.annotations.Many;
 import org.apache.ibatis.annotations.One;
 import org.apache.ibatis.annotations.Options;
 import org.apache.ibatis.annotations.Result;
@@ -9,7 +8,6 @@ import org.apache.ibatis.annotations.Results;
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.UpdateProvider;
 import org.apache.ibatis.jdbc.SQL;
-import org.apache.ibatis.mapping.FetchType;
 
 import pers.dzj0821.SchoolLeaveSystem.pojo.Leave;
 
@@ -24,8 +22,7 @@ public interface LeaveDao {
 	@Results({ @Result(column = "id", property = "id", id = true),
 			@Result(column = "user_id", property = "user", one = @One(select = "pers.dzj0821.SchoolLeaveSystem.dao.UserDao.selectUserById")),
 			@Result(column = "clazz_id", property = "clazz", one = @One(select = "pers.dzj0821.SchoolLeaveSystem.dao.ClazzDao.selectClazzById")),
-			@Result(column = "reviewer_id", property = "reviewer", one = @One(select = "pers.dzj0821.SchoolLeaveSystem.dao.UserDao.selectUserById")),
-			@Result(column = "id", property = "leaveImages", many = @Many(select = "pers.dzj0821.SchoolLeaveSystem.dao.LeaveImageDao.selectLeaveImagesByLeaveId", fetchType = FetchType.LAZY)) })
+			@Result(column = "reviewer_id", property = "reviewer", one = @One(select = "pers.dzj0821.SchoolLeaveSystem.dao.UserDao.selectUserById")) })
 	public Leave selectLeaveById(int id) throws Exception;
 
 	@UpdateProvider(type = LeaveProvider.class, method = "updateLeaveById")

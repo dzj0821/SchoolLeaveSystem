@@ -249,6 +249,7 @@ public class UserServiceImpl implements UserService {
 					return JSONResult.SERVER_ERROR;
 				}
 				for (PermissionClazz permissionClazz : permissionClazzes) {
+					//FIXME equals
 					if(permissionClazz.getClazz().getId() == willGetUser.getClazz().getId()) {
 						break check;
 					}
@@ -263,6 +264,7 @@ public class UserServiceImpl implements UserService {
 					return JSONResult.SERVER_ERROR;
 				}
 				for (PermissionCollage permissionCollage : permissionCollages) {
+					//FIXME equals
 					if(permissionCollage.getId() == willGetUser.getClazz().getMajor().getCollage().getId()) {
 						break check;
 					}

@@ -1,7 +1,6 @@
 package pers.dzj0821.SchoolLeaveSystem.pojo;
 
 import java.util.Date;
-import java.util.List;
 
 import pers.dzj0821.SchoolLeaveSystem.type.LeaveType;
 
@@ -19,13 +18,12 @@ public class Leave {
 	private LeaveType type;
 	private User reviewer;
 	private Date reviewTime;
-	private List<String> imgUrl;
 
 	public Leave() {
 	}
 
 	public Leave(Integer id, User user, Clazz clazz, String telephone, Date startDate, Integer startLesson, Date endDate,
-			Integer endLesson, String reason, Date createTime,LeaveType type, User reviewer, Date reviewTime,List<String> imgUrl) {
+			Integer endLesson, String reason, Date createTime,LeaveType type, User reviewer, Date reviewTime) {
 		this.id = id;
 		this.user = user;
 		this.clazz = clazz;
@@ -39,7 +37,6 @@ public class Leave {
 		this.type = type;
 		this.reviewer = reviewer;
 		this.reviewTime = reviewTime;
-		this.imgUrl=imgUrl;
 	}
 
 	@Override
@@ -153,13 +150,4 @@ public class Leave {
 	public void setReviewTime(Date reviewTime) {
 		this.reviewTime = reviewTime;
 	}
-
-	public List<String> getImgUrl() {
-		return imgUrl;
-	}
-
-	public void setImgUrl(List<String> imgUrl) {
-		this.imgUrl = imgUrl;
-	}
-	
 }
