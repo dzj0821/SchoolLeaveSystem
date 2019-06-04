@@ -4,8 +4,8 @@ import java.util.List;
 
 import org.springframework.ui.Model;
 
-import pers.dzj0821.SchoolLeaveSystem.pojo.Leave;
 import pers.dzj0821.SchoolLeaveSystem.pojo.json.JSONResult;
+import pers.dzj0821.SchoolLeaveSystem.pojo.view.LeaveListView;
 import pers.dzj0821.SchoolLeaveSystem.pojo.view.UserInfoView;
 
 public class ModelAdapter {
@@ -20,7 +20,7 @@ public class ModelAdapter {
 		model.addAttribute("result", result);
 	}
 	
-	public void setLeaveList(List<Leave> leaves) {
-		model.addAttribute("leaves", leaves);
+	public void setLeaveList(List<LeaveListView> leaveListViews) {
+		model.addAttribute("leaveListViews", leaveListViews);
 	}
 }

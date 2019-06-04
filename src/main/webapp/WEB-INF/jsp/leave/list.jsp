@@ -16,13 +16,16 @@
     <th>请假时间</th>
     <th>请假申请时间</th>
   </tr>
-  <c:forEach items="${leaves }" var="leave">
+  <c:forEach items="${leaveListViews }" var="leave">
   	<tr>
   		<td>${leave.id }</td>
   		<td>${leave.user.name }</td>
-  		<td>${leave.clazz.clazzFullName() }</td>
-  		<td>${leave.startDate }第${leave.startLesson }节课至${leave.endDate }第${leave.endLesson }节课</td>
+  		<td>${leave.clazzFullName }</td>
+  		<td>${leave.leaveTime }</td>
   		<td>${leave.createTime }</td>
+  		<c:if test="${leave.type == 'WAIT' }">
+  			<td><a href="#">审核</a></td>
+  		</c:if>
   	</tr>
   </c:forEach>
 </table>

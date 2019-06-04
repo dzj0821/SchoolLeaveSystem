@@ -1,5 +1,6 @@
 package pers.dzj0821.SchoolLeaveSystem.controller;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
@@ -18,6 +19,7 @@ import pers.dzj0821.SchoolLeaveSystem.annotation.UserTypeRequired;
 import pers.dzj0821.SchoolLeaveSystem.pojo.Leave;
 import pers.dzj0821.SchoolLeaveSystem.pojo.User;
 import pers.dzj0821.SchoolLeaveSystem.pojo.json.JSONResult;
+import pers.dzj0821.SchoolLeaveSystem.pojo.view.LeaveListView;
 import pers.dzj0821.SchoolLeaveSystem.service.LeaveService;
 import pers.dzj0821.SchoolLeaveSystem.type.JSONCodeType;
 import pers.dzj0821.SchoolLeaveSystem.type.LeaveType;
@@ -72,7 +74,12 @@ public class LeaveController {
 			modelAdapter.setResult(result);
 			return "error";
 		}
-		modelAdapter.setLeaveList((List<Leave>) result.getData().get("leaves"));
+		List<Leave> leaves  = (List<Leave>) result.getData().get("leaves");
+		List<LeaveListView> leaveListViews = new ArrayList<>(leaves.size());
+		for (Leave leave : leaves) {
+			leaveListViews.add(new LeaveListView(leave));
+		}
+		modelAdapter.setLeaveList(leaveListViews);
 		return "leave/list";
 	}
 }
