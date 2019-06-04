@@ -5,6 +5,16 @@ public class Clazz {
 	private Integer no;
 	private Grade grade;
 	private Major major;
+	
+	public Clazz() {}
+
+	public Clazz(Integer id, Integer no, Grade grade, Major major) {
+		super();
+		this.id = id;
+		this.no = no;
+		this.grade = grade;
+		this.major = major;
+	}
 
 	public String clazzFullName() {
 		//如：2015级网络工程1班

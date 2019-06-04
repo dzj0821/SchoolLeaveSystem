@@ -1,14 +1,25 @@
 package pers.dzj0821.SchoolLeaveSystem.controller;
 
 import java.util.Calendar;
+import java.util.List;
 
+import javax.servlet.http.HttpSession;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import pers.dzj0821.SchoolLeaveSystem.Messages;
+import pers.dzj0821.SchoolLeaveSystem.adapter.HttpSessionAdapter;
+import pers.dzj0821.SchoolLeaveSystem.adapter.ModelAdapter;
 import pers.dzj0821.SchoolLeaveSystem.annotation.UserTypeRequired;
+import pers.dzj0821.SchoolLeaveSystem.pojo.Leave;
+import pers.dzj0821.SchoolLeaveSystem.pojo.User;
+import pers.dzj0821.SchoolLeaveSystem.pojo.json.JSONResult;
+import pers.dzj0821.SchoolLeaveSystem.service.LeaveService;
+import pers.dzj0821.SchoolLeaveSystem.type.JSONCodeType;
 import pers.dzj0821.SchoolLeaveSystem.type.LeaveType;
 import pers.dzj0821.SchoolLeaveSystem.type.UserType;
 //TODO 使用自定义EL函数在JSP中取值
@@ -20,6 +31,9 @@ import pers.dzj0821.SchoolLeaveSystem.type.UserType;
 @Controller
 @RequestMapping("/leave")
 public class LeaveController {
+	@Autowired
+	private LeaveService leaveService;
+	
 	/**
 	 * 创建假条页面
 	 * @param model
@@ -47,8 +61,18 @@ public class LeaveController {
 		return Messages.getString("CreateLeavePage");
 	}
 	
+	@SuppressWarnings("unchecked")
 	@GetMapping("/list")
-	public String list(Integer clazzId, Integer userId, LeaveType type) {
-		return "list";
+	public String list(Integer clazzId, Integer userId, LeaveType type, HttpSession session, Model model) {
+		HttpSessionAdapter sessionAdapter = new HttpSessionAdapter(session);
+		User user = sessionAdapter.getUser();
+		JSONResult result = leaveService.list(user, clazzId, userId, type);
+		ModelAdapter modelAdapter = new ModelAdapter(model);
+		if(result.getCode() != JSONCodeType.SUCCESS) {
+			modelAdapter.setResult(result);
+			return "error";
+		}
+		modelAdapter.setLeaveList((List<Leave>) result.getData().get("leaves"));
+		return "leave/list";
 	}
 }

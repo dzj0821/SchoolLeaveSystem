@@ -4,6 +4,14 @@ public class PermissionClazz {
 	private Integer id;
 	private User user;
 	private Clazz clazz;
+	
+	public PermissionClazz() {}
+
+	public PermissionClazz(Integer id, User user, Clazz clazz) {
+		this.id = id;
+		this.user = user;
+		this.clazz = clazz;
+	}
 
 	@Override
 	public String toString() {
