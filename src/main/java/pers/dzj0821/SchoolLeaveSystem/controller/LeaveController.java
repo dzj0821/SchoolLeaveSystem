@@ -1,14 +1,31 @@
 package pers.dzj0821.SchoolLeaveSystem.controller;
 
+import java.io.IOException;
 import java.util.Calendar;
+import java.util.List;
 
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import pers.dzj0821.SchoolLeaveSystem.Messages;
+import pers.dzj0821.SchoolLeaveSystem.adapter.HttpSessionAdapter;
+import pers.dzj0821.SchoolLeaveSystem.adapter.ModelAdapter;
 import pers.dzj0821.SchoolLeaveSystem.annotation.UserTypeRequired;
+import pers.dzj0821.SchoolLeaveSystem.pojo.Leave;
+import pers.dzj0821.SchoolLeaveSystem.pojo.LeaveImage;
+import pers.dzj0821.SchoolLeaveSystem.pojo.User;
+import pers.dzj0821.SchoolLeaveSystem.pojo.json.JSONResult;
+import pers.dzj0821.SchoolLeaveSystem.pojo.view.LeaveInfoView;
+import pers.dzj0821.SchoolLeaveSystem.service.LeaveService;
+import pers.dzj0821.SchoolLeaveSystem.type.JSONCodeType;
 import pers.dzj0821.SchoolLeaveSystem.type.UserType;
 //TODO 使用自定义EL函数在JSP中取值
 /**
@@ -19,6 +36,9 @@ import pers.dzj0821.SchoolLeaveSystem.type.UserType;
 @Controller
 @RequestMapping("/leave")
 public class LeaveController {
+	@Autowired
+	private LeaveService leaveService ; 
+	
 	/**
 	 * 创建假条页面
 	 * @param model
@@ -45,4 +65,46 @@ public class LeaveController {
 		model.addAttribute("lastDay", lastDay);
 		return Messages.getString("CreateLeavePage");
 	}
+	
+	/**
+	 * 审核界面
+	 * 
+	 */
+	@GetMapping("/info")
+	public String info(@RequestParam int id, Model model, HttpSession session){
+		HttpSessionAdapter sessionAdapter = new HttpSessionAdapter(session);
+		User user = sessionAdapter.getUser();
+		JSONResult result = leaveService.info(user, id);
+		ModelAdapter modelAdapter = new ModelAdapter(model);
+		if(result.getCode() != JSONCodeType.SUCCESS) {
+			modelAdapter.setResult(result);
+			return "error";
+		}
+		Leave leave = (Leave) result.getData().get("leave");
+		@SuppressWarnings("unchecked")
+		List<LeaveImage> leaveImages = (List<LeaveImage>) result.getData().get("leaveImages");
+		LeaveInfoView leaveInfoView = new LeaveInfoView(leave, leaveImages);
+		model.addAttribute("leaveInfoView", leaveInfoView);
+		return "leave/info";
+	}
+	
+	@PostMapping("/review")
+	public String review(@RequestParam int id, @RequestParam boolean access, HttpSession session, Model model, HttpServletResponse response) {
+		HttpSessionAdapter sessionAdapter = new HttpSessionAdapter(session);
+		User user = sessionAdapter.getUser();
+		JSONResult result = leaveService.review(user, id, access);
+		ModelAdapter modelAdapter = new ModelAdapter(model);
+		if(result.getCode() != JSONCodeType.SUCCESS) {
+			modelAdapter.setResult(result);
+			return "error";
+		}
+		try {
+			response.sendRedirect("list");
+		} catch (IOException e) {
+			modelAdapter.setResult(JSONResult.SERVER_ERROR);
+			return "error";
+		}
+		return null;
+	}
+	
 }

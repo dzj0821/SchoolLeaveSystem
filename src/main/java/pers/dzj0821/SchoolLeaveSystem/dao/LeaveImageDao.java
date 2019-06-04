@@ -16,10 +16,10 @@ public interface LeaveImageDao {
 	@Options(useGeneratedKeys = true, keyProperty = "id")
 	public int insertLeaveImage(LeaveImage leaveImage) throws Exception;
 	
-	@Select("select  * from leave_image where leave_id = #{leave_id}")
+	@Select("select * from leave_image where leave_id = #{leaveId}")
 	@Results({
 		@Result(column = "id", property = "id", id = true),
-		@Result(column = "leave_id", property = "leave", one = @One(select = "per.dzj0821.SchoolLeaveSystem.dao.LeaveDao.selectLeaveById"))
+		@Result(column = "leave_id", property = "leave", one = @One(select = "pers.dzj0821.SchoolLeaveSystem.dao.LeaveDao.selectLeaveById"))
 	})
 	public List<LeaveImage> selectLeaveImagesByLeaveId(int leaveId) throws Exception;
 }

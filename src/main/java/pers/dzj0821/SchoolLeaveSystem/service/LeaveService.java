@@ -33,4 +33,13 @@ public interface LeaveService {
 	 * @return
 	 */
 	public JSONResult cancel(User user, int id);
+	
+	/**
+	 *请假信息查询 
+	 * 
+	 * 
+	 */
+	public JSONResult info(User user, int id);
+	
+	public JSONResult review(User user, int id, boolean access);
 }

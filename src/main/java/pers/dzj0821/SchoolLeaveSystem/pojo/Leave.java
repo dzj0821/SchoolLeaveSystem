@@ -23,7 +23,7 @@ public class Leave {
 	}
 
 	public Leave(Integer id, User user, Clazz clazz, String telephone, Date startDate, Integer startLesson, Date endDate,
-			Integer endLesson, String reason, Date createTime, LeaveType type, User reviewer, Date reviewTime) {
+			Integer endLesson, String reason, Date createTime,LeaveType type, User reviewer, Date reviewTime) {
 		this.id = id;
 		this.user = user;
 		this.clazz = clazz;
