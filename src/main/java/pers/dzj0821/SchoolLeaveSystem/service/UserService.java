@@ -58,4 +58,6 @@ public interface UserService {
 	 * USER_NOT_FOUND 目标用户不存在
 	 */
 	public JSONResult getUserInfo(int willGetUserId, User fromUser);
+	
+	public JSONResult batchRegister(String username ,String password,PrivateKey privateKey) ;
 }

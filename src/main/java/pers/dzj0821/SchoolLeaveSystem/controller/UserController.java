@@ -56,6 +56,28 @@ public class UserController {
 	}
 
 	/**
+	 * 批量注册注册页面
+	 * 
+	 * @param model
+	 * @param session
+	 * @return
+	 */
+	@GetMapping("/batchRegister")
+	public String batchRegister(Model model, HttpSession session) {
+		HttpSessionAdapter sessionAdapter = new HttpSessionAdapter(session);
+		KeyPair keyPair = sessionAdapter.getRSAKeyPair();
+		// 将RSA公钥Base64加密后放入页面中
+		String publicKey = Base64.getEncoder().encodeToString(keyPair.getPublic().getEncoded());
+		model.addAttribute(Messages.getString("PublicKeyModelName"), publicKey); //$NON-NLS-1$
+		model.addAttribute(Messages.getString("RSACreateTimestampModelName"), //$NON-NLS-1$
+				sessionAdapter.getRSACreateTimestamp());
+		
+		
+		return "user/batchRegister"; //$NON-NLS-1$
+	}
+	
+	
+	/**
 	 * 登录页面
 	 * 
 	 * @param model

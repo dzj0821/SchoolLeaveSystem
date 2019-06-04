@@ -290,4 +290,44 @@ public class UserServiceImpl implements UserService {
 				&& !Pattern.matches("^[a-zA-Z]*$", password); //$NON-NLS-1$
 	}
 
+	@Override
+	public JSONResult batchRegister(String username,String base64RSAPassword,PrivateKey privateKey) {
+		//TODO 通过注解进行参数验证
+				// 验证输入							
+				JSONResult Invalidpassword = new JSONResult(JSONCodeType.INVALID_PARAMS,
+						Messages.getString("InvalidPassword"), null); //$NON-NLS-1$
+				String password = null;
+				// 密码解码
+				try {
+					password = new String(RSAUtil.decrypt(Base64.getDecoder().decode(base64RSAPassword), privateKey));
+				} catch (InvalidKeyException | IllegalBlockSizeException | BadPaddingException e) {
+					return Invalidpassword;
+				}
+				
+				// 验证用户名是否存在
+				User user = null;
+				try {
+					user = userDao.selectUserByUsername(username);
+				} catch (Exception e) {
+					logger.warn(Messages.getString("SQLError"), e); //$NON-NLS-1$
+					return JSONResult.SERVER_ERROR;
+				}
+				if (user != null) {
+					return new JSONResult(JSONCodeType.REGISTER_USERNAME_ALREADY_EXIST, Messages.getString("UsernameAlreadyExist"), //$NON-NLS-1$
+							null);
+				}
+				String name=null,telephone=null;
+				//验证结束 用户信息存入数据库
+				user = new User(null, username, SHA256Util.encrypt(password), null, name, telephone, null, null, null);
+				try {
+					userDao.insertUser(user);
+				} catch (Exception e) {
+					logger.warn(Messages.getString("SQLError"), e); //$NON-NLS-1$
+					return JSONResult.SERVER_ERROR;
+				}
+				JSONResult success = new JSONResult(JSONCodeType.SUCCESS, Messages.getString("RegisterSuccess"), null); //$NON-NLS-1$
+				success.put(Messages.getString("LoginedUserObjectName"), user); //$NON-NLS-1$
+				return success;
+	}
+
 }
