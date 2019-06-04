@@ -25,6 +25,8 @@ import pers.dzj0821.SchoolLeaveSystem.pojo.Leave;
 import pers.dzj0821.SchoolLeaveSystem.pojo.LeaveImage;
 import pers.dzj0821.SchoolLeaveSystem.pojo.PermissionClazz;
 import pers.dzj0821.SchoolLeaveSystem.pojo.PermissionCollage;
+import pers.dzj0821.SchoolLeaveSystem.dao.UserDao;
+import pers.dzj0821.SchoolLeaveSystem.pojo.Clazz;
 import pers.dzj0821.SchoolLeaveSystem.pojo.User;
 import pers.dzj0821.SchoolLeaveSystem.pojo.json.JSONResult;
 import pers.dzj0821.SchoolLeaveSystem.service.LeaveService;
@@ -51,7 +53,8 @@ public class LeaveServiceImpl implements LeaveService {
 	private PermissionClazzDao permissionClazzDao;
 	@Autowired
 	private PermissionCollageDao permissionCollageDao;
-	
+	@Autowired
+	private UserDao userDao;
 
 	@Override
 	public JSONResult create(User user, int startYear, int startMonth, int startDay, int startLesson, int endYear,
@@ -317,5 +320,66 @@ public class LeaveServiceImpl implements LeaveService {
 			return JSONResult.SERVER_ERROR;
 		}
 		return new JSONResult(JSONCodeType.SUCCESS, "审核成功", null);
+	}
+	
+	@Override
+	public JSONResult list(User user, Integer clazzId, Integer userId, LeaveType type) {
+		// 如果用户未登录
+		if (user == null) {
+			return JSONResult.ACCESS_DENIED;
+		}
+		// 普通用户只能查询自己的记录，如果查询其他记录拒绝查询
+		if (user.getType() == UserType.NORMAL_USER && (clazzId != null || userId != null || type != null)) {
+			return JSONResult.ACCESS_DENIED;
+		}
+		if(user.getType() == UserType.NORMAL_USER) {
+			userId = user.getId();
+		}
+		boolean access = true;
+		try {
+			if (clazzId != null) {
+				// 获取用户是否有指定班级的权限
+				PermissionClazz permissionClazz = permissionClazzDao
+						.selectPermissionClazzByUserIdAndClazzId(user.getId(), clazzId);
+				if (permissionClazz == null) {
+					access = false;
+				}
+			}
+			if (userId != null) {
+				User willGetUser = userDao.selectUserById(userId);
+				//如果用户不存在/用户未加入班级/查询用户没有被查询用户所在的班级的权限
+				if (userId != user.getId() && (willGetUser == null || willGetUser.getClazz() == null || permissionClazzDao
+						.selectPermissionClazzByUserIdAndClazzId(userId, willGetUser.getClazz().getId()) == null)) {
+					access = false;
+				}
+			}
+		} catch (Exception e) {
+			logger.warn(e);
+			return JSONResult.SERVER_ERROR;
+		}
+		// 如果没有权限
+		if (!access) {
+			return JSONResult.ACCESS_DENIED;
+		}
+		User selectUser = null;
+		Clazz selectClazz = null;
+		if(userId != null) {
+			selectUser = new User(userId, null, null, null, null, null, null, null, null);
+		}
+		if(clazzId != null) {
+			selectClazz = new Clazz(clazzId, null, null, null);
+		}
+		Leave leave = new Leave(null, selectUser, selectClazz, null, null, null, null, null, null, null, type, null, null);
+		List<Leave> leaves = null;
+		try {
+			leaves = leaveDao.selectLeaveByLeave(leave);
+		} catch (Exception e) {
+			logger.warn(e);
+			return JSONResult.SERVER_ERROR;
+		}
+		HashMap<String, Object> map = new HashMap<String, Object>();
+		map.put("leaves", leaves);
+		JSONResult result = new JSONResult(JSONCodeType.SUCCESS, "查询成功", map);
+		return result;
 	}
 }

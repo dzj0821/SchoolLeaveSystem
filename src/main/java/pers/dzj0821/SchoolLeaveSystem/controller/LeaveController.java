@@ -1,5 +1,6 @@
 package pers.dzj0821.SchoolLeaveSystem.controller;
 
+import java.util.ArrayList;
 import java.io.IOException;
 import java.util.Calendar;
 import java.util.List;
@@ -26,6 +27,8 @@ import pers.dzj0821.SchoolLeaveSystem.pojo.json.JSONResult;
 import pers.dzj0821.SchoolLeaveSystem.pojo.view.LeaveInfoView;
 import pers.dzj0821.SchoolLeaveSystem.service.LeaveService;
 import pers.dzj0821.SchoolLeaveSystem.type.JSONCodeType;
+import pers.dzj0821.SchoolLeaveSystem.pojo.view.LeaveListView;
+import pers.dzj0821.SchoolLeaveSystem.type.LeaveType;
 import pers.dzj0821.SchoolLeaveSystem.type.UserType;
 //TODO 使用自定义EL函数在JSP中取值
 /**
@@ -37,7 +40,7 @@ import pers.dzj0821.SchoolLeaveSystem.type.UserType;
 @RequestMapping("/leave")
 public class LeaveController {
 	@Autowired
-	private LeaveService leaveService ; 
+	private LeaveService leaveService;
 	
 	/**
 	 * 创建假条页面
@@ -64,6 +67,26 @@ public class LeaveController {
 		model.addAttribute("currentDay", currentDay);
 		model.addAttribute("lastDay", lastDay);
 		return Messages.getString("CreateLeavePage");
+	}
+	
+	@SuppressWarnings("unchecked")
+	@GetMapping("/list")
+	public String list(Integer clazzId, Integer userId, LeaveType type, HttpSession session, Model model) {
+		HttpSessionAdapter sessionAdapter = new HttpSessionAdapter(session);
+		User user = sessionAdapter.getUser();
+		JSONResult result = leaveService.list(user, clazzId, userId, type);
+		ModelAdapter modelAdapter = new ModelAdapter(model);
+		if(result.getCode() != JSONCodeType.SUCCESS) {
+			modelAdapter.setResult(result);
+			return "error";
+		}
+		List<Leave> leaves  = (List<Leave>) result.getData().get("leaves");
+		List<LeaveListView> leaveListViews = new ArrayList<>(leaves.size());
+		for (Leave leave : leaves) {
+			leaveListViews.add(new LeaveListView(leave));
+		}
+		modelAdapter.setLeaveList(leaveListViews);
+		return "leave/list";
 	}
 	
 	/**

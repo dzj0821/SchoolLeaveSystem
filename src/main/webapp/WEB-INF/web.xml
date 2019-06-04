@@ -23,6 +23,9 @@
 		<url-pattern>*.jpg</url-pattern>
 		<url-pattern>*.js</url-pattern>
 		<url-pattern>*.css</url-pattern>
+		<url-pattern>*.woff2</url-pattern>
+		<url-pattern>*.woff</url-pattern>
+		<url-pattern>*.ttf</url-pattern>
 	</servlet-mapping>
 	<servlet-mapping>
 		<servlet-name>spring-mvc</servlet-name>
