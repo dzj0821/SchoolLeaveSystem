@@ -8,9 +8,12 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Formatter;
+import java.util.HashMap;
+import java.util.List;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.omg.PortableInterceptor.SUCCESSFUL;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.commons.CommonsMultipartFile;
@@ -131,7 +134,7 @@ public class LeaveServiceImpl implements LeaveService {
 		}
 		// 记录请假申请
 		Leave leave = new Leave(0, user, user.getClazz(), user.getTelephone(), startDate, startLesson, endDate,
-				endLesson, reason, null, LeaveType.WAIT, null, null);
+				endLesson, reason, null, LeaveType.WAIT, null, null, null);
 		try {
 			int id = leaveDao.insertLeave(leave);
 			leave.setId(id);
@@ -214,5 +217,50 @@ public class LeaveServiceImpl implements LeaveService {
 			return JSONResult.SERVER_ERROR;
 		}
 		return new JSONResult(JSONCodeType.SUCCESS, "取消成功", null);
+	}
+
+	@Override
+	public JSONResult cudit(Leave leave, User user, int id) {
+		// TODO Auto-generated method stub
+		try {
+			leave =leaveDao.selectLeaveById(id);
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
+		JSONResult result;
+		
+		
+		return null;
+	}
+
+	@Override
+	public JSONResult selectLeaveById(int id) {
+		Leave leaves=null;
+				try {
+					leaves =leaveDao.selectLeaveById(id);
+				} catch (Exception e) {
+					return JSONResult.SERVER_ERROR;
+				}
+			
+		HashMap<String, Object>	map=new HashMap<String, Object>();
+		map.put("leaves", leaves);
+		JSONResult result=new JSONResult(JSONCodeType.SUCCESS,"查询成功", map);
+		return result;
+	}
+
+	@Override
+	public JSONResult getImgUrl(int id) {
+		// TODO Auto-generated method stub
+		List<LeaveImage> leaveImage;
+		try {
+			leaveImage=leaveImageDao.selectLeaveImagesByLeaveId(id);
+		} catch (Exception e) {
+			// TODO: handle exception
+			return JSONResult.SERVER_ERROR;
+		}
+		HashMap<String, Object>	map=new HashMap<String, Object>();
+		map.put("leaveImage", leaveImage);
+		JSONResult result=new JSONResult(JSONCodeType.SUCCESS,"查询成功", map);
+		return result;
 	}
 }

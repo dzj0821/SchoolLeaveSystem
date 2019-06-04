@@ -1,14 +1,26 @@
 package pers.dzj0821.SchoolLeaveSystem.controller;
 
 import java.util.Calendar;
+import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import pers.dzj0821.SchoolLeaveSystem.Messages;
+import pers.dzj0821.SchoolLeaveSystem.adapter.HttpSessionAdapter;
+import pers.dzj0821.SchoolLeaveSystem.adapter.ModelAdapter;
 import pers.dzj0821.SchoolLeaveSystem.annotation.UserTypeRequired;
+import pers.dzj0821.SchoolLeaveSystem.pojo.Leave;
+import pers.dzj0821.SchoolLeaveSystem.pojo.json.JSONResult;
+import pers.dzj0821.SchoolLeaveSystem.pojo.view.LeaveInfoView;
+import pers.dzj0821.SchoolLeaveSystem.service.LeaveService;
 import pers.dzj0821.SchoolLeaveSystem.type.UserType;
 //TODO 使用自定义EL函数在JSP中取值
 /**
@@ -19,6 +31,9 @@ import pers.dzj0821.SchoolLeaveSystem.type.UserType;
 @Controller
 @RequestMapping("/leave")
 public class LeaveController {
+	@Autowired
+	private LeaveService leaveService ; 
+	
 	/**
 	 * 创建假条页面
 	 * @param model
@@ -45,4 +60,22 @@ public class LeaveController {
 		model.addAttribute("lastDay", lastDay);
 		return Messages.getString("CreateLeavePage");
 	}
+	
+	/**
+	 * 审核界面
+	 * 
+	 */
+	@GetMapping("/audit")
+	public String audit(Model model, HttpServletRequest request, HttpSession session){
+		HttpSessionAdapter sessionAdapter = new HttpSessionAdapter(session);
+		ModelAdapter modelAdapter = new ModelAdapter(model);
+		JSONResult result=leaveService.selectLeaveById(2);		
+		Leave leaves  =  (Leave) result.getData().get("leaves");
+		LeaveInfoView leaveInfoView=new LeaveInfoView(leaves);
+		JSONResult imgUrl=leaveService.getImgUrl(leaves.getId());
+		model.addAttribute("imgUrl", imgUrl);
+		model.addAttribute("leaves", leaveInfoView);
+		return "leave/audit";
+	}
+	
 }
