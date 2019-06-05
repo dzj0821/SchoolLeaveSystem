@@ -37,7 +37,7 @@ function onSubmit(){
 					<span
 						class="glyphicon glyphicon-lock col-xs-3 col-md-1 col-md-offset-3"></span>
 					<input type="password" name="password" id="password"
-						placeholder="请输入密码" class="col-xs-8 col-md-5 " maxlength="10" required>
+						placeholder="请输入密码" class="col-xs-8 col-md-5 " maxlength="18" required>
 					<span id="error_psw" class="col-xs-6 col-md-4"></span>
 				</div>
 				<div

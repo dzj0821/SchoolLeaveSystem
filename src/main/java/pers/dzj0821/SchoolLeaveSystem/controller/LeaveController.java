@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.commons.CommonsMultipartFile;
 
 import pers.dzj0821.SchoolLeaveSystem.Messages;
 import pers.dzj0821.SchoolLeaveSystem.adapter.HttpSessionAdapter;
@@ -68,6 +69,30 @@ public class LeaveController {
 		model.addAttribute("currentDay", currentDay);
 		model.addAttribute("lastDay", lastDay);
 		return Messages.getString("CreateLeavePage");
+	}
+	
+	@PostMapping("/create")
+	public String createRequest(@RequestParam int startYear, @RequestParam int startMonth,
+			@RequestParam int startDay, @RequestParam int startLesson, @RequestParam int endYear,
+			@RequestParam int endMonth, @RequestParam int endDay, @RequestParam int endLesson,
+			@RequestParam String reason, @RequestParam(value = "image", required = false) CommonsMultipartFile[] images,
+			HttpSession session, Model model, HttpServletResponse response) {
+		HttpSessionAdapter sessionAdapter = new HttpSessionAdapter(session);
+		User user = sessionAdapter.getUser();
+		JSONResult result = leaveService.create(user, startYear, startMonth, startDay, startLesson, endYear, endMonth, endDay, endLesson,
+				reason, images, session.getServletContext().getRealPath("/"));
+		ModelAdapter modelAdapter = new ModelAdapter(model);
+		if(result.getCode() != JSONCodeType.SUCCESS) {
+			modelAdapter.setResult(result);
+			return "error";
+		}
+		try {
+			response.sendRedirect("list");
+		} catch (IOException e) {
+			modelAdapter.setResult(JSONResult.SERVER_ERROR);
+			return "error";
+		}
+		return null;
 	}
 	
 	@SuppressWarnings("unchecked")

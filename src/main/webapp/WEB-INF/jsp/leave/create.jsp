@@ -6,14 +6,14 @@
 <head>
 <%@ include file="/WEB-INF/jsp/include/head.jsp"%>
 <title>校园请假系统_请假申请</title>
-<script src="${pageContext.request.contextPath}/js/leave/create.js"></script>
+<script src="${pageContext.request.contextPath}/js/leave/create.js" charset="UTF-8"></script>
 </head>
 <body>
 <%@ include file="/WEB-INF/jsp/include/header.jsp"%>
 	<div class="container">
 		<h2>请假申请</h2>
 		<form name="form"
-			action="${pageContext.request.contextPath}/api/leave/create"
+			action="${pageContext.request.contextPath}/leave/create"
 			method="POST" enctype="multipart/form-data">
 			请假开始日期： <select name="startYear">
 				<c:forEach items="${years }" var="year">
