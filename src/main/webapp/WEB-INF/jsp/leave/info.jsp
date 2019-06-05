@@ -53,7 +53,7 @@
 						value="${leaveInfoView.reason}">
 					<label class="col-sm-3 control-label">附件：</label>
 					<c:forEach items="${leaveInfoView.images }" var="image">
-						<img src="${pageContext.request.contextPath}/${image.path }" />
+						<img width="300px" height="250px" src="${pageContext.request.contextPath}/${image.path }" />
 					</c:forEach>
 
 
