@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.util.Calendar;
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
@@ -128,6 +129,26 @@ public class LeaveController {
 			return "error";
 		}
 		return null;
+	}
+	
+	@GetMapping("/cancel")
+	public String cancel(@RequestParam int id, HttpSession session, Model model, HttpServletResponse response, HttpServletRequest request) {
+		HttpSessionAdapter sessionAdapter = new HttpSessionAdapter(session);
+		User user = sessionAdapter.getUser();
+		JSONResult result = leaveService.cancel(user, id);
+		ModelAdapter modelAdapter = new ModelAdapter(model);
+		if(result.getCode() != JSONCodeType.SUCCESS) {
+			modelAdapter.setResult(result);
+			return "error";
+		}
+		try {
+			response.sendRedirect("list");
+		} catch (IOException e) {
+			modelAdapter.setResult(JSONResult.SERVER_ERROR);
+			return "error";
+		}
+		return null;
+		
 	}
 	
 }

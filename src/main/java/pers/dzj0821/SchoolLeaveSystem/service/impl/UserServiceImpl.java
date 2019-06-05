@@ -1,14 +1,10 @@
 package pers.dzj0821.SchoolLeaveSystem.service.impl;
 
-import java.security.InvalidKeyException;
 import java.security.PrivateKey;
 import java.util.Base64;
 import java.util.HashMap;
 import java.util.List;
 import java.util.regex.Pattern;
-
-import javax.crypto.BadPaddingException;
-import javax.crypto.IllegalBlockSizeException;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -69,7 +65,7 @@ public class UserServiceImpl implements UserService {
 		// 密码解码
 		try {
 			password = new String(RSAUtil.decrypt(Base64.getDecoder().decode(base64RSAPassword), privateKey));
-		} catch (InvalidKeyException | IllegalBlockSizeException | BadPaddingException e) {
+		} catch (Exception e) {
 			return Invalidpassword;
 		}
 		if (!valifyPassword(password)) { //$NON-NLS-1$
@@ -113,7 +109,7 @@ public class UserServiceImpl implements UserService {
 		// 密码解码
 		try {
 			password = new String(RSAUtil.decrypt(Base64.getDecoder().decode(base64RSAPassword), privateKey));
-		} catch (InvalidKeyException | IllegalBlockSizeException | BadPaddingException e) {
+		} catch (Exception e) {
 			return Invalidpassword;
 		}
 		if (!valifyPassword(password)) { //$NON-NLS-1$
@@ -163,7 +159,7 @@ public class UserServiceImpl implements UserService {
 		String oldPassword = null;
 		try {
 			oldPassword = new String(RSAUtil.decrypt(Base64.getDecoder().decode(base64RSAOldPassword), privateKey));
-		} catch (InvalidKeyException | IllegalBlockSizeException | BadPaddingException e) {
+		} catch (Exception e) {
 			return invalidOldPassword;
 		}
 		if(!valifyPassword(oldPassword)) {
@@ -174,7 +170,7 @@ public class UserServiceImpl implements UserService {
 		String newPassword = null;
 		try {
 			newPassword = new String(RSAUtil.decrypt(Base64.getDecoder().decode(base64RSANewPassword), privateKey));
-		} catch (InvalidKeyException | IllegalBlockSizeException | BadPaddingException e) {
+		} catch (Exception e) {
 			return invalidNewPassword;
 		}
 		if("".equals(newPassword)) { //$NON-NLS-1$
@@ -300,7 +296,7 @@ public class UserServiceImpl implements UserService {
 				// 密码解码
 				try {
 					password = new String(RSAUtil.decrypt(Base64.getDecoder().decode(base64RSAPassword), privateKey));
-				} catch (InvalidKeyException | IllegalBlockSizeException | BadPaddingException e) {
+				} catch (Exception e) {
 					return Invalidpassword;
 				}
 				

@@ -10,8 +10,10 @@
 </head>
 
 <body class="gray-bg">
+	<%@ include file="/WEB-INF/jsp/include/header.jsp"%>
 	<div class="container">
-		<form action="${pageContext.request.contextPath}/leave/review" method="POST">
+		<form action="${pageContext.request.contextPath}/leave/review"
+			method="POST">
 			<input id="id" name="id" type="hidden" value="${leaveInfoView.id }">
 			<div class="form-group">
 				<label class="col-sm-3 control-label">姓名：</label>
@@ -48,8 +50,8 @@
 				<label class="col-sm-3 control-label">请假理由：</label>
 				<div class="col-sm-8">
 					<input id="reason" name="reason" class="form-control" type="text"
-						value="${leaveInfoView.reason}"> <label
-						class="col-sm-3 control-label">附件：</label>
+						value="${leaveInfoView.reason}">
+					<label class="col-sm-3 control-label">附件：</label>
 					<c:forEach items="${leaveInfoView.images }" var="image">
 						<img src="${pageContext.request.contextPath}/${image.path }" />
 					</c:forEach>
@@ -58,25 +60,25 @@
 				</div>
 
 			</div>
-
-
-			<div class="form-group">
-				<label class="col-sm-3 control-label">审批结果：</label>
-				<div class="col-sm-8">
-					<!-- 不通过 <input type ="checkbox" value="1" name="type">
+			<c:if test="${User.type != 'NORMAL_USER' }">
+				<div class="form-group">
+					<label class="col-sm-3 control-label">审批结果：</label>
+					<div class="col-sm-8">
+						<!-- 不通过 <input type ="checkbox" value="1" name="type">
 									通过 <input type ="checkbox" value="2" name="type"> -->
-					<select id="type" name="access" class="form-control">
-						<option value="false">不通过</option>
-						<option value="true">通过</option>
-					</select>
+						<select id="type" name="access" class="form-control">
+							<option value="false">不通过</option>
+							<option value="true">通过</option>
+						</select>
 
+					</div>
 				</div>
-			</div>
-			<div class="form-group">
-				<div class="col-sm-8 col-sm-offset-3">
-					<button type="submit" class="btn btn-primary">提交</button>
+				<div class="form-group">
+					<div class="col-sm-8 col-sm-offset-3">
+						<button type="submit" class="btn btn-primary">提交</button>
+					</div>
 				</div>
-			</div>
+			</c:if>
 		</form>
 	</div>
 </body>

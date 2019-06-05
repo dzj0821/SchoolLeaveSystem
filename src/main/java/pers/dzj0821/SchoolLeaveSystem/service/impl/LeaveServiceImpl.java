@@ -358,7 +358,7 @@ public class LeaveServiceImpl implements LeaveService {
 			return JSONResult.SERVER_ERROR;
 		}
 		// 如果没有权限
-		if (!access) {
+		if (user.getType() != UserType.SUPER_ADMIN && !access) {
 			return JSONResult.ACCESS_DENIED;
 		}
 		User selectUser = null;
