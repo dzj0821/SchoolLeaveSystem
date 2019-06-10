@@ -7,7 +7,7 @@ import javax.servlet.http.HttpSession;
 import pers.dzj0821.SchoolLeaveSystem.pojo.User;
 
 public class HttpSessionAdapter {
-	private static final String USER_KEY_NAME = "User";
+	private static final String USER_KEY_NAME = "user";
 	private static final String RSA_KEY_PAIR_KEY_NAME = "RSAKeyPair";
 	private static final String RSA_CREATE_TIMESTAMP_KEY_NAME = "RSACreateTimestamp";
 	private HttpSession session;

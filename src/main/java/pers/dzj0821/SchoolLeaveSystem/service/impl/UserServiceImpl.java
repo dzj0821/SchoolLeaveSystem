@@ -28,6 +28,7 @@ import pers.dzj0821.SchoolLeaveSystem.util.SHA256Util;
 
 /**
  * 用户模块的逻辑实现
+ * 
  * @author dzj0821
  *
  */
@@ -48,19 +49,19 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public JSONResult register(String username, String base64RSAPassword, String name, String telephone,
 			PrivateKey privateKey) {
-		//TODO 通过注解进行参数验证
+		// TODO 通过注解进行参数验证
 		// 验证输入
-		if (!Pattern.matches(USERNAME_REGEX, username)) { //$NON-NLS-1$
+		if (!Pattern.matches(USERNAME_REGEX, username)) { // $NON-NLS-1$
 			return new JSONResult(JSONCodeType.INVALID_PARAMS, Messages.getString("InvalidUsername"), null); //$NON-NLS-1$
 		}
-		if (!Pattern.matches(NAME_REGEX, name)) { //$NON-NLS-1$
+		if (!Pattern.matches(NAME_REGEX, name)) { // $NON-NLS-1$
 			return new JSONResult(JSONCodeType.INVALID_PARAMS, Messages.getString("InvalidName"), null); //$NON-NLS-1$
 		}
-		if (!Pattern.matches(TELEPHONE_REGEX, telephone)) { //$NON-NLS-1$
+		if (!Pattern.matches(TELEPHONE_REGEX, telephone)) { // $NON-NLS-1$
 			return new JSONResult(JSONCodeType.INVALID_PARAMS, Messages.getString("InvalidTelephone"), null); //$NON-NLS-1$
 		}
-		JSONResult Invalidpassword = new JSONResult(JSONCodeType.INVALID_PARAMS,
-				Messages.getString("InvalidPassword"), null); //$NON-NLS-1$
+		JSONResult Invalidpassword = new JSONResult(JSONCodeType.INVALID_PARAMS, Messages.getString("InvalidPassword"), //$NON-NLS-1$
+				null);
 		String password = null;
 		// 密码解码
 		try {
@@ -68,7 +69,7 @@ public class UserServiceImpl implements UserService {
 		} catch (Exception e) {
 			return Invalidpassword;
 		}
-		if (!valifyPassword(password)) { //$NON-NLS-1$
+		if (!valifyPassword(password)) { // $NON-NLS-1$
 			return Invalidpassword;
 		}
 		// 验证用户名是否存在
@@ -80,11 +81,13 @@ public class UserServiceImpl implements UserService {
 			return JSONResult.SERVER_ERROR;
 		}
 		if (user != null) {
-			return new JSONResult(JSONCodeType.REGISTER_USERNAME_ALREADY_EXIST, Messages.getString("UsernameAlreadyExist"), //$NON-NLS-1$
+			return new JSONResult(JSONCodeType.REGISTER_USERNAME_ALREADY_EXIST,
+					Messages.getString("UsernameAlreadyExist"), //$NON-NLS-1$
 					null);
 		}
-		//验证结束 用户信息存入数据库
-		user = new User(null, username, SHA256Util.encrypt(password), UserType.NORMAL_USER, name, telephone, null, null, null);
+		// 验证结束 用户信息存入数据库
+		user = new User(null, username, SHA256Util.encrypt(password), UserType.NORMAL_USER, name, telephone, null, null,
+				null);
 		try {
 			userDao.insertUser(user);
 		} catch (Exception e) {
@@ -92,19 +95,19 @@ public class UserServiceImpl implements UserService {
 			return JSONResult.SERVER_ERROR;
 		}
 		JSONResult success = new JSONResult(JSONCodeType.SUCCESS, Messages.getString("RegisterSuccess"), null); //$NON-NLS-1$
-		success.put(Messages.getString("LoginedUserObjectName"), user); //$NON-NLS-1$
+		success.put("user", user); //$NON-NLS-1$
 		return success;
 	}
 
 	@Override
 	public JSONResult login(String username, String base64RSAPassword, PrivateKey privateKey) {
-		//TODO 通过注解进行参数验证
+		// TODO 通过注解进行参数验证
 		// 验证输入
-		if (!Pattern.matches(USERNAME_REGEX, username)) { //$NON-NLS-1$
+		if (!Pattern.matches(USERNAME_REGEX, username)) { // $NON-NLS-1$
 			return new JSONResult(JSONCodeType.INVALID_PARAMS, Messages.getString("InvalidUsername"), null); //$NON-NLS-1$
 		}
-		JSONResult Invalidpassword = new JSONResult(JSONCodeType.INVALID_PARAMS,
-				Messages.getString("InvalidPassword"), null); //$NON-NLS-1$
+		JSONResult Invalidpassword = new JSONResult(JSONCodeType.INVALID_PARAMS, Messages.getString("InvalidPassword"), //$NON-NLS-1$
+				null);
 		String password = null;
 		// 密码解码
 		try {
@@ -112,7 +115,7 @@ public class UserServiceImpl implements UserService {
 		} catch (Exception e) {
 			return Invalidpassword;
 		}
-		if (!valifyPassword(password)) { //$NON-NLS-1$
+		if (!valifyPassword(password)) { // $NON-NLS-1$
 			return Invalidpassword;
 		}
 		// 验证用户名是否存在
@@ -127,33 +130,35 @@ public class UserServiceImpl implements UserService {
 			return new JSONResult(JSONCodeType.DATA_NOT_FOUND, Messages.getString("UserNotFound"), //$NON-NLS-1$
 					null);
 		}
-		//判断密码是否一致
+		// 判断密码是否一致
 		String sha256Password = SHA256Util.encrypt(password);
-		if(!sha256Password.equals(user.getPassword())) {
-			return new JSONResult(JSONCodeType.USERNAME_OR_PASSWORD_ERROR, Messages.getString("UsernameOrPasswordError"), null); //$NON-NLS-1$
+		if (!sha256Password.equals(user.getPassword())) {
+			return new JSONResult(JSONCodeType.USERNAME_OR_PASSWORD_ERROR,
+					Messages.getString("UsernameOrPasswordError"), null); //$NON-NLS-1$
 		}
 		JSONResult result = new JSONResult(JSONCodeType.SUCCESS, Messages.getString("LoginSuccess"), null); //$NON-NLS-1$
-		result.put(Messages.getString("LoginedUserObjectName"), user); //$NON-NLS-1$
+		result.put("user", user); //$NON-NLS-1$
 		return result;
 	}
 
 	@Override
-	public JSONResult modify(User user, String base64RSAOldPassword, String base64RSANewPassword, String name, String telephone, PrivateKey privateKey) {
-		//TODO 通过注解进行参数验证
-		//开始验证
-		if("".equals(name)) { //$NON-NLS-1$
+	public JSONResult modify(User user, String base64RSAOldPassword, String base64RSANewPassword, String name,
+			String telephone, PrivateKey privateKey) {
+		// TODO 通过注解进行参数验证
+		// 开始验证
+		if ("".equals(name)) { //$NON-NLS-1$
 			name = null;
 		}
-		if(name != null && !Pattern.matches(NAME_REGEX, name)) { //$NON-NLS-1$
+		if (name != null && !Pattern.matches(NAME_REGEX, name)) { // $NON-NLS-1$
 			return new JSONResult(JSONCodeType.INVALID_PARAMS, Messages.getString("InvalidName"), null); //$NON-NLS-1$
 		}
-		if("".equals(telephone)) { //$NON-NLS-1$
+		if ("".equals(telephone)) { //$NON-NLS-1$
 			telephone = null;
 		}
-		if (telephone != null && !Pattern.matches(TELEPHONE_REGEX, telephone)) { //$NON-NLS-1$
+		if (telephone != null && !Pattern.matches(TELEPHONE_REGEX, telephone)) { // $NON-NLS-1$
 			return new JSONResult(JSONCodeType.INVALID_PARAMS, Messages.getString("InvalidTelephone"), null); //$NON-NLS-1$
 		}
-		//密码解密
+		// 密码解密
 		JSONResult invalidOldPassword = new JSONResult(JSONCodeType.INVALID_PARAMS,
 				Messages.getString("InvalidOldPassword"), null); //$NON-NLS-1$
 		String oldPassword = null;
@@ -162,7 +167,7 @@ public class UserServiceImpl implements UserService {
 		} catch (Exception e) {
 			return invalidOldPassword;
 		}
-		if(!valifyPassword(oldPassword)) {
+		if (!valifyPassword(oldPassword)) {
 			return invalidOldPassword;
 		}
 		JSONResult invalidNewPassword = new JSONResult(JSONCodeType.INVALID_PARAMS,
@@ -173,21 +178,21 @@ public class UserServiceImpl implements UserService {
 		} catch (Exception e) {
 			return invalidNewPassword;
 		}
-		if("".equals(newPassword)) { //$NON-NLS-1$
+		if ("".equals(newPassword)) { //$NON-NLS-1$
 			newPassword = null;
 		}
-		if(newPassword != null && !valifyPassword(newPassword)) {
+		if (newPassword != null && !valifyPassword(newPassword)) {
 			return invalidNewPassword;
 		}
-		//验证完毕
+		// 验证完毕
 		String sha256Password = SHA256Util.encrypt(oldPassword);
-		if(!user.getPassword().equals(sha256Password)) {
+		if (!user.getPassword().equals(sha256Password)) {
 			return new JSONResult(JSONCodeType.OLD_PASSWORD_ERROR, Messages.getString("OldPasswordError"), null); //$NON-NLS-1$
 		}
-		//更新用户信息
+		// 更新用户信息
 		User updateUser = new User();
 		updateUser.setId(user.getId());
-		if(newPassword != null) {
+		if (newPassword != null) {
 			updateUser.setPassword(SHA256Util.encrypt(newPassword));
 		}
 		updateUser.setName(name);
@@ -200,25 +205,25 @@ public class UserServiceImpl implements UserService {
 			return JSONResult.SERVER_ERROR;
 		}
 		JSONResult result = new JSONResult(JSONCodeType.SUCCESS, Messages.getString("ModifyUserInfoSuccess"), null); //$NON-NLS-1$
-		result.put(Messages.getString("LoginedUserObjectName"), user); //$NON-NLS-1$
+		result.put("user", user); //$NON-NLS-1$
 		return result;
 	}
 
 	@Override
 	public JSONResult logout(User user) {
-		if(user == null) {
+		if (user == null) {
 			return new JSONResult(JSONCodeType.ACCESS_DENIED, "尚未登录", null);
 		}
 		return new JSONResult(JSONCodeType.SUCCESS, "登出成功", null);
 	}
-	
+
 	@Override
 	public JSONResult getUserInfo(int willGetUserId, User fromUser) {
-		//未登录不能查看用户信息
-		if(fromUser == null) {
+		// 未登录不能查看用户信息
+		if (fromUser == null) {
 			return JSONResult.ACCESS_DENIED;
 		}
-		//获取被查询的用户
+		// 获取被查询的用户
 		User willGetUser = null;
 		try {
 			willGetUser = userDao.selectUserById(willGetUserId);
@@ -226,17 +231,17 @@ public class UserServiceImpl implements UserService {
 			logger.warn(Messages.getString("ServerError"), e); //$NON-NLS-1$
 			return JSONResult.SERVER_ERROR;
 		}
-		//如果没有这个用户
-		if(willGetUser == null) {
+		// 如果没有这个用户
+		if (willGetUser == null) {
 			return new JSONResult(JSONCodeType.DATA_NOT_FOUND, Messages.getString("UserNotFound"), null); //$NON-NLS-1$
 		}
-		//如果查看的不是自己的账号信息 验证权限
-		if(willGetUserId != fromUser.getId()) {
-			check:switch (fromUser.getType()) {
+		// 如果查看的不是自己的账号信息 验证权限
+		if (willGetUserId != fromUser.getId()) {
+			check: switch (fromUser.getType()) {
 			case NORMAL_USER:
 				return JSONResult.ACCESS_DENIED;
 			case CLAZZ_ADMIN:
-				//验证被查询的用户是否是属于查询者管理的班级
+				// 验证被查询的用户是否是属于查询者管理的班级
 				List<PermissionClazz> permissionClazzes = null;
 				try {
 					permissionClazzes = permissionClazzDao.selectPermissionClazzesByUserId(fromUser.getId());
@@ -245,8 +250,8 @@ public class UserServiceImpl implements UserService {
 					return JSONResult.SERVER_ERROR;
 				}
 				for (PermissionClazz permissionClazz : permissionClazzes) {
-					//FIXME equals
-					if(permissionClazz.getClazz().getId() == willGetUser.getClazz().getId()) {
+					// FIXME equals
+					if (permissionClazz.getClazz().getId() == willGetUser.getClazz().getId()) {
 						break check;
 					}
 				}
@@ -260,8 +265,8 @@ public class UserServiceImpl implements UserService {
 					return JSONResult.SERVER_ERROR;
 				}
 				for (PermissionCollage permissionCollage : permissionCollages) {
-					//FIXME equals
-					if(permissionCollage.getId() == willGetUser.getClazz().getMajor().getCollage().getId()) {
+					// FIXME equals
+					if (permissionCollage.getId() == willGetUser.getClazz().getMajor().getCollage().getId()) {
 						break check;
 					}
 				}
@@ -276,9 +281,9 @@ public class UserServiceImpl implements UserService {
 		data.put(Messages.getString("UserInfoDataUserName"), new UserInfoView(willGetUser)); //$NON-NLS-1$
 		return new JSONResult(JSONCodeType.SUCCESS, null, data);
 	}
-	
+
 	private boolean valifyPassword(String password) {
-		if(password == null) {
+		if (password == null) {
 			return false;
 		}
 		return Pattern.matches("^[a-zA-Z0-9]{9,18}$", password) //$NON-NLS-1$
@@ -287,43 +292,43 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public JSONResult batchRegister(String username,String base64RSAPassword,PrivateKey privateKey) {
-		//TODO 通过注解进行参数验证
-				// 验证输入							
-				JSONResult Invalidpassword = new JSONResult(JSONCodeType.INVALID_PARAMS,
-						Messages.getString("InvalidPassword"), null); //$NON-NLS-1$
-				String password = null;
-				// 密码解码
-				try {
-					password = new String(RSAUtil.decrypt(Base64.getDecoder().decode(base64RSAPassword), privateKey));
-				} catch (Exception e) {
-					return Invalidpassword;
-				}
-				
-				// 验证用户名是否存在
-				User user = null;
-				try {
-					user = userDao.selectUserByUsername(username);
-				} catch (Exception e) {
-					logger.warn(Messages.getString("SQLError"), e); //$NON-NLS-1$
-					return JSONResult.SERVER_ERROR;
-				}
-				if (user != null) {
-					return new JSONResult(JSONCodeType.REGISTER_USERNAME_ALREADY_EXIST, Messages.getString("UsernameAlreadyExist"), //$NON-NLS-1$
-							null);
-				}
-				String name=null,telephone=null;
-				//验证结束 用户信息存入数据库
-				user = new User(null, username, SHA256Util.encrypt(password), null, name, telephone, null, null, null);
-				try {
-					userDao.insertUser(user);
-				} catch (Exception e) {
-					logger.warn(Messages.getString("SQLError"), e); //$NON-NLS-1$
-					return JSONResult.SERVER_ERROR;
-				}
-				JSONResult success = new JSONResult(JSONCodeType.SUCCESS, Messages.getString("RegisterSuccess"), null); //$NON-NLS-1$
-				success.put(Messages.getString("LoginedUserObjectName"), user); //$NON-NLS-1$
-				return success;
+	public JSONResult batchRegister(String username, String base64RSAPassword, PrivateKey privateKey) {
+		// 验证输入
+		JSONResult Invalidpassword = new JSONResult(JSONCodeType.INVALID_PARAMS, Messages.getString("InvalidPassword"), //$NON-NLS-1$
+				null);
+		String password = null;
+		// 密码解码
+		try {
+			password = new String(RSAUtil.decrypt(Base64.getDecoder().decode(base64RSAPassword), privateKey));
+		} catch (Exception e) {
+			return Invalidpassword;
+		}
+
+		// 验证用户名是否存在
+		User user = null;
+		try {
+			user = userDao.selectUserByUsername(username);
+		} catch (Exception e) {
+			logger.warn(Messages.getString("SQLError"), e); //$NON-NLS-1$
+			return JSONResult.SERVER_ERROR;
+		}
+		if (user != null) {
+			return new JSONResult(JSONCodeType.REGISTER_USERNAME_ALREADY_EXIST,
+					Messages.getString("UsernameAlreadyExist"), //$NON-NLS-1$
+					null);
+		}
+		String name = null, telephone = null;
+		// 验证结束 用户信息存入数据库
+		user = new User(null, username, SHA256Util.encrypt(password), null, name, telephone, null, null, null);
+		try {
+			userDao.insertUser(user);
+		} catch (Exception e) {
+			logger.warn(Messages.getString("SQLError"), e); //$NON-NLS-1$
+			return JSONResult.SERVER_ERROR;
+		}
+		JSONResult success = new JSONResult(JSONCodeType.SUCCESS, Messages.getString("RegisterSuccess"), null); //$NON-NLS-1$
+		success.put("user", user); //$NON-NLS-1$
+		return success;
 	}
 
 }

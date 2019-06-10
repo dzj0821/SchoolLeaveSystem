@@ -83,19 +83,19 @@ public class LeaveController {
 				reason, images, session.getServletContext().getRealPath("/"));
 		ModelAdapter modelAdapter = new ModelAdapter(model);
 		if(result.getCode() != JSONCodeType.SUCCESS) {
-			modelAdapter.setResult(result);
+			modelAdapter.setErrorResult(result);
 			return "error";
 		}
 		try {
 			response.sendRedirect("list");
 		} catch (IOException e) {
-			modelAdapter.setResult(JSONResult.SERVER_ERROR);
+			modelAdapter.setErrorResult(JSONResult.SERVER_ERROR);
 			return "error";
 		}
 		return null;
 	}
 	
-	@SuppressWarnings("unchecked")
+	
 	@GetMapping("/list")
 	public String list(Integer clazzId, Integer userId, LeaveType type, HttpSession session, Model model) {
 		HttpSessionAdapter sessionAdapter = new HttpSessionAdapter(session);
@@ -103,9 +103,10 @@ public class LeaveController {
 		JSONResult result = leaveService.list(user, clazzId, userId, type);
 		ModelAdapter modelAdapter = new ModelAdapter(model);
 		if(result.getCode() != JSONCodeType.SUCCESS) {
-			modelAdapter.setResult(result);
+			modelAdapter.setErrorResult(result);
 			return "error";
 		}
+		@SuppressWarnings("unchecked")
 		List<Leave> leaves  = (List<Leave>) result.getData().get("leaves");
 		List<LeaveListView> leaveListViews = new ArrayList<>(leaves.size());
 		for (Leave leave : leaves) {
@@ -126,7 +127,7 @@ public class LeaveController {
 		JSONResult result = leaveService.info(user, id);
 		ModelAdapter modelAdapter = new ModelAdapter(model);
 		if(result.getCode() != JSONCodeType.SUCCESS) {
-			modelAdapter.setResult(result);
+			modelAdapter.setErrorResult(result);
 			return "error";
 		}
 		Leave leave = (Leave) result.getData().get("leave");
@@ -144,13 +145,13 @@ public class LeaveController {
 		JSONResult result = leaveService.review(user, id, access);
 		ModelAdapter modelAdapter = new ModelAdapter(model);
 		if(result.getCode() != JSONCodeType.SUCCESS) {
-			modelAdapter.setResult(result);
+			modelAdapter.setErrorResult(result);
 			return "error";
 		}
 		try {
 			response.sendRedirect("list");
 		} catch (IOException e) {
-			modelAdapter.setResult(JSONResult.SERVER_ERROR);
+			modelAdapter.setErrorResult(JSONResult.SERVER_ERROR);
 			return "error";
 		}
 		return null;
@@ -163,13 +164,13 @@ public class LeaveController {
 		JSONResult result = leaveService.cancel(user, id);
 		ModelAdapter modelAdapter = new ModelAdapter(model);
 		if(result.getCode() != JSONCodeType.SUCCESS) {
-			modelAdapter.setResult(result);
+			modelAdapter.setErrorResult(result);
 			return "error";
 		}
 		try {
 			response.sendRedirect("list");
 		} catch (IOException e) {
-			modelAdapter.setResult(JSONResult.SERVER_ERROR);
+			modelAdapter.setErrorResult(JSONResult.SERVER_ERROR);
 			return "error";
 		}
 		return null;

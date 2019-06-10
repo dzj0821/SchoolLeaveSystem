@@ -19,7 +19,7 @@
 		<div class="navbar-collapse collapse" id="order" aria-expanded="false">
 			<ul class="nav navbar-nav">
 				<li class="dropdown">
-					<c:if test="${User != null }">
+					<c:if test="${user != null }">
 						<a href="#" class="dropdown-toggle" data-toggle="dropdown"
 							role="button" aria-haspopup="true" aria-expanded="false">
 							请假管理
@@ -32,10 +32,10 @@
 							<li>
 								<a href="${pageContext.request.contextPath}/leave/list">申请记录</a>
 							</li>
-							<c:if test="${User.type != 'NORMAL_USER' }">
+							<c:if test="${user.type != 'NORMAL_USER' }">
 								<li role="separator" class="divider"></li>
 								<li>
-									<a href="${pageContext.request.contextPath}/leave/list?clazzId=${User.clazz.id }">审核名单</a>
+									<a href="${pageContext.request.contextPath}/leave/list?clazzId=${user.clazz.id }">审核名单</a>
 								</li>
 							</c:if>
 						</ul>
@@ -45,7 +45,7 @@
 				<!--<li><a href="">权限管理</a></li>-->
 			</ul>
 			<ul class="nav navbar-nav navbar-right ">
-				<c:if test="${User == null }">
+				<c:if test="${user == null }">
 					<li>
 						<a href="${pageContext.request.contextPath}/user/login"
 							style="color: #9d9d9d">登录</a>
@@ -55,18 +55,18 @@
 							style="color: #9d9d9d">注册</a>
 					</li>
 				</c:if>
-				<c:if test="${User != null }">
+				<c:if test="${user != null }">
 					<li class="dropdown">
 						<a href="#" class="dropdown-toggle" data-toggle="dropdown"
 							role="button" aria-haspopup="true" aria-expanded="false">
 							<span class="glyphicon glyphicon-user"></span>
 							<%-- 用户登陆成功，显示姓名--%>
-							<span>${User.name }</span>
+							<span>${user.name }</span>
 						</a>
 						<ul class="dropdown-menu">
 							<li>
 								<a
-									href="${pageContext.request.contextPath}/user/info?id=${User.id }"
+									href="${pageContext.request.contextPath}/user/info?id=${user.id }"
 									style="color: #9d9d9d">个人信息</a>
 							</li>
 							<li>

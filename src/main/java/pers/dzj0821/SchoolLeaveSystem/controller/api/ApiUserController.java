@@ -77,7 +77,7 @@ public class ApiUserController {
 		JSONResult result = userService.login(username, password, keyPair.getPrivate());
 		if(result.getCode() == JSONCodeType.SUCCESS) {
 			//如果登录成功，把User对象放入session中
-			User loginedUser = (User) result.get(Messages.getString("LoginedUserObjectName"));
+			User loginedUser = (User) result.get("user");
 			sessionAdapter.setUser(loginedUser);
 		}
 		return result;
@@ -103,7 +103,7 @@ public class ApiUserController {
 		User user = sessionAdapter.getUser(); 
 		JSONResult result = userService.modify(user, oldPassword, newPassword, name, telephone, keyPair.getPrivate());
 		if(result.getCode() == JSONCodeType.SUCCESS) {
-			User loginedUser = (User) result.get(Messages.getString("LoginedUserObjectName"));
+			User loginedUser = (User) result.get("user");
 			sessionAdapter.setUser(loginedUser);
 		}
 		return result;

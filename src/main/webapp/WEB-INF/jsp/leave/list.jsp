@@ -55,12 +55,12 @@
 					</td>
 					<td>
 						<c:if
-							test="${leave.type == 'WAIT' && sessionScope.User.type != 'NORMAL_USER' }">
+							test="${leave.type == 'WAIT' && user.type != 'NORMAL_USER' }">
 							<a
 								href="${pageContext.request.contextPath}/leave/info?id=${leave.id }">审核</a>
 						</c:if>
 						<c:if
-							test="${leave.type == 'WAIT' && sessionScope.User.type == 'NORMAL_USER' }">
+							test="${leave.type == 'WAIT' && user.type == 'NORMAL_USER' }">
 							<a
 								href="${pageContext.request.contextPath}/leave/cancel?id=${leave.id }">取消申请</a>
 						</c:if>

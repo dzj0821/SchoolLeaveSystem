@@ -15,7 +15,7 @@ public class ModelAdapter {
 	public void setUserInfoView(UserInfoView view) {
 		model.addAttribute("userInfoView", view);
 	}
-	public void setResult(JSONResult result) {
+	public void setErrorResult(JSONResult result) {
 		model.addAttribute("result", result);
 	}
 	

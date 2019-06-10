@@ -72,12 +72,12 @@ public class UserController {
 			try {
 				response.sendRedirect("login");
 			} catch (IOException e) {
-				modelAdapter.setResult(JSONResult.SERVER_ERROR);
+				modelAdapter.setErrorResult(JSONResult.SERVER_ERROR);
 				return "error";
 			}
 			return null;
 		}
-		modelAdapter.setResult(result);
+		modelAdapter.setErrorResult(result);
 		return "error";
 	}
 
@@ -128,17 +128,17 @@ public class UserController {
 		ModelAdapter modelAdapter = new ModelAdapter(model);
 		if (result.getCode() == JSONCodeType.SUCCESS) {
 			// 如果登录成功，把User对象放入session中
-			User loginedUser = (User) result.get(Messages.getString("LoginedUserObjectName"));
+			User loginedUser = (User) result.get("user");
 			sessionAdapter.setUser(loginedUser);
 			try {
 				response.sendRedirect(request.getContextPath() + "/");
 			} catch (IOException e) {
-				modelAdapter.setResult(JSONResult.SERVER_ERROR);
+				modelAdapter.setErrorResult(JSONResult.SERVER_ERROR);
 				return "error";
 			}
 			return null;
 		}
-		modelAdapter.setResult(result);
+		modelAdapter.setErrorResult(result);
 		return "error";
 	}
 
@@ -170,17 +170,17 @@ public class UserController {
 		JSONResult result = userService.modify(user, oldPassword, newPassword, name, telephone, keyPair.getPrivate());
 		ModelAdapter modelAdapter = new ModelAdapter(model);
 		if(result.getCode() == JSONCodeType.SUCCESS) {
-			User loginedUser = (User) result.get(Messages.getString("LoginedUserObjectName"));
+			User loginedUser = (User) result.get("user");
 			sessionAdapter.setUser(loginedUser);
 			try {
 				response.sendRedirect("info?id=" + user.getId());
 			} catch (IOException e) {
-				modelAdapter.setResult(JSONResult.SERVER_ERROR);
+				modelAdapter.setErrorResult(JSONResult.SERVER_ERROR);
 				return "error";
 			}
 			return null;
 		}
-		modelAdapter.setResult(result);
+		modelAdapter.setErrorResult(result);
 		return "error";
 	}
 
@@ -205,7 +205,7 @@ public class UserController {
 			return Messages.getString("UserInfoPage"); //$NON-NLS-1$
 		}
 		// 失败显示错误页面
-		modelAdapter.setResult(result);
+		modelAdapter.setErrorResult(result);
 		return Messages.getString("ErrorPage"); //$NON-NLS-1$
 	}
 
@@ -220,12 +220,12 @@ public class UserController {
 			try {
 				response.sendRedirect(request.getContextPath() + "/");
 			} catch (IOException e) {
-				modelAdapter.setResult(JSONResult.SERVER_ERROR);
+				modelAdapter.setErrorResult(JSONResult.SERVER_ERROR);
 				return "error";
 			}
 			return null;
 		}
-		modelAdapter.setResult(result);
+		modelAdapter.setErrorResult(result);
 		return "error";
 	}
 }

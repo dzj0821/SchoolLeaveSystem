@@ -51,16 +51,16 @@
 				<div class="col-sm-8">
 					<input id="reason" name="reason" class="form-control" type="text"
 						value="${leaveInfoView.reason}">
-					<label class="col-sm-3 control-label">附件：</label>
 					<c:forEach items="${leaveInfoView.images }" var="image">
-						<img width="300px" height="250px" src="${pageContext.request.contextPath}/${image.path }" />
+						<p><span>附件：</span>
+						<img src="${pageContext.request.contextPath}/${image.path }" /></p>
 					</c:forEach>
 
 
 				</div>
 
 			</div>
-			<c:if test="${User.type != 'NORMAL_USER' }">
+			<c:if test="${user.type != 'NORMAL_USER' }">
 				<div class="form-group">
 					<label class="col-sm-3 control-label">审批结果：</label>
 					<div class="col-sm-8">

@@ -37,10 +37,10 @@
 				</div>
 				<br>
 				<div class="panel-body">
-					<p>用户名：${User.username }</p>
+					<p>用户名：${user.username }</p>
 				</div>
 				<div class="panel-body">
-					<p>用户类型：${User.type.name }</p>
+					<p>用户类型：${user.type.name }</p>
 				</div>
 				<div class="panel-body">
 					<p>
@@ -65,13 +65,13 @@
 				<div class="panel-body">
 					<p>
 						姓名：
-						<input type="text" name="name" value="${User.name }">
+						<input type="text" name="name" value="${user.name }">
 					</p>
 				</div>
 				<div class="panel-body">
 					<p>
 						电话：
-						<input type="text" name="telephone" value="${User.telephone }">
+						<input type="text" name="telephone" value="${user.telephone }">
 					</p>
 				</div>
 				<hr>
