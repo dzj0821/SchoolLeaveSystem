@@ -2,7 +2,6 @@ package pers.dzj0821.SchoolLeaveSystem.controller;
 
 import java.io.IOException;
 import java.security.KeyPair;
-import java.util.Base64;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -41,22 +40,10 @@ public class UserController {
 
 	/**
 	 * 注册页面
-	 * 
-	 * @param model
-	 * @param session
-	 * @return
 	 */
 	@GetMapping("/register")
-	public String register(Model model, HttpSession session) {
-		/* KeyPair 生成公钥的工具类 */
-		HttpSessionAdapter sessionAdapter = new HttpSessionAdapter(session);
-		KeyPair keyPair = sessionAdapter.getRSAKeyPair();
-		// 将RSA公钥Base64加密后放入页面中
-		String publicKey = Base64.getEncoder().encodeToString(keyPair.getPublic().getEncoded());
-		model.addAttribute(Messages.getString("PublicKeyModelName"), publicKey); //$NON-NLS-1$
-		model.addAttribute(Messages.getString("RSACreateTimestampModelName"), //$NON-NLS-1$
-				sessionAdapter.getRSACreateTimestamp());
-		return Messages.getString("RegisterPage"); //$NON-NLS-1$
+	public String register() {
+		return "user/register";
 	}
 
 	@PostMapping("/register")
@@ -65,7 +52,7 @@ public class UserController {
 			HttpServletRequest request, HttpServletResponse response) {
 		// 从session中获取用于解密密码的RSA密钥对
 		HttpSessionAdapter sessionAdapter = new HttpSessionAdapter(session);
-		KeyPair keyPair = sessionAdapter.getRSAKeyPair();
+		KeyPair keyPair = sessionAdapter.getRsaKeyPair();
 		JSONResult result = userService.register(username, password, name, telephone, keyPair.getPrivate());
 		ModelAdapter modelAdapter = new ModelAdapter(model);
 		if (result.getCode() == JSONCodeType.SUCCESS) {
@@ -83,47 +70,25 @@ public class UserController {
 
 	/**
 	 * 批量注册注册页面
-	 * 
-	 * @param model
-	 * @param session
-	 * @return
 	 */
 	@GetMapping("/batchRegister")
-	public String batchRegister(Model model, HttpSession session) {
-		HttpSessionAdapter sessionAdapter = new HttpSessionAdapter(session);
-		KeyPair keyPair = sessionAdapter.getRSAKeyPair();
-		// 将RSA公钥Base64加密后放入页面中
-		String publicKey = Base64.getEncoder().encodeToString(keyPair.getPublic().getEncoded());
-		model.addAttribute(Messages.getString("PublicKeyModelName"), publicKey); //$NON-NLS-1$
-		model.addAttribute(Messages.getString("RSACreateTimestampModelName"), //$NON-NLS-1$
-				sessionAdapter.getRSACreateTimestamp());
-
-		return "user/batchRegister"; //$NON-NLS-1$
+	public String batchRegister() {
+		return "user/batchRegister";
 	}
 
 	/**
 	 * 登录页面
-	 * 
-	 * @param model
-	 * @param session
-	 * @return
 	 */
 	@GetMapping("/login")
-	public String login(Model model, HttpSession session) {
-		HttpSessionAdapter sessionAdapter = new HttpSessionAdapter(session);
-		KeyPair keyPair = sessionAdapter.getRSAKeyPair();
-		String publicKey = Base64.getEncoder().encodeToString(keyPair.getPublic().getEncoded());
-		model.addAttribute(Messages.getString("PublicKeyModelName"), publicKey); //$NON-NLS-1$
-		model.addAttribute(Messages.getString("RSACreateTimestampModelName"), //$NON-NLS-1$
-				sessionAdapter.getRSACreateTimestamp());
-		return Messages.getString("LoginPage"); //$NON-NLS-1$
+	public String login() {
+		return "user/login";
 	}
 
 	@PostMapping("/login")
 	public String loginRequest(@RequestParam String username, @RequestParam String password, HttpSession session,
 			HttpServletResponse response, HttpServletRequest request, Model model) {
 		HttpSessionAdapter sessionAdapter = new HttpSessionAdapter(session);
-		KeyPair keyPair = sessionAdapter.getRSAKeyPair();
+		KeyPair keyPair = sessionAdapter.getRsaKeyPair();
 		JSONResult result = userService.login(username, password, keyPair.getPrivate());
 		ModelAdapter modelAdapter = new ModelAdapter(model);
 		if (result.getCode() == JSONCodeType.SUCCESS) {
@@ -151,21 +116,15 @@ public class UserController {
 	 */
 	@GetMapping("/modify")
 	@UserTypeRequired(UserType.NORMAL_USER)
-	public String modify(Model model, HttpSession session) {
-		HttpSessionAdapter sessionAdapter = new HttpSessionAdapter(session);
-		KeyPair keyPair = sessionAdapter.getRSAKeyPair(); // $NON-NLS-1$
-		String publicKey = Base64.getEncoder().encodeToString(keyPair.getPublic().getEncoded());
-		model.addAttribute(Messages.getString("PublicKeyModelName"), publicKey); //$NON-NLS-1$
-		model.addAttribute(Messages.getString("RSACreateTimestampModelName"), //$NON-NLS-1$
-				sessionAdapter.getRSACreateTimestamp());
-		return Messages.getString("ModifyUserInfoPage"); //$NON-NLS-1$
+	public String modify() {
+		return "user/modify"; //$NON-NLS-1$
 	}
 	
 	@PostMapping("/modify")
 	public String modifyRequest(@RequestParam String oldPassword, @RequestParam String newPassword,
 			@RequestParam String name, @RequestParam String telephone, HttpSession session, HttpServletResponse response, Model model) {
 		HttpSessionAdapter sessionAdapter = new HttpSessionAdapter(session);
-		KeyPair keyPair = sessionAdapter.getRSAKeyPair(); 
+		KeyPair keyPair = sessionAdapter.getRsaKeyPair(); 
 		User user = sessionAdapter.getUser(); 
 		JSONResult result = userService.modify(user, oldPassword, newPassword, name, telephone, keyPair.getPrivate());
 		ModelAdapter modelAdapter = new ModelAdapter(model);

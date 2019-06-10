@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import pers.dzj0821.SchoolLeaveSystem.Messages;
 import pers.dzj0821.SchoolLeaveSystem.adapter.HttpSessionAdapter;
 import pers.dzj0821.SchoolLeaveSystem.annotation.RSATimestampCheck;
 import pers.dzj0821.SchoolLeaveSystem.annotation.UserTypeRequired;
@@ -56,7 +55,7 @@ public class ApiUserController {
 			@RequestParam String name, @RequestParam String telephone, HttpSession session) {
 		//从session中获取用于解密密码的RSA密钥对
 		HttpSessionAdapter sessionAdapter = new HttpSessionAdapter(session);
-		KeyPair keyPair = sessionAdapter.getRSAKeyPair();
+		KeyPair keyPair = sessionAdapter.getRsaKeyPair();
 		return userService.register(username, password, name, telephone, keyPair.getPrivate());
 	}
 
@@ -73,7 +72,7 @@ public class ApiUserController {
 	public Map<String, Object> login(@RequestParam String username, @RequestParam String password,
 			HttpSession session) {
 		HttpSessionAdapter sessionAdapter = new HttpSessionAdapter(session);
-		KeyPair keyPair = sessionAdapter.getRSAKeyPair();
+		KeyPair keyPair = sessionAdapter.getRsaKeyPair();
 		JSONResult result = userService.login(username, password, keyPair.getPrivate());
 		if(result.getCode() == JSONCodeType.SUCCESS) {
 			//如果登录成功，把User对象放入session中
@@ -99,7 +98,7 @@ public class ApiUserController {
 	public Map<String, Object> modify(@RequestParam String oldPassword, @RequestParam String newPassword,
 			@RequestParam String name, @RequestParam String telephone, HttpSession session) {
 		HttpSessionAdapter sessionAdapter = new HttpSessionAdapter(session);
-		KeyPair keyPair = sessionAdapter.getRSAKeyPair(); 
+		KeyPair keyPair = sessionAdapter.getRsaKeyPair(); 
 		User user = sessionAdapter.getUser(); 
 		JSONResult result = userService.modify(user, oldPassword, newPassword, name, telephone, keyPair.getPrivate());
 		if(result.getCode() == JSONCodeType.SUCCESS) {
@@ -152,7 +151,7 @@ public class ApiUserController {
 		String[] res = username.split("\n");
 		//从session中获取用于解密密码的RSA密钥对
 				HttpSessionAdapter sessionAdapter = new HttpSessionAdapter(session);
-				KeyPair keyPair = sessionAdapter.getRSAKeyPair();
+				KeyPair keyPair = sessionAdapter.getRsaKeyPair();
 
 		try {
 			for (int i = 0; i < res.length-1; i++) {

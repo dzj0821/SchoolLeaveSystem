@@ -25,7 +25,7 @@ public class RSATimestampCheckInterceptor extends HandlerInterceptorAdapter {
 		//如果含有RSATimestampCheck注解
 		if (handlerMethod.getMethodAnnotation(RSATimestampCheck.class) != null) {
 			//获取用户的RSA密钥生成时的时间戳
-			String clientRSACreateTimestamp = request.getParameter(Messages.getString("RSACreateTimestampModelName")); //$NON-NLS-1$
+			String clientRSACreateTimestamp = request.getParameter("timestamp"); //$NON-NLS-1$
 			if (clientRSACreateTimestamp == null) {
 				response.sendError(400);
 				return false;
@@ -38,12 +38,12 @@ public class RSATimestampCheckInterceptor extends HandlerInterceptorAdapter {
 				return false;
 			}
 			HttpSessionAdapter sessionAdapter = new HttpSessionAdapter(request.getSession());
-			if (clientRSACreateTimestampLong != sessionAdapter.getRSACreateTimestamp()) { //$NON-NLS-1$
+			if (clientRSACreateTimestampLong != sessionAdapter.getRsaCreateTimestamp()) { //$NON-NLS-1$
 				JSONResult result = new JSONResult(JSONCodeType.SESSION_TIMEOUT, Messages.getString("SessionTimeout"), //$NON-NLS-1$
 						null);
-				request.setAttribute(Messages.getString("NeedForwardResultRequestName"), result); //$NON-NLS-1$
+				request.setAttribute("result", result); //$NON-NLS-1$
 				//将JSON结果转发以返回JSON数据
-				request.getRequestDispatcher(Messages.getString("ForwardResultPath")).forward(request, response); //$NON-NLS-1$
+				request.getRequestDispatcher("/result").forward(request, response); //$NON-NLS-1$
 				return false;
 			}
 		}

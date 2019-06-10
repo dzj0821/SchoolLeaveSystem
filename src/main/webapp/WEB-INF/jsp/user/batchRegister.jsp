@@ -42,8 +42,8 @@ function onSubmit(){
   	</textarea>
   	初始密码：
   	<input type="text" name="password" id="password">
-  	<input id="publicKey" type='hidden' name="publicKey" value="${publicKey }" />
-	<input type='hidden' name="timestamp" value="${timestamp }" />
+  	<input id="publicKey" type='hidden' name="publicKey" value="${rsaPublicKey }" />
+	<input type='hidden' name="timestamp" value="${rsaCreateTimestamp }" />
 	    <input type="submit" value="提交">
   
   

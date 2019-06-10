@@ -1,6 +1,7 @@
 package pers.dzj0821.SchoolLeaveSystem.listener;
 
 import java.security.KeyPair;
+import java.util.Base64;
 
 import javax.servlet.annotation.WebListener;
 import javax.servlet.http.HttpSessionEvent;
@@ -23,8 +24,9 @@ public class RSAKeySessionListener implements HttpSessionListener {
 		//生成一个RSA密钥对
 		KeyPair keyPair = RSAUtil.genKeyPair();
 		HttpSessionAdapter sessionAdapter = new HttpSessionAdapter(event.getSession());
-		sessionAdapter.setRSAKeyPair(keyPair);
-		sessionAdapter.setRSACreateTimestamp(System.currentTimeMillis());
+		sessionAdapter.setRsaKeyPair(keyPair);
+		sessionAdapter.setRsaPublicKey(Base64.getEncoder().encodeToString(keyPair.getPublic().getEncoded()));
+		sessionAdapter.setRsaCreateTimestamp(System.currentTimeMillis());
 	}
 
 	@Override

@@ -77,8 +77,8 @@
 				<hr>
 				<div class="panel-body ">
 					<input id="publicKey" type='hidden' name="publicKey"
-						value="${publicKey }" />
-					<input type='hidden' name="timestamp" value="${timestamp }" />
+						value="${rsaPublicKey }" />
+					<input type='hidden' name="timestamp" value="${rsaCreateTimestamp }" />
 					<button class="btn btn-default" type="submit">确认修改</button>
 				</div>
 			</div>

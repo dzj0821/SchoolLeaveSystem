@@ -60,8 +60,8 @@ function onSubmit(){
 					class="form-group has-feedback form-inline  form-horizontal row">
 					<span class=" col-xs-3 col-md-1 col-md-offset-3"></span>
 					<input id="publicKey" type='hidden' name="publicKey"
-						value="${publicKey }" />
-					<input type='hidden' name="timestamp" value="${timestamp }" />
+						value="${rsaPublicKey }" />
+					<input type='hidden' name="timestamp" value="${rsaCreateTimestamp }" />
 					<span id="" class="col-xs-6 col-md-4"></span>
 				</div>
 				<div
