@@ -23,9 +23,13 @@
 		<url-pattern>*.jpg</url-pattern>
 		<url-pattern>*.js</url-pattern>
 		<url-pattern>*.css</url-pattern>
+		<url-pattern>*.map</url-pattern>
+
 		<url-pattern>*.woff2</url-pattern>
 		<url-pattern>*.woff</url-pattern>
 		<url-pattern>*.ttf</url-pattern>
+
+		<url-pattern>*.xlsx</url-pattern>
 	</servlet-mapping>
 	<servlet-mapping>
 		<servlet-name>spring-mvc</servlet-name>
@@ -33,11 +37,13 @@
 	</servlet-mapping>
 	<!-- log4j2-begin -->
 	<listener>
-		<listener-class>org.apache.logging.log4j.web.Log4jServletContextListener</listener-class>
+		<listener-class>org.apache.logging.log4j.web.Log4jServletContextListener
+		</listener-class>
 	</listener>
 	<filter>
 		<filter-name>encodingFilter</filter-name>
-		<filter-class>org.springframework.web.filter.CharacterEncodingFilter</filter-class>
+		<filter-class>org.springframework.web.filter.CharacterEncodingFilter
+		</filter-class>
 		<init-param>
 			<param-name>encoding</param-name>
 			<param-value>UTF-8</param-value>
@@ -54,7 +60,8 @@
 
 	<filter>
 		<filter-name>log4jServletFilter</filter-name>
-		<filter-class>org.apache.logging.log4j.web.Log4jServletFilter</filter-class>
+		<filter-class>org.apache.logging.log4j.web.Log4jServletFilter
+		</filter-class>
 	</filter>
 	<filter-mapping>
 		<filter-name>log4jServletFilter</filter-name>

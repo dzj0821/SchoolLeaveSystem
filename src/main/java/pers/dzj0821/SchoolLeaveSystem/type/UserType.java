@@ -16,6 +16,10 @@ public enum UserType {
 		this.name = name;
 	}
 	
+	/**
+	 * 
+	 * @return 用户类型对应代码，数值越小权限越高
+	 */
 	@JsonValue
 	public int getCode() {
 		return code;

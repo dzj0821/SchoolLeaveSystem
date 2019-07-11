@@ -1,54 +1,83 @@
-<%@ page language="java" import="java.util.*" pageEncoding="UTF-8"%>
-<%
-String path = request.getContextPath();
-String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path+"/";
-%>
-
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+	pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
-  <head>
-    <base href="<%=basePath%>">
-    
-    <title>My JSP 'batchRegister.jsp' starting page</title>
-    
-	<meta http-equiv="pragma" content="no-cache">
-	<meta http-equiv="cache-control" content="no-cache">
-	<meta http-equiv="expires" content="0">    
-	<meta http-equiv="keywords" content="keyword1,keyword2,keyword3">
-	<meta http-equiv="description" content="This is my page">
-	<!--
-	<link rel="stylesheet" type="text/css" href="styles.css">
-	-->
-	<script src="${pageContext.request.contextPath}/js/jsencrypt.min.js"></script>
-	<script>
-function onSubmit(){
-	var public_key = document.getElementById("publicKey").value;
-	var password = document.getElementById("password").value;
-	var encrypt = new JSEncrypt();
-    encrypt.setPublicKey(public_key);
-    var encrypted_password = encrypt.encrypt(password);
-    document.getElementById("password").value = encrypted_password;
-    
+<head>
+<%@ include file="/WEB-INF/jsp/include/head.jsp"%>
+<script>
+function check(){
+	$("#text_result").attr("class", "form-group alert");
+	$("#text_result").text("");
+	$("#submit").attr("disabled", false);
+	var text = $("#text").val().trim();
+	if(text === ""){
+		$("#text_result").addClass("alert-danger");
+		$("#text_result").text("信息为空");
+		$("#submit").attr("disabled", true);
+		return;
+	}
+	var arr = text.split("\n");
+	for(var i = 0; i < arr.length; i++){
+		var info = arr[i].split("\t");
+		if(info.length != 3){
+			$("#text_result").addClass("alert-danger");
+			$("#text_result").text("第" + (i + 1) + "行格式有误，内容为：" + arr[i]);
+			$("#submit").attr("disabled", true);
+			return;
+		}
+		if(!/^[0-9]{10}$/.test(info[0])){
+			$("#text_result").addClass("alert-danger");
+			$("#text_result").text("第" + (i + 1) + "行学号格式有误，内容为：" + info[0]);
+			$("#submit").attr("disabled", true);
+			return;
+		}
+		if(!/^[\u4E00-\u9FFF]{2,4}/.test(info[1])){
+			$("#text_result").addClass("alert-danger");
+			$("#text_result").text("第" + (i + 1) + "行姓名格式有误，内容为：" + info[1]);
+			$("#submit").attr("disabled", true);
+			return;
+		}
+		if(!/^0?(13|14|15|17|18|19)[0-9]{9}$/.test(info[2])){
+			$("#text_result").addClass("alert-danger");
+			$("#text_result").text("第" + (i + 1) + "行手机格式有误，内容为：" + info[2]);
+			$("#submit").attr("disabled", true);
+			return;
+		}
+	}
+	$("#text_result").addClass("alert-success");
+	$("#text_result").text("信息校验通过");
 }
+$(document).ready(function(){
+	$("#text").on("propertychange input", check);
+	check();
+});
 </script>
-  </head>
-  
-  <body>
-  <h2>批量注册</h2>
-  <form name="batchRegister" action="${pageContext.request.contextPath}/api/user/batchRegister" onsubmit="onSubmit()" method="post">
-  	<h3>学号</h3>
-  	<textarea rows="11" cols="15" name="username" id="username">
-  	
-  	</textarea>
-  	初始密码：
-  	<input type="text" name="password" id="password">
-  	<input id="publicKey" type='hidden' name="publicKey" value="${rsaPublicKey }" />
-	<input type='hidden' name="timestamp" value="${rsaCreateTimestamp }" />
-	    <input type="submit" value="提交">
-  
-  
-  </form>
-	    
-  </body>
-  
+<title>校园请假系统_批量注册</title>
+</head>
+<body>
+	<%@ include file="/WEB-INF/jsp/include/header.jsp"%>
+	<div class="container">
+		<form role="form" action="" method="POST">
+			<div class="form-group">
+				<span>请下载附件，按照格式填写信息，后将所有人信息框选后复制到文本框中：</span>
+				<a
+					href="${pageContext.request.contextPath}/static/batchRegister.xlsx">点此下载附件</a>
+				<textarea id="text" name="text" class="form-control" rows="20"></textarea>
+			</div>
+			<div id="text_result" class="form-group alert"></div>
+			<div class="form-group">
+				<span>请选择注册后这些用户加入的班级（仅可选择自己管理的班级）：</span>
+				<select class="form-control" name="classId">
+					<c:forEach items="${clazzes }" var="x">
+						<option value="${x.id }">${x.clazzFullName() }</option>
+					</c:forEach>
+				</select>
+			</div>
+			<div class="form-group">
+				<button id="submit" type="submit" class="btn btn-default">批量注册</button>
+			</div>
+		</form>
+	</div>
+</body>
 </html>

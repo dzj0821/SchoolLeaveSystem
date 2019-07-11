@@ -210,8 +210,7 @@ public class LeaveServiceImpl implements LeaveService {
 			return new JSONResult(JSONCodeType.DATA_NOT_FOUND, "记录不存在", null);
 		}
 		// 如果不是自己的申请
-		//FIXME equals
-		if (leave.getUser().getId() != user.getId()) {
+		if (leave.getUser().getId().equals(user.getId())) {
 			return JSONResult.ACCESS_DENIED;
 		}
 		// 只有待审核状态才能取消

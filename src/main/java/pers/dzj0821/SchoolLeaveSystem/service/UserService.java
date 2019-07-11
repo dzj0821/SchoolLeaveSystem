@@ -59,5 +59,8 @@ public interface UserService {
 	 */
 	public JSONResult getUserInfo(int willGetUserId, User fromUser);
 	
-	public JSONResult batchRegister(String username ,String password,PrivateKey privateKey) ;
+	public JSONResult getManageClazzes(User user);
+	
+	public JSONResult batchRegister(String text, User user);
+	
 }

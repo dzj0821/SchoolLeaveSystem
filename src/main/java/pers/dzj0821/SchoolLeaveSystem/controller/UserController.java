@@ -72,8 +72,17 @@ public class UserController {
 	 * 批量注册注册页面
 	 */
 	@GetMapping("/batchRegister")
-	public String batchRegister() {
-		return "user/batchRegister";
+	public String batchRegister(HttpSession session, Model model) {
+		HttpSessionAdapter sessionAdapter = new HttpSessionAdapter(session);
+		User user = sessionAdapter.getUser();
+		JSONResult result = userService.getManageClazzes(user);
+		if(result.getCode() == JSONCodeType.SUCCESS) {
+			model.addAttribute("clazzes", result.getData().get("clazzes"));
+			return "user/batchRegister";
+		}
+		ModelAdapter modelAdapter = new ModelAdapter(model);
+		modelAdapter.setErrorResult(result);
+		return "error";
 	}
 
 	/**

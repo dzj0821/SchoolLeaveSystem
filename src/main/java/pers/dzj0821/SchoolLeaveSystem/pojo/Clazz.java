@@ -22,6 +22,29 @@ public class Clazz {
 	}
 	
 	@Override
+	public int hashCode() {
+		if(id != null) {
+			return id;
+		}
+		return -1;
+	}
+	
+	@Override
+	public boolean equals(Object obj) {
+		if(obj == null) {
+			return false;
+		}
+		if(!(obj instanceof Clazz)) {
+			return false;
+		}
+		Clazz clazz = (Clazz) obj;
+		if(id == null || clazz.id == null) {
+			return false;
+		}
+		return id.equals(clazz.id);
+	}
+	
+	@Override
 	public String toString() {
 		return "Class [id=" + id + ", no=" + no + ", grade=" + grade + ", major=" + major + "]";
 	}

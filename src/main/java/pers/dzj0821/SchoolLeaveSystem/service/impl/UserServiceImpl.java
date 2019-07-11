@@ -3,7 +3,10 @@ package pers.dzj0821.SchoolLeaveSystem.service.impl;
 import java.security.PrivateKey;
 import java.util.Base64;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.regex.Pattern;
 
 import org.apache.logging.log4j.LogManager;
@@ -12,9 +15,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import pers.dzj0821.SchoolLeaveSystem.Messages;
+import pers.dzj0821.SchoolLeaveSystem.dao.ClazzDao;
+import pers.dzj0821.SchoolLeaveSystem.dao.MajorDao;
 import pers.dzj0821.SchoolLeaveSystem.dao.PermissionClazzDao;
 import pers.dzj0821.SchoolLeaveSystem.dao.PermissionCollageDao;
 import pers.dzj0821.SchoolLeaveSystem.dao.UserDao;
+import pers.dzj0821.SchoolLeaveSystem.pojo.Clazz;
+import pers.dzj0821.SchoolLeaveSystem.pojo.Major;
 import pers.dzj0821.SchoolLeaveSystem.pojo.PermissionClazz;
 import pers.dzj0821.SchoolLeaveSystem.pojo.PermissionCollage;
 import pers.dzj0821.SchoolLeaveSystem.pojo.User;
@@ -44,6 +51,10 @@ public class UserServiceImpl implements UserService {
 	private PermissionClazzDao permissionClazzDao;
 	@Autowired
 	private PermissionCollageDao permissionCollageDao;
+	@Autowired
+	private ClazzDao clazzDao;
+	@Autowired
+	private MajorDao majorDao;
 	private Logger logger = LogManager.getLogger(UserServiceImpl.class);
 
 	@Override
@@ -250,8 +261,7 @@ public class UserServiceImpl implements UserService {
 					return JSONResult.SERVER_ERROR;
 				}
 				for (PermissionClazz permissionClazz : permissionClazzes) {
-					// FIXME equals
-					if (permissionClazz.getClazz().getId() == willGetUser.getClazz().getId()) {
+					if (permissionClazz.getClazz().getId().equals(willGetUser.getClazz().getId())) {
 						break check;
 					}
 				}
@@ -265,8 +275,7 @@ public class UserServiceImpl implements UserService {
 					return JSONResult.SERVER_ERROR;
 				}
 				for (PermissionCollage permissionCollage : permissionCollages) {
-					// FIXME equals
-					if (permissionCollage.getId() == willGetUser.getClazz().getMajor().getCollage().getId()) {
+					if (permissionCollage.getId().equals(willGetUser.getClazz().getMajor().getCollage().getId())) {
 						break check;
 					}
 				}
@@ -290,44 +299,74 @@ public class UserServiceImpl implements UserService {
 				&& !Pattern.matches("^[0-9]*$", password) //$NON-NLS-1$
 				&& !Pattern.matches("^[a-zA-Z]*$", password); //$NON-NLS-1$
 	}
+	
+	@Override
+	public JSONResult getManageClazzes(User user) {
+		//未登录 或 权限低于班级管理员
+		if(user == null || user.getType().getCode() > UserType.CLAZZ_ADMIN.getCode()) {
+			return JSONResult.ACCESS_DENIED;
+		}
+		//set去重 防止出现重复的班级
+		Set<Clazz> set = new HashSet<Clazz>();
+		//查询用户管理的班级和年级
+		List<PermissionClazz> permissionClazzs = null;
+		try {
+			permissionClazzs = permissionClazzDao.selectPermissionClazzesByUserId(user.getId());
+		} catch (Exception e) {
+			logger.warn(e);
+			return JSONResult.SERVER_ERROR;
+		}
+		List<PermissionCollage> permissionCollages = null;
+		try {
+			permissionCollages = permissionCollageDao.selectPermissionCollagesByUserId(user.getId());
+		} catch (Exception e) {
+			logger.warn(e);
+			return JSONResult.SERVER_ERROR;
+		}
+		//加入可选择名单
+		for (PermissionClazz permissionClazz : permissionClazzs) {
+			set.add(permissionClazz.getClazz());
+		}
+		for (PermissionCollage permissionCollage : permissionCollages) {
+			//对于每个院级，先筛选出院里的专业
+			List<Major> majors = null;
+			try {
+				majors = majorDao.selectMajorsByCollageId(permissionCollage.getCollage().getId());
+			} catch (Exception e) {
+				logger.warn(e);
+				return JSONResult.SERVER_ERROR;
+			}
+			for (Major major : majors) {
+				//每个专业再筛选出班级
+				List<Clazz> clazzs = null;
+				try {
+					clazzs = clazzDao.selectClazzesByMajorId(major.getId());
+				} catch (Exception e) {
+					logger.warn(e);
+					return JSONResult.SERVER_ERROR;
+				}
+				for (Clazz clazz : clazzs) {
+					set.add(clazz);
+				}
+			}
+		}
+		if(set.isEmpty()) {
+			return new JSONResult(JSONCodeType.DATA_NOT_FOUND, "您尚未管理任何班级", null);
+		}
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("clazzes", set);
+		return new JSONResult(JSONCodeType.SUCCESS, null, map);
+	}
 
 	@Override
-	public JSONResult batchRegister(String username, String base64RSAPassword, PrivateKey privateKey) {
-		// 验证输入
-		JSONResult Invalidpassword = new JSONResult(JSONCodeType.INVALID_PARAMS, Messages.getString("InvalidPassword"), //$NON-NLS-1$
-				null);
-		String password = null;
-		// 密码解码
-		try {
-			password = new String(RSAUtil.decrypt(Base64.getDecoder().decode(base64RSAPassword), privateKey));
-		} catch (Exception e) {
-			return Invalidpassword;
+	public JSONResult batchRegister(String text, User user) {
+		//如果用户权限低于班级管理员权限
+		if(user.getType().getCode() > UserType.CLAZZ_ADMIN.getCode()) {
+			return JSONResult.ACCESS_DENIED;
 		}
-
-		// 验证用户名是否存在
-		User user = null;
-		try {
-			user = userDao.selectUserByUsername(username);
-		} catch (Exception e) {
-			logger.warn(Messages.getString("SQLError"), e); //$NON-NLS-1$
-			return JSONResult.SERVER_ERROR;
-		}
-		if (user != null) {
-			return new JSONResult(JSONCodeType.REGISTER_USERNAME_ALREADY_EXIST,
-					Messages.getString("UsernameAlreadyExist"), //$NON-NLS-1$
-					null);
-		}
-		String name = null, telephone = null;
-		// 验证结束 用户信息存入数据库
-		user = new User(null, username, SHA256Util.encrypt(password), null, name, telephone, null, null, null);
-		try {
-			userDao.insertUser(user);
-		} catch (Exception e) {
-			logger.warn(Messages.getString("SQLError"), e); //$NON-NLS-1$
-			return JSONResult.SERVER_ERROR;
-		}
-		JSONResult success = new JSONResult(JSONCodeType.SUCCESS, Messages.getString("RegisterSuccess"), null); //$NON-NLS-1$
-		success.put("user", user); //$NON-NLS-1$
+		
+		JSONResult success = new JSONResult(JSONCodeType.SUCCESS, Messages.getString("RegisterSuccess"), null);
+		success.put("user", user);
 		return success;
 	}
 
