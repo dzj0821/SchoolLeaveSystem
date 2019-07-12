@@ -1,11 +1,13 @@
 package pers.dzj0821.SchoolLeaveSystem.service.impl;
 
 import java.security.PrivateKey;
+import java.util.ArrayList;
 import java.util.Base64;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 import java.util.Set;
 import java.util.regex.Pattern;
 
@@ -359,15 +361,122 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public JSONResult batchRegister(String text, User user) {
+	public JSONResult batchRegister(String text, Integer clazzId, User user) {
 		//如果用户权限低于班级管理员权限
-		if(user.getType().getCode() > UserType.CLAZZ_ADMIN.getCode()) {
+		if(user == null || user.getType().getCode() > UserType.CLAZZ_ADMIN.getCode()) {
 			return JSONResult.ACCESS_DENIED;
 		}
-		
-		JSONResult success = new JSONResult(JSONCodeType.SUCCESS, Messages.getString("RegisterSuccess"), null);
-		success.put("user", user);
-		return success;
+		JSONResult invalidClazzIdResult = new JSONResult(JSONCodeType.INVALID_PARAMS, "班级序号有误", null);
+		//班级序号不存在的情况
+		if(clazzId == null) {
+			return invalidClazzIdResult;
+		}
+		//验证班级是否存在
+		Clazz clazz = null;
+		try {
+			clazz = clazzDao.selectClazzById(clazzId);
+		} catch (Exception e) {
+			logger.warn(e);
+			return JSONResult.SERVER_ERROR;
+		}
+		if(clazz == null) {
+			return invalidClazzIdResult;
+		}
+		//验证是否有班级权限
+		PermissionClazz permissionClazz = null;
+		try {
+			permissionClazz = permissionClazzDao.selectPermissionClazzByUserIdAndClazzId(user.getId(), clazzId);
+		} catch (Exception e) {
+			logger.warn(e);
+			return JSONResult.SERVER_ERROR;
+		}
+		if(permissionClazz == null) {
+			//验证是否有院级权限
+			PermissionCollage permissionCollage = null;
+			try {
+				permissionCollage = permissionCollageDao.selectPermissionCollageByUserIdAndCollageId(user.getId(), clazz.getMajor().getCollage().getId());
+			} catch (Exception e) {
+				logger.warn(e);
+				return JSONResult.SERVER_ERROR;
+			}
+			if(permissionCollage == null) {
+				//没有权限
+				return invalidClazzIdResult;
+			}
+		}
+		//有权限 验证text格式
+		if(text == null || text.trim().equals("")) {
+			return new JSONResult(JSONCodeType.INVALID_PARAMS, "信息格式有误", null);
+		}
+		text = text.trim();
+		//每行是一个账号，顺序为学号、姓名、手机，用\t分隔
+		String[] lines = text.split("\n");
+		ArrayList<String> haveReigstedUserList = new ArrayList<String>();
+		//生成一个随机密码 3位小写字母+6位数字
+		Random random = new Random();
+		StringBuilder passwordBuilder = new StringBuilder();
+		for(int i = 0; i < 3; i++) {
+			passwordBuilder.append((char)(random.nextInt(26) + 'a'));
+		}
+		for(int i = 0; i < 6; i++) {
+			passwordBuilder.append(random.nextInt(10));
+		}
+		String encPassword = SHA256Util.encrypt(passwordBuilder.toString());
+		ArrayList<User> willReigsteUsers = new ArrayList<User>(lines.length);
+		for (int i = 0; i < lines.length; i++) {
+			String[] infos = lines[i].split("\t");
+			if(infos.length != 3) {
+				return new JSONResult(JSONCodeType.INVALID_PARAMS, "第" + (i + 1) + "行格式有误", null);
+			}
+			String studentId = infos[0];
+			String name = infos[1];
+			String telephone = infos[2];
+			//学号
+			if(!Pattern.matches("^[0-9]{10}$", studentId)) {
+				return new JSONResult(JSONCodeType.INVALID_PARAMS, "第" + (i + 1) + "行学号格式有误", null);
+			}
+			//姓名
+			if(!Pattern.matches(NAME_REGEX, name)) {
+				return new JSONResult(JSONCodeType.INVALID_PARAMS, "第" + (i + 1) + "行姓名格式有误", null);
+			}
+			//手机
+			if(!Pattern.matches(TELEPHONE_REGEX, telephone)) {
+				return new JSONResult(JSONCodeType.INVALID_PARAMS, "第" + (i + 1) + "行手机格式有误", null);
+			}
+			//判断是否已注册过
+			User willReigsteUser = null;
+			try {
+				willReigsteUser = userDao.selectUserByUsername(studentId);
+			} catch (Exception e) {
+				logger.warn(e);
+				return JSONResult.SERVER_ERROR;
+			}
+			if(willReigsteUser != null) {
+				//注册过了
+				haveReigstedUserList.add(studentId);
+			} else {
+				willReigsteUser = new User(null, studentId, encPassword, UserType.NORMAL_USER, name, telephone, clazz, null, null);
+				willReigsteUsers.add(willReigsteUser);
+			}
+		}
+		if(!haveReigstedUserList.isEmpty()) {
+			//存在已经注册的用户
+			StringBuilder builder = new StringBuilder();
+			for (String string : haveReigstedUserList) {
+				builder.append("用户名为" + string + "的用户已注册过").append("<br/>");
+			}
+			builder.append("存在已注册用户的情况下无法完成批量注册");
+			return new JSONResult(JSONCodeType.INVALID_PARAMS, builder.toString(), null);
+		}
+		for (User willReigsteUser : willReigsteUsers) {
+			try {
+				userDao.insertUser(willReigsteUser);
+			} catch (Exception e) {
+				logger.warn(e);
+				return JSONResult.SERVER_ERROR;
+			}
+		}
+		return new JSONResult(JSONCodeType.SUCCESS, "批量注册成功，初始密码为" + passwordBuilder.toString() + "，请牢记", null);
 	}
 
 }

@@ -142,10 +142,10 @@ public class ApiUserController {
 	 */
 	@PostMapping("/batchRegister")
 	@ResponseBody
-	public Map<String, Object> batchRegister(@RequestParam String text, HttpSession session) {
+	public Map<String, Object> batchRegister(@RequestParam String text, @RequestParam Integer clazzId , HttpSession session) {
 		HttpSessionAdapter sessionAdapter = new HttpSessionAdapter(session);
 		User user = sessionAdapter.getUser();
-		return userService.batchRegister(text, user);
+		return userService.batchRegister(text, clazzId, user);
 	}
 	
 	/**

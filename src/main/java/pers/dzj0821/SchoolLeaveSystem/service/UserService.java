@@ -61,6 +61,6 @@ public interface UserService {
 	
 	public JSONResult getManageClazzes(User user);
 	
-	public JSONResult batchRegister(String text, User user);
+	public JSONResult batchRegister(String text, Integer clazzId, User user);
 	
 }

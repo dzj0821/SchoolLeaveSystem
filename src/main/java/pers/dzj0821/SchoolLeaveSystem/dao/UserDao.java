@@ -26,7 +26,7 @@ public interface UserDao {
 	})
 	User selectUserById(int id) throws Exception;
 	
-	@Insert("insert into user(username, password, type, name, telephone) values(#{username}, #{password}, #{type}, #{name}, #{telephone})")
+	@Insert("insert into user(username, password, type, name, telephone, clazz_id) values(#{username}, #{password}, #{type}, #{name}, #{telephone}, #{clazz.id})")
 	//用于在语句执行完毕后返回新插入的主键
 	@Options(useGeneratedKeys = true, keyProperty = "id")
 	int insertUser(User user) throws Exception;
