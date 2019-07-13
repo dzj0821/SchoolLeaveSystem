@@ -72,7 +72,7 @@
 				} else {
 					$("#submit_result").addClass("alert-danger");
 				}
-				$("#submit_result").text(data.message);
+				$("#submit_result").text(data.message.replace(/\n/g, "<br/>"));
 			},
 			error : function(e) {
 				alert(e);

@@ -463,7 +463,7 @@ public class UserServiceImpl implements UserService {
 			//存在已经注册的用户
 			StringBuilder builder = new StringBuilder();
 			for (String string : haveReigstedUserList) {
-				builder.append("用户名为" + string + "的用户已注册过").append("<br/>");
+				builder.append("用户名为" + string + "的用户已注册过").append('\n');
 			}
 			builder.append("存在已注册用户的情况下无法完成批量注册");
 			return new JSONResult(JSONCodeType.INVALID_PARAMS, builder.toString(), null);
