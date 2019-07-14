@@ -6,16 +6,21 @@
 <head>
 <%@ include file="/WEB-INF/jsp/include/head.jsp"%>
 <title>校园请假系统_请假申请</title>
-<script src="${pageContext.request.contextPath}/js/leave/create.js" charset="UTF-8"></script>
+<script src="${pageContext.request.contextPath}/js/leave/create.js" charset="UTF-8" ></script>
 </head>
 <body>
 <%@ include file="/WEB-INF/jsp/include/header.jsp"%>
-	<div class="container">
+	<div class="container" style="font-weight: 2	">
 		<h2>请假申请</h2>
 		<form name="form"
 			action="${pageContext.request.contextPath}/leave/create"
-			method="POST" enctype="multipart/form-data">
-			请假开始日期： <select name="startYear">
+			method="POST" enctype="multipart/form-data">	
+		 <!--请假日期模块  -->
+		 <div class="container">
+		    <!-- 开始日期 -->
+		    <div class="row">
+		      <div class="col-xs-12 col-md-10 col-md-offset-2">
+		      请假开始日期： <select name="startYear">
 				<c:forEach items="${years }" var="year">
 					<option value=${year }>${year }</option>
 				</c:forEach>
@@ -31,7 +36,13 @@
 				<c:forEach var="i" begin="1" end="10">
 					<option value=${i }>${i }</option>
 				</c:forEach>
-			</select> 节课 <br> 请假结束日期： <select name="endYear">
+			</select> 节课
+		      </div>
+		    </div>
+		      <!-- 结束日期  -->
+		      <div class="row">	
+		     <div class="col-xs-12 col-md-10 col-md-offset-2">
+		     请假结束日期： <select name="endYear">
 				<c:forEach items="${years }" var="year">
 					<option value=${year }>${year }</option>
 				</c:forEach>
@@ -47,13 +58,28 @@
 				<c:forEach var="i" begin="1" end="10">
 					<option value=${i }>${i }</option>
 				</c:forEach>
-			</select> 节课 <br> 请假原因：
-			<textarea name="reason"></textarea>
-			<br>
-			<div id="images"></div>
-			<button type="button" onclick="addImage()">添加图片</button>
-			<a href="javascript:clearImages()">清空</a> <br> <input
-				type="submit" />
+			</select> 节课 
+		     </div>
+			</div>
+		 </div>
+		 <div class="container">
+		    <div class="row" style="padding-top: 20px;">
+		    <div class="col-xs-12 col-md-10 col-md-offset-2">
+			 请假原因：<br>
+			<textarea class="form-control" rows="3" name="reason"></textarea>
+			</div>
+			</div>
+			<div class="row">
+			<div id="images" class=" col-xs-12 col-md-10 col-md-offset-2" style="padding-top:20px; padding-bottom: 20px;"></div>
+			<div class="row" style="padding-top: 20px;">
+			<div class="col-xs-12 col-md-10 col-md-offset-2">
+			<button type="button" onclick="addImage()" class="btn btn-default active"><span class="glyphicon glyphicon-picture"> &nbsp;添加图片</span></button>
+			<a href="javascript:clearImages()">清空</a> <br>
+			 <button type="submit" class="btn btn-default active"   style="margin-top: 10px;"><span class="glyphicon glyphicon-open">&nbsp;&nbsp;&nbsp;&nbsp;提交</span></button>
+			 </div>
+			</div>
+		</div>
+		</div>
 		</form>
 	</div>
 </body>

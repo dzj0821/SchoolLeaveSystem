@@ -6,6 +6,7 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import javax.validation.constraints.Null;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -66,6 +67,7 @@ public class ApiUserController {
 	 * @return JSON结果
 	 */
 	@PostMapping("/login")
+	/* 返回的数据不是html标签的页面，而是其他某种格式的数据时（如json、xml等）使用；*/
 	@ResponseBody
 	@RSATimestampCheck
 	public Map<String, Object> login(@RequestParam String username, @RequestParam String password,
