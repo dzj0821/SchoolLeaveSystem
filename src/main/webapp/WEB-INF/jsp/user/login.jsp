@@ -5,7 +5,7 @@
 <head>
 <%@ include file="/WEB-INF/jsp/include/head.jsp"%>
 <script src="${pageContext.request.contextPath}/js/jsencrypt.min.js"></script>
-<title>校园请假系统_登录</title>
+<title>登录</title>
 <script>
         function onSubmit(){
             var public_key = document.getElementById("publicKey").value;

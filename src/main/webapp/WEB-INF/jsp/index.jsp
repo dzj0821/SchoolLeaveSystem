@@ -3,7 +3,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<title>校园请假系统_首页</title>
+<title>首页</title>
 <style>
 .button_span {
 	border: none;

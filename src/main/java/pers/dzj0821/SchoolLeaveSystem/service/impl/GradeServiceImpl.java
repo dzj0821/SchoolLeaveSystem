@@ -44,16 +44,27 @@ public class GradeServiceImpl implements GradeService {
 	}
 
 	@Override
-	public JSONResult add(Integer grade, User user) {
+	public JSONResult add(Integer year, User user) {
 		// 如果未登录 或 权限低于超级管理员
 		if (user == null || user.getType().getCode() > UserType.SUPER_ADMIN.getCode()) {
 			return JSONResult.ACCESS_DENIED;
 		}
-		if (grade == null || grade < 1000 || grade > 10000) {
+		if (year == null || year < 1000 || year > 10000) {
 			return new JSONResult(JSONCodeType.INVALID_PARAMS, "参数错误", null);
 		}
+		Grade grade = null;
 		try {
-			gradeDao.insertGrade(grade);
+			grade = gradeDao.selectGradeByYear(year);
+		} catch (Exception e) {
+			logger.warn(e);
+			return JSONResult.SERVER_ERROR;
+		}
+		if(grade != null) {
+			//年级已存在
+			return new JSONResult(JSONCodeType.INVALID_PARAMS, "年级已存在", null);
+		}
+		try {
+			gradeDao.insertGrade(year);
 		} catch (Exception e) {
 			logger.warn(e);
 			return JSONResult.SERVER_ERROR;
@@ -80,6 +91,12 @@ public class GradeServiceImpl implements GradeService {
 		if(grade == null) {
 			return new JSONResult(JSONCodeType.INVALID_PARAMS, "所选年级不存在", null);
 		}
-		return null;
+		try {
+			gradeDao.deleteGradeById(id);
+		} catch (Exception e) {
+			logger.warn(e);
+			return JSONResult.SERVER_ERROR;
+		}
+		return new JSONResult(JSONCodeType.SUCCESS, "删除成功", null);
 	}
 }

@@ -7,7 +7,7 @@
 		<!--navbar-header 头部，设置项目名称或logo-->
 		<div class="navbar-header ">
 			<!--设置项目名称或logo-->
-			<a href="${pageContext.request.contextPath}/" class="navbar-brand">校园请假系统</a>
+			<a href="${pageContext.request.contextPath}/" class="navbar-brand">大学请假管理系统</a>
 			<button type="button" class="navbar-toggle collapsed"
 				data-toggle="collapse" data-target="#order">
 				<span class="sr-only">Toggle navigation</span>
@@ -45,6 +45,9 @@
 				<c:if test="${user.type.getCode() <= UserType.SUPER_ADMIN.getCode() }">
 					<li>
 						<a href="${pageContext.request.contextPath}/grade/list">年级管理</a>
+					</li>
+					<li>
+						<a href="${pageContext.request.contextPath}/collage/list">学院管理</a>
 					</li>
 				</c:if>
 			</ul>

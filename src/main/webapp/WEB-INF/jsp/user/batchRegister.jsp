@@ -80,7 +80,7 @@
 		});
 	}
 </script>
-<title>校园请假系统_批量注册</title>
+<title>批量注册</title>
 </head>
 <body>
 	<%@ include file="/WEB-INF/jsp/include/header.jsp"%>

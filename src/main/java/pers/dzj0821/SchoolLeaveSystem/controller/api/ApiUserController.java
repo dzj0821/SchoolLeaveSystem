@@ -6,7 +6,6 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import javax.validation.constraints.Null;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;

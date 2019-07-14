@@ -5,7 +5,7 @@
 <html>
 <head>
 <%@ include file="/WEB-INF/jsp/include/head.jsp"%>
-<title>校园请假系统_请假申请</title>
+<title>请假申请</title>
 <script src="${pageContext.request.contextPath}/js/leave/create.js" charset="UTF-8" ></script>
 </head>
 <body>

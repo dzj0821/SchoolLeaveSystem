@@ -6,7 +6,7 @@
 <head>
 <%@ include file="/WEB-INF/jsp/include/head.jsp"%>
 
-<title>校园请假系统_修改个人信息</title>
+<title>修改个人信息</title>
 <script src="${pageContext.request.contextPath}/js/jsencrypt.min.js"></script>
 <script>
 	function onSubmit() {

@@ -9,6 +9,7 @@
 <script>
 $(document).ready(function(){
 	$("#addGradeSubmit").on("click", addGradeCheck);
+	$("#deleteGradeSubmit").on("click", deleteGradeAjax);
 });
 
 function addGradeCheck(){
@@ -24,7 +25,34 @@ function addGradeAjax(){
 		url : '${pageContext.request.contextPath}/api/grade/add',
 		dataType : 'json',
 		data : {
-			grade: $("#addGradeText").val()
+			year: $("#addGradeText").val()
+		},
+		type : 'POST',
+		success : function(data) {
+			if(data.code === 100){
+				location.reload();
+			} else {
+				alert(data.message);
+			}
+			
+		},
+		error : function(e) {
+			alert(e);
+		}
+	});
+}
+
+function deleteModelClick(id, year){
+	$("#deleteMessage").text("确认要删除" + year + "年级吗？所有属于该年级的班级、请假记录等将会被永久删除，请谨慎操作！")
+	window.deleteId = id;
+}
+
+function deleteGradeAjax(){
+	$.ajax({
+		url : '${pageContext.request.contextPath}/api/grade/delete',
+		dataType : 'json',
+		data : {
+			id: window.deleteId
 		},
 		type : 'POST',
 		success : function(data) {
@@ -45,9 +73,6 @@ function addGradeAjax(){
 <body>
 	<%@ include file="/WEB-INF/jsp/include/header.jsp"%>
 	<div class="container">
-		<div class="form-group">
-			<button class="btn btn-primary" data-toggle="modal" data-target="#addModal">添加年级</button>
-		</div>
 		<div class="modal fade" id="addModal" tabindex="-1" role="dialog"
 			aria-labelledby="addModalLabel" aria-hidden="true">
 			<div class="modal-dialog">
@@ -63,14 +88,35 @@ function addGradeAjax(){
 					</div>
 					<div class="modal-footer">
 						<button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
-						<button type="button" class="btn btn-primary" id="addGradeSubmit">提交更改</button>
+						<button type="button" class="btn btn-primary" id="addGradeSubmit">确认添加</button>
 					</div>
 				</div>
 				<!-- /.modal-content -->
 			</div>
 			<!-- /.modal -->
 		</div>
-
+		<div class="modal fade" id="deleteModal" tabindex="-1" role="dialog"
+			aria-labelledby="deleteModalLabel" aria-hidden="true">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal"
+							aria-hidden="true">&times;</button>
+						<h4 class="modal-title" id="deleteModalLabel">删除年级</h4>
+					</div>
+					<div id="deleteMessage" class="modal-body"></div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+						<button type="button" class="btn btn-primary" id="deleteGradeSubmit">确认删除</button>
+					</div>
+				</div>
+				<!-- /.modal-content -->
+			</div>
+			<!-- /.modal -->
+		</div>
+		<div class="form-group">
+			<button class="btn btn-primary" data-toggle="modal" data-target="#addModal">添加年级</button>
+		</div>
 		<div class="table-responsive">
 			<table class="table">
 				<tr>
@@ -82,7 +128,7 @@ function addGradeAjax(){
 						<td>${grade.year }</td>
 						<td>
 							<div class="form-group">
-								<button class="btn btn-default">删除</button>
+								<button class="btn btn-default" data-toggle="modal" data-target="#deleteModal" onclick="deleteModelClick(${grade.id }, ${grade.year })">删除</button>
 							</div>
 						</td>
 					</tr>

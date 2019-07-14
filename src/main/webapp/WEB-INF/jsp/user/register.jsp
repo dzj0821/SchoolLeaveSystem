@@ -4,7 +4,7 @@
 <html>
 <head>
 <%@ include file="/WEB-INF/jsp/include/head.jsp"%>
-<title>校园请假系统_注册</title>
+<title>注册</title>
 <script src="${pageContext.request.contextPath}/js/jsencrypt.min.js"></script>
 <script>
 function onSubmit(){

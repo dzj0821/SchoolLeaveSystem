@@ -5,7 +5,7 @@
 <html>
 <head>
 <%@ include file="/WEB-INF/jsp/include/head.jsp"%>
-<title>校园请假系统_个人资料</title>
+<title>个人资料</title>
 </head>
 <body>
 	<%@ include file="/WEB-INF/jsp/include/header.jsp"%>
