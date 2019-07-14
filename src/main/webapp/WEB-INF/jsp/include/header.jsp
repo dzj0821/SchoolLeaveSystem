@@ -1,3 +1,4 @@
+<%@page import="pers.dzj0821.SchoolLeaveSystem.type.UserType"%>
 <%@ page pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <nav class="navbar navbar-inverse" role="navigation">
@@ -18,8 +19,8 @@
 		<!--其他导航，指定几行几个内容-->
 		<div class="navbar-collapse collapse" id="order" aria-expanded="false">
 			<ul class="nav navbar-nav">
-				<li class="dropdown">
-					<c:if test="${user != null }">
+				<c:if test="${user != null }">
+					<li class="dropdown">
 						<a href="#" class="dropdown-toggle" data-toggle="dropdown"
 							role="button" aria-haspopup="true" aria-expanded="false">
 							请假管理
@@ -32,17 +33,20 @@
 							<li>
 								<a href="${pageContext.request.contextPath}/leave/list">申请记录</a>
 							</li>
-							<c:if test="${user.type != 'NORMAL_USER' }">
+							<c:if test="${user.type.getCode() <= UserType.NORMAL_USER.getCode() }">
 								<li role="separator" class="divider"></li>
 								<li>
 									<a href="${pageContext.request.contextPath}/leave/list?clazzId=${user.clazz.id }">审核名单</a>
 								</li>
 							</c:if>
 						</ul>
-					</c:if>
-				</li>
-
-				<!--<li><a href="">权限管理</a></li>-->
+					</li>
+				</c:if>
+				<c:if test="${user.type.getCode() <= UserType.SUPER_ADMIN.getCode() }">
+					<li>
+						<a href="${pageContext.request.contextPath}/grade/list">年级管理</a>
+					</li>
+				</c:if>
 			</ul>
 			<ul class="nav navbar-nav navbar-right ">
 				<c:if test="${user == null }">

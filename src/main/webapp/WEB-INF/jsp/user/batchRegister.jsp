@@ -33,7 +33,7 @@
 				$("#submit").attr("disabled", true);
 				return;
 			}
-			if (!/^[\u4E00-\u9FFF]{2,4}/.test(info[1])) {
+			if (!/^[\u4E00-\u9FFF]{2,4}$/.test(info[1])) {
 				$("#text_result").addClass("alert-danger");
 				$("#text_result")
 						.text("第" + (i + 1) + "行姓名格式有误，内容为：" + info[1]);
