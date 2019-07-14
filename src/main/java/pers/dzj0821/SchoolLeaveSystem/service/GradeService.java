@@ -7,4 +7,6 @@ public interface GradeService {
 	public JSONResult list(User user);
 	
 	public JSONResult add(Integer grade, User user);
+	
+	public JSONResult delete(Integer id, User user);
 }

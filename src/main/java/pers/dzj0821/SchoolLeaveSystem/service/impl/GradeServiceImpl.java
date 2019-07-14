@@ -49,7 +49,7 @@ public class GradeServiceImpl implements GradeService {
 		if (user == null || user.getType().getCode() > UserType.SUPER_ADMIN.getCode()) {
 			return JSONResult.ACCESS_DENIED;
 		}
-		if(grade == null || grade < 1000 || grade > 10000) {
+		if (grade == null || grade < 1000 || grade > 10000) {
 			return new JSONResult(JSONCodeType.INVALID_PARAMS, "参数错误", null);
 		}
 		try {
@@ -59,5 +59,27 @@ public class GradeServiceImpl implements GradeService {
 			return JSONResult.SERVER_ERROR;
 		}
 		return new JSONResult(JSONCodeType.SUCCESS, "添加成功", null);
+	}
+
+	@Override
+	public JSONResult delete(Integer id, User user) {
+		// 如果未登录 或 权限低于超级管理员
+		if (user == null || user.getType().getCode() > UserType.SUPER_ADMIN.getCode()) {
+			return JSONResult.ACCESS_DENIED;
+		}
+		if(id == null) {
+			return new JSONResult(JSONCodeType.INVALID_PARAMS, "参数错误", null);
+		}
+		Grade grade = null;
+		try {
+			grade = gradeDao.selectGradeById(id);
+		} catch (Exception e) {
+			logger.warn(e);
+			return JSONResult.SERVER_ERROR;
+		}
+		if(grade == null) {
+			return new JSONResult(JSONCodeType.INVALID_PARAMS, "所选年级不存在", null);
+		}
+		return null;
 	}
 }
