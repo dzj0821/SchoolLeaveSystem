@@ -23,10 +23,10 @@ public class ApiGradeController {
 	
 	@PostMapping("/add")
 	@ResponseBody
-	public Map<String, Object> add(@RequestParam Integer grade, HttpSession session){
+	public Map<String, Object> add(@RequestParam Integer year, HttpSession session){
 		HttpSessionAdapter sessionAdapter = new HttpSessionAdapter(session);
 		User user = sessionAdapter.getUser();
-		return gradeService.add(grade, user);
+		return gradeService.add(year, user);
 	}
 	
 	@PostMapping("/delete")

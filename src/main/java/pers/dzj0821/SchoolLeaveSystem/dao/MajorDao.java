@@ -23,4 +23,11 @@ public interface MajorDao {
 		@Result(column = "collage_id", property = "collage", one = @One(select = "pers.dzj0821.SchoolLeaveSystem.dao.CollageDao.selectCollageById"))
 	})
 	public List<Major> selectMajorsByCollageId(int collageId) throws Exception;
+	
+	@Select("select * from major")
+	@Results({
+		@Result(column = "id", property = "id", id = true),
+		@Result(column = "collage_id", property = "collage", one = @One(select = "pers.dzj0821.SchoolLeaveSystem.dao.CollageDao.selectCollageById"))
+	})
+	public List<Major> selectMajors() throws Exception;
 }
