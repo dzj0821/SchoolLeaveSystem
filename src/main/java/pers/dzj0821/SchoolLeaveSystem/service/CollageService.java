@@ -7,4 +7,8 @@ public interface CollageService {
 	public JSONResult list(User user);
 	
 	public JSONResult add(String name, User user);
+	
+	public JSONResult change(Integer id, String name, User user);
+	
+	public JSONResult delete(Integer id, User user);
 }

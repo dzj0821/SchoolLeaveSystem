@@ -33,7 +33,7 @@ public class LeaveListView {
 	public LeaveListView(Leave leave) {
 		this.id = leave.getId();
 		this.user = leave.getUser();
-		this.clazzFullName = leave.getClazz().clazzFullName();
+		this.clazzFullName = leave.getClazz().getFullName();
 		DateFormat format = DateUtil.getDateFormatter();
 		this.leaveTime = format.format(leave.getStartDate()) + "第" + leave.getStartLesson() + "节课 至 "
 				+ format.format(leave.getEndDate()) + "第" + leave.getEndLesson() + "节课";

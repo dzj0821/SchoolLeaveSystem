@@ -1,5 +1,7 @@
 package pers.dzj0821.SchoolLeaveSystem.dao;
 
+import java.util.List;
+
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.One;
 import org.apache.ibatis.annotations.Options;
@@ -25,6 +27,13 @@ public interface UserDao {
 		@Result(column = "clazz_id", property = "clazz", one = @One(select = "pers.dzj0821.SchoolLeaveSystem.dao.ClazzDao.selectClazzById")),
 	})
 	User selectUserById(int id) throws Exception;
+	
+	@Select("select * from user")
+	@Results({
+		@Result(column = "id", property = "id", id = true),
+		@Result(column = "clazz_id", property = "clazz", one = @One(select = "pers.dzj0821.SchoolLeaveSystem.dao.ClazzDao.selectClazzById")),
+	})
+	List<User> selectUsers() throws Exception;
 	
 	@Insert("insert into user(username, password, type, name, telephone, clazz_id) values(#{username}, #{password}, #{type}, #{name}, #{telephone}, #{clazz.id})")
 	//用于在语句执行完毕后返回新插入的主键

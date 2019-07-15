@@ -479,4 +479,51 @@ public class UserServiceImpl implements UserService {
 		return new JSONResult(JSONCodeType.SUCCESS, "批量注册成功，初始密码为" + passwordBuilder.toString() + "，请牢记", null);
 	}
 
+	@Override
+	public JSONResult list(User user) {
+		if(user == null || user.getType().getCode() > UserType.SUPER_ADMIN.getCode()) {
+			return JSONResult.ACCESS_DENIED;
+		}
+		List<User> users = null;
+		try {
+			users = userDao.selectUsers();
+		} catch (Exception e) {
+			logger.warn(e);
+			return JSONResult.SERVER_ERROR;
+		}
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("users", users);
+		return new JSONResult(JSONCodeType.SUCCESS, null, map);
+	}
+	
+	@Override
+	public JSONResult changeType(Integer changeUserId, UserType changeType, User user) {
+		if(user == null || user.getType().getCode() > UserType.SUPER_ADMIN.getCode()) {
+			return JSONResult.ACCESS_DENIED;
+		}
+		if(changeUserId == null || changeType == null) {
+			return new JSONResult(JSONCodeType.INVALID_PARAMS, null, null);
+		}
+		if(user.getId().equals(changeUserId)) {
+			return new JSONResult(JSONCodeType.INVALID_PARAMS, "不能修改自己的权限", null);
+		}
+		User changeUser = null;
+		try {
+			changeUser = userDao.selectUserById(changeUserId);
+		} catch (Exception e) {
+			logger.warn(e);
+			return JSONResult.SERVER_ERROR;
+		}
+		if(changeUser == null) {
+			return new JSONResult(JSONCodeType.DATA_NOT_FOUND, "用户不存在", null);
+		}
+		User changedUser = new User(changeUser.getId(), null, null, changeType, null, null, null, null, null);
+		try {
+			userDao.updateUserById(changedUser);
+		} catch (Exception e) {
+			logger.warn(e);
+			return JSONResult.SERVER_ERROR;
+		}
+		return new JSONResult(JSONCodeType.SUCCESS, null, null);
+	}
 }

@@ -55,4 +55,53 @@ public class CollageServiceImpl implements CollageService {
 		}
 		return new JSONResult(JSONCodeType.SUCCESS, "添加成功", null);
 	}
+	
+	@Override
+	public JSONResult change(Integer id, String name, User user) {
+		if(user == null || user.getType().getCode() > UserType.SUPER_ADMIN.getCode()) {
+			return JSONResult.ACCESS_DENIED;
+		}
+		Collage collage = null;
+		try {
+			collage = collageDao.selectCollageById(id);
+		} catch (Exception e) {
+			logger.warn(e);
+			return JSONResult.SERVER_ERROR;
+		}
+		if(collage == null) {
+			return new JSONResult(JSONCodeType.DATA_NOT_FOUND, "学院不存在", null);
+		}
+		collage.setName(name);
+		try {
+			collageDao.updateCollageById(collage);
+		} catch (Exception e) {
+			logger.warn(e);
+			return JSONResult.SERVER_ERROR;
+		}
+		return new JSONResult(JSONCodeType.SUCCESS, null, null);
+	}
+	
+	@Override
+	public JSONResult delete(Integer id, User user) {
+		if(user == null || user.getType().getCode() > UserType.SUPER_ADMIN.getCode()) {
+			return JSONResult.ACCESS_DENIED;
+		}
+		Collage collage = null;
+		try {
+			collage = collageDao.selectCollageById(id);
+		} catch (Exception e) {
+			logger.warn(e);
+			return JSONResult.SERVER_ERROR;
+		}
+		if(collage == null) {
+			return new JSONResult(JSONCodeType.DATA_NOT_FOUND, "学院不存在", null);
+		}
+		try {
+			collageDao.deleteCollageById(id);
+		} catch (Exception e) {
+			logger.warn(e);
+			return JSONResult.SERVER_ERROR;
+		}
+		return new JSONResult(JSONCodeType.SUCCESS, null, null);
+	}
 }

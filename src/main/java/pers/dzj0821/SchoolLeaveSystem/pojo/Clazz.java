@@ -16,7 +16,7 @@ public class Clazz {
 		this.major = major;
 	}
 
-	public String clazzFullName() {
+	public String getFullName() {
 		//如：2015级网络工程1班
 		return grade.getYear() + "级" + major.getCollage().getName() + major.getName() + no + "班";
 	}

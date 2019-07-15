@@ -165,4 +165,12 @@ public class ApiUserController {
 		}
 		return result;
 	}
+	
+	@PostMapping("/changeType")
+	@ResponseBody
+	public Map<String, Object> changeType(@RequestParam Integer id, @RequestParam UserType type, HttpSession session){
+		HttpSessionAdapter sessionAdapter = new HttpSessionAdapter(session);
+		User user = sessionAdapter.getUser();
+		return userService.changeType(id, type, user);
+	}
 }

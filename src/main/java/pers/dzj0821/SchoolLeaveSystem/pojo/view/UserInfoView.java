@@ -20,7 +20,7 @@ public class UserInfoView {
 		name = user.getName();
 		telephone = user.getTelephone();
 		if(user.getClazz() != null) {
-			clazzFullName = user.getClazz().clazzFullName();
+			clazzFullName = user.getClazz().getFullName();
 		} else {
 			clazzFullName = null;
 		}

@@ -196,4 +196,18 @@ public class UserController {
 		modelAdapter.setErrorResult(result);
 		return "error";
 	}
+	
+	@GetMapping("/list")
+	public String list(HttpSession session, Model model) {
+		HttpSessionAdapter sessionAdapter = new HttpSessionAdapter(session);
+		User user = sessionAdapter.getUser();
+		JSONResult result = userService.list(user);
+		if(result.getCode() == JSONCodeType.SUCCESS) {
+			model.addAttribute("users", result.getData().get("users"));
+			return "user/list";
+		}
+		ModelAdapter modelAdapter = new ModelAdapter(model);
+		modelAdapter.setErrorResult(result);
+		return "error";
+	}
 }

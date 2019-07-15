@@ -9,6 +9,7 @@
 <script>
 $(document).ready(function(){
 	$("#addCollageSubmit").on("click", addCollageAjax);
+	$("#changeCollageSubmit").on("click", changeCollageAjax);
 	$("#deleteCollageSubmit").on("click", deleteCollageAjax);
 });
 
@@ -35,7 +36,7 @@ function addCollageAjax(){
 }
 
 function deleteModelClick(id, year){
-	$("#deleteMessage").text("确认要删除" + year + "学院吗？所有属于该学院的专业、班级、请假记录等将会被永久删除，请谨慎操作！")
+	$("#deleteMessage").text("确认要删除" + year + "吗？所有属于该学院的专业、班级、请假记录等将会被永久删除，请谨慎操作！")
 	window.deleteId = id;
 }
 
@@ -170,8 +171,8 @@ function changeCollageAjax(){
 						<td>${collage.name }</td>
 						<td>
 							<div class="form-group">
-								<button class="btn btn-default" data-toggle="modal" data-target="#changeModal" onclick="changeModelClick(${collage.id }, ${collage.name })">修改</button>
-								<button class="btn btn-default" data-toggle="modal" data-target="#deleteModal" onclick="deleteModelClick(${collage.id }, ${collage.name })">删除</button>
+								<button class="btn btn-default" data-toggle="modal" data-target="#changeModal" onclick="changeModelClick(${collage.id }, '${collage.name }')">修改</button>
+								<button class="btn btn-default" data-toggle="modal" data-target="#deleteModal" onclick="deleteModelClick(${collage.id }, '${collage.name }')">删除</button>
 							</div>
 						</td>
 					</tr>

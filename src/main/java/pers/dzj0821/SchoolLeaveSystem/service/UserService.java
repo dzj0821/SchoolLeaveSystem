@@ -4,6 +4,7 @@ import java.security.PrivateKey;
 
 import pers.dzj0821.SchoolLeaveSystem.pojo.User;
 import pers.dzj0821.SchoolLeaveSystem.pojo.json.JSONResult;
+import pers.dzj0821.SchoolLeaveSystem.type.UserType;
 
 public interface UserService {
 	/**
@@ -62,5 +63,9 @@ public interface UserService {
 	public JSONResult getManageClazzes(User user);
 	
 	public JSONResult batchRegister(String text, Integer clazzId, User user);
+	
+	public JSONResult list(User user);
+	
+	public JSONResult changeType(Integer changeUserId, UserType changeType, User user);
 	
 }

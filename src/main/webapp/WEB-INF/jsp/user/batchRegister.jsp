@@ -97,7 +97,7 @@
 				<span>请选择注册后这些用户加入的班级（仅可选择自己管理的班级）：</span>
 				<select id="clazzId" class="form-control" name="clazzId">
 					<c:forEach items="${clazzes }" var="x">
-						<option value="${x.id }">${x.clazzFullName() }</option>
+						<option value="${x.id }">${x.fullName }</option>
 					</c:forEach>
 				</select>
 			</div>

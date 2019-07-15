@@ -33,7 +33,7 @@
 							<li>
 								<a href="${pageContext.request.contextPath}/leave/list">申请记录</a>
 							</li>
-							<c:if test="${user.type.getCode() <= UserType.NORMAL_USER.getCode() }">
+							<c:if test="${user.type.code <= UserType.NORMAL_USER.code }">
 								<li role="separator" class="divider"></li>
 								<li>
 									<a href="${pageContext.request.contextPath}/leave/list?clazzId=${user.clazz.id }">审核名单</a>
@@ -42,12 +42,15 @@
 						</ul>
 					</li>
 				</c:if>
-				<c:if test="${user.type.getCode() <= UserType.SUPER_ADMIN.getCode() }">
+				<c:if test="${user.type.code <= UserType.SUPER_ADMIN.code }">
 					<li>
 						<a href="${pageContext.request.contextPath}/grade/list">年级管理</a>
 					</li>
 					<li>
 						<a href="${pageContext.request.contextPath}/collage/list">学院管理</a>
+					</li>
+					<li>
+						<a href="${pageContext.request.contextPath}/user/list">用户管理</a>
 					</li>
 				</c:if>
 			</ul>
