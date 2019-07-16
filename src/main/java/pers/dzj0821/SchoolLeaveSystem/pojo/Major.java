@@ -4,6 +4,34 @@ public class Major {
 	private Integer id;
 	private String name;
 	private Collage collage;
+	
+	public Major() {}
+
+	public Major(Integer id, String name, Collage collage) {
+		this.id = id;
+		this.name = name;
+		this.collage = collage;
+	}
+	
+	@Override
+	public boolean equals(Object obj) {
+		if(obj == null || !(obj instanceof Major)) {
+			return false;
+		}
+		Major major = (Major)obj;
+		if(id == null || major.id == null) {
+			return false;
+		}
+		return id.equals(major.id);
+	}
+	
+	@Override
+	public int hashCode() {
+		if(id == null) {
+			return -1;
+		}
+		return id;
+	}
 
 	@Override
 	public String toString() {

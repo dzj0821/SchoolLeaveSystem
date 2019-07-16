@@ -35,6 +35,13 @@ public interface UserDao {
 	})
 	List<User> selectUsers() throws Exception;
 	
+	@Select("select * from user where clazz_id = #{clazzId}")
+	@Results({
+		@Result(column = "id", property = "id", id = true),
+		@Result(column = "clazz_id", property = "clazz", one = @One(select = "pers.dzj0821.SchoolLeaveSystem.dao.ClazzDao.selectClazzById")),
+	})
+	List<User> selectUsersByClazzId(int clazzId) throws Exception;
+	
 	@Insert("insert into user(username, password, type, name, telephone, clazz_id) values(#{username}, #{password}, #{type}, #{name}, #{telephone}, #{clazz.id})")
 	//用于在语句执行完毕后返回新插入的主键
 	@Options(useGeneratedKeys = true, keyProperty = "id")

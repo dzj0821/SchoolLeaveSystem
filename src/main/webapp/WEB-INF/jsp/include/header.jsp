@@ -53,6 +53,16 @@
 						<a href="${pageContext.request.contextPath}/user/list">用户管理</a>
 					</li>
 				</c:if>
+				<c:if test="${user.type.code <= UserType.COLLAGE_ADMIN.code }">
+					<li>
+						<a href="${pageContext.request.contextPath}/major/list">专业管理</a>
+					</li>
+				</c:if>
+				<c:if test="${user.type.code <= UserType.CLAZZ_ADMIN.code }">
+					<li>
+						<a href="${pageContext.request.contextPath}/clazz/list">班级管理</a>
+					</li>
+				</c:if>
 			</ul>
 			<ul class="nav navbar-nav navbar-right ">
 				<c:if test="${user == null }">
