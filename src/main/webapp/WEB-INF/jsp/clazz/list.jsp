@@ -9,18 +9,24 @@
 <c:if test="${user.type.code <= UserType.COLLAGE_ADMIN.code }">
 	<script>
 function addClazzClick(major_id, major_name){
-	$("#addClazzBody").text("为 " + major_name + " 添加班级，请输入班级名称");
+	$("#addClazzBody").text("为 " + major_name + " 添加班级，请输入班级序号并选择年级");
 	window.add_major_id = major_id;
 	$("#addModal").modal("show");
 }
 
 function addClazzSubmit(){
+	var no = $("#addClazzNoText").val();
+	if(!/^[1-9][0-9]*$/.test(no)){
+		alert("序号必须为纯数字");
+		return;
+	}
 	$.ajax({
 		url : '${pageContext.request.contextPath}/api/clazz/add',
 		dataType : 'json',
 		data : {
+			no: $("#addClazzNoText").val(),
 			majorId: window.add_major_id,
-			name: $("#addClazzText").val()
+			gradeId: $("#addClazzGradeSelect").val()
 		},
 		type : 'POST',
 		success : function(data) {
@@ -45,13 +51,19 @@ function changeClazzClick(clazz_id, clazz_name, major_id){
 }
 
 function changeClazzSubmit(){
+	var no = $("#changeClazzText").val();
+	if(!/[1-9][0-9]*/.test(no)){
+		alert("序号必须为纯数字");
+		return;
+	}
 	$.ajax({
 		url : '${pageContext.request.contextPath}/api/clazz/change',
 		dataType : 'json',
 		data : {
 			id: window.change_clazz_id,
-			name: $("#changeClazzText").val(),
-			majorId: $("#changeClazzSelect").val()
+			no: $("#changeClazzText").val(),
+			majorId: $("#changeClazzSelect").val(),
+			gradeId: $("#changeClazzGradeSelect").val()
 		},
 		type : 'POST',
 		success : function(data) {
@@ -116,7 +128,14 @@ function info(id){
 						</div>
 						<div class="modal-body" id="addClazzBody"></div>
 						<div class="form-group">
-							<input type="text" id="addClazzText" class="form-control" />
+							<select id="addClazzGradeSelect" class="form-control">
+								<c:forEach items="${grades }" var="grade">
+									<option value="${grade.id }">${grade.year }</option>
+								</c:forEach>
+							</select>
+						</div>
+						<div class="form-group">
+							<input type="text" id="addClazzNoText" class="form-control" />
 						</div>
 						<div class="modal-footer">
 							<button type="button" class="btn btn-default"
@@ -140,8 +159,15 @@ function info(id){
 						</div>
 						<div class="modal-body" id="changeClazzBody"></div>
 						<div class="form-group">
+							<select id="changeClazzGradeSelect" class="form-control">
+								<c:forEach items="${grades }" var="grade">
+									<option value="${grade.id }">${grade.year }</option>
+								</c:forEach>
+							</select>
+						</div>
+						<div class="form-group">
 							<select id="changeClazzSelect" class="form-control">
-								<c:forEach items="${majors }" var="collage">
+								<c:forEach items="${majors }" var="major">
 									<option value="${major.id }">${major.name }</option>
 								</c:forEach>
 							</select>
@@ -208,7 +234,7 @@ function info(id){
 										onclick="info(${clazz.id })">详细信息</button>
 									<c:if test="${user.type.code <= UserType.COLLAGE_ADMIN.code }">
 										<button class="btn btn-default"
-											onclick="changeClazzClick(${clazz.id }, '${clazz.fullName }', ${major.id })">修改</button>
+											onclick="changeClazzClick(${clazz.id }, ${clazz.no }, ${major.id })">修改</button>
 										<button class="btn btn-default"
 											onclick="deleteClazzClick(${clazz.id }, '${clazz.fullName }')">删除</button>
 									</c:if>

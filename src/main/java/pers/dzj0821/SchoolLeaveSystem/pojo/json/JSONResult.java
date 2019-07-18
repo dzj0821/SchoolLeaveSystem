@@ -13,8 +13,9 @@ public class JSONResult extends HashMap<String, Object> {
 	private static final String CODE_KEY_NAME = "code";
 	private static final String DATA_KEY_NAME = "data";
 	private static final String MESSAGE_KEY_NAME = "message";
-	public static final JSONResult SERVER_ERROR = new JSONResult(JSONCodeType.SERVER_ERROR, Messages.getString("ServerError"), null); //$NON-NLS-1$
+	public static final JSONResult SERVER_ERROR = new JSONResult(JSONCodeType.SERVER_ERROR, Messages.getString("ServerError"), null);
 	public static final JSONResult ACCESS_DENIED = new JSONResult(JSONCodeType.ACCESS_DENIED, Messages.getString("AccessDenied"), null);
+	public static final JSONResult INVALID_PARAMS = new JSONResult(JSONCodeType.INVALID_PARAMS, "参数错误", null);
 
 	public JSONResult(JSONCodeType codeType, String message, Map<String, Object> data) {
 		put(CODE_KEY_NAME, codeType);

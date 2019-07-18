@@ -5,9 +5,11 @@ import java.util.List;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.One;
 import org.apache.ibatis.annotations.Options;
+import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Result;
 import org.apache.ibatis.annotations.Results;
 import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.Update;
 import org.apache.ibatis.annotations.UpdateProvider;
 import org.apache.ibatis.jdbc.SQL;
 
@@ -50,6 +52,9 @@ public interface UserDao {
 	@UpdateProvider(type = UserDaoProvider.class, method = "updateUserById")
 	//默认返回受影响的行数
 	int updateUserById(User user) throws Exception;
+	
+	@Update("update user set clazz_id = #{clazz_id} where id = #{id}")
+	int updateUserSetClazzById(@Param("id") int id, @Param("clazz_id") Integer clazzId) throws Exception;
 	
 	class UserDaoProvider {
 		public String updateUserById(User user) {
