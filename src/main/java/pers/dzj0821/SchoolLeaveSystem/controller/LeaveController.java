@@ -9,6 +9,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -44,6 +46,8 @@ public class LeaveController {
 	@Autowired
 	private LeaveService leaveService;
 	
+	private Logger logger = LogManager.getLogger(LeaveController.class);
+	
 	/**
 	 * 创建假条页面
 	 * @param model
@@ -51,7 +55,12 @@ public class LeaveController {
 	 */
 	@GetMapping("/create")
 	@UserTypeRequired(UserType.NORMAL_USER)
-	public String create(Model model) {
+	public String create(HttpSession session, Model model) {
+		if(new HttpSessionAdapter(session).getUser().getType() != UserType.NORMAL_USER) {
+			ModelAdapter modelAdapter = new ModelAdapter(model);
+			modelAdapter.setErrorResult(JSONResult.ACCESS_DENIED);
+			return "error";
+		}
 		Calendar calendar = Calendar.getInstance();
 		int[] years = new int[3];
 		//获取当前年份
@@ -100,7 +109,13 @@ public class LeaveController {
 	public String list(Integer clazzId, Integer userId, LeaveType type, HttpSession session, Model model) {
 		HttpSessionAdapter sessionAdapter = new HttpSessionAdapter(session);
 		User user = sessionAdapter.getUser();
-		JSONResult result = leaveService.list(user, clazzId, userId, type);
+		JSONResult result = null;
+		try {
+			result = leaveService.list(user, clazzId, userId, type);
+		} catch (Exception e) {
+			logger.warn(e);
+			result = JSONResult.SERVER_ERROR;
+		}
 		ModelAdapter modelAdapter = new ModelAdapter(model);
 		if(result.getCode() != JSONCodeType.SUCCESS) {
 			modelAdapter.setErrorResult(result);

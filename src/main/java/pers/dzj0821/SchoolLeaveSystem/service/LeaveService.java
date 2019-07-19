@@ -37,7 +37,7 @@ public interface LeaveService {
 	 */
 	public JSONResult cancel(User user, int id);
 
-	public JSONResult list(User user, Integer clazzId, Integer userId, LeaveType type);
+	public JSONResult list(User user, Integer clazzId, Integer userId, LeaveType type) throws Exception;
 
 	/**
 	 * 请假信息查询

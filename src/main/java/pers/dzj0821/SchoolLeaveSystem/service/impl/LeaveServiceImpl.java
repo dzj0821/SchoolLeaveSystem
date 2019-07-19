@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Formatter;
@@ -17,15 +18,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.commons.CommonsMultipartFile;
 
+import pers.dzj0821.SchoolLeaveSystem.dao.ClazzDao;
 import pers.dzj0821.SchoolLeaveSystem.dao.LeaveDao;
 import pers.dzj0821.SchoolLeaveSystem.dao.LeaveImageDao;
+import pers.dzj0821.SchoolLeaveSystem.dao.MajorDao;
 import pers.dzj0821.SchoolLeaveSystem.dao.PermissionClazzDao;
 import pers.dzj0821.SchoolLeaveSystem.dao.PermissionCollageDao;
 import pers.dzj0821.SchoolLeaveSystem.pojo.Leave;
 import pers.dzj0821.SchoolLeaveSystem.pojo.LeaveImage;
+import pers.dzj0821.SchoolLeaveSystem.pojo.Major;
 import pers.dzj0821.SchoolLeaveSystem.pojo.PermissionClazz;
 import pers.dzj0821.SchoolLeaveSystem.pojo.PermissionCollage;
-import pers.dzj0821.SchoolLeaveSystem.dao.UserDao;
 import pers.dzj0821.SchoolLeaveSystem.pojo.Clazz;
 import pers.dzj0821.SchoolLeaveSystem.pojo.User;
 import pers.dzj0821.SchoolLeaveSystem.pojo.json.JSONResult;
@@ -54,7 +57,9 @@ public class LeaveServiceImpl implements LeaveService {
 	@Autowired
 	private PermissionCollageDao permissionCollageDao;
 	@Autowired
-	private UserDao userDao;
+	private MajorDao majorDao;
+	@Autowired
+	private ClazzDao clazzDao;
 
 	@Override
 	public JSONResult create(User user, int startYear, int startMonth, int startDay, int startLesson, int endYear,
@@ -210,7 +215,9 @@ public class LeaveServiceImpl implements LeaveService {
 			return new JSONResult(JSONCodeType.DATA_NOT_FOUND, "记录不存在", null);
 		}
 		// 如果不是自己的申请
-		if (leave.getUser().getId().equals(user.getId())) {
+		if (!leave.getUser().getId().equals(user.getId())) {
+			System.out.println(leave.getUser().getId());
+			System.out.println(user.getId());
 			return JSONResult.ACCESS_DENIED;
 		}
 		// 只有待审核状态才能取消
@@ -322,59 +329,38 @@ public class LeaveServiceImpl implements LeaveService {
 	}
 	
 	@Override
-	public JSONResult list(User user, Integer clazzId, Integer userId, LeaveType type) {
+	public JSONResult list(User user, Integer clazzId, Integer userId, LeaveType type) throws Exception {
 		// 如果用户未登录
 		if (user == null) {
 			return JSONResult.ACCESS_DENIED;
 		}
-		// 普通用户只能查询自己的记录，如果查询其他记录拒绝查询
-		if (user.getType() == UserType.NORMAL_USER && (clazzId != null || userId != null || type != null)) {
-			return JSONResult.ACCESS_DENIED;
-		}
-		if(user.getType() == UserType.NORMAL_USER) {
-			userId = user.getId();
-		}
-		boolean access = true;
-		try {
-			if (clazzId != null) {
-				// 获取用户是否有指定班级的权限
-				PermissionClazz permissionClazz = permissionClazzDao
-						.selectPermissionClazzByUserIdAndClazzId(user.getId(), clazzId);
-				if (permissionClazz == null) {
-					access = false;
-				}
-			}
-			if (userId != null) {
-				User willGetUser = userDao.selectUserById(userId);
-				//如果用户不存在/用户未加入班级/查询用户没有被查询用户所在的班级的权限
-				if (userId != user.getId() && (willGetUser == null || willGetUser.getClazz() == null || permissionClazzDao
-						.selectPermissionClazzByUserIdAndClazzId(userId, willGetUser.getClazz().getId()) == null)) {
-					access = false;
-				}
-			}
-		} catch (Exception e) {
-			logger.warn(e);
-			return JSONResult.SERVER_ERROR;
-		}
-		// 如果没有权限
-		if (user.getType() != UserType.SUPER_ADMIN && !access) {
-			return JSONResult.ACCESS_DENIED;
-		}
-		User selectUser = null;
-		Clazz selectClazz = null;
-		if(userId != null) {
-			selectUser = new User(userId, null, null, null, null, null, null, null, null);
-		}
-		if(clazzId != null) {
-			selectClazz = new Clazz(clazzId, null, null, null);
-		}
-		Leave leave = new Leave(null, selectUser, selectClazz, null, null, null, null, null, null, null, type, null, null);
 		List<Leave> leaves = null;
-		try {
-			leaves = leaveDao.selectLeaveByLeave(leave);
-		} catch (Exception e) {
-			logger.warn(e);
-			return JSONResult.SERVER_ERROR;
+		// 普通用户只能查询自己的记录，如果查询其他记录拒绝查询
+		if (user.getType() == UserType.NORMAL_USER) {
+			leaves = leaveDao.selectLeavesComplex(null, user.getId(), null);
+		}
+		if(user.getType() == UserType.SUPER_ADMIN) {
+			leaves = leaveDao.selectLeaves();
+		}
+		List<Clazz> clazzs = new ArrayList<Clazz>();
+		if(user.getType() == UserType.COLLAGE_ADMIN) {
+			List<PermissionCollage> permissionCollages = permissionCollageDao.selectPermissionCollagesByUserId(user.getId());
+			for (PermissionCollage permissionCollage : permissionCollages) {
+				List<Major> majors = majorDao.selectMajorsByCollageId(permissionCollage.getCollage().getId());
+				for (Major major : majors) {
+					List<Clazz> clazzes = clazzDao.selectClazzesByMajorId(major.getId());
+					clazzs.addAll(clazzes);
+				}
+			}
+		}
+		if(user.getType() == UserType.COLLAGE_ADMIN || user.getType() == UserType.CLAZZ_ADMIN) {
+			List<PermissionClazz> permissionClazzs = permissionClazzDao.selectPermissionClazzesByUserId(user.getId());
+			for (PermissionClazz permissionClazz : permissionClazzs) {
+				clazzs.add(permissionClazz.getClazz());
+			}
+		}
+		if(leaves == null) {
+			leaves = leaveDao.selectLeavesComplex(clazzs, null, null);
 		}
 		HashMap<String, Object> map = new HashMap<String, Object>();
 		map.put("leaves", leaves);

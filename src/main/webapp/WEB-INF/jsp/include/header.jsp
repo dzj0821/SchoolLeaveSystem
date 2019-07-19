@@ -27,16 +27,18 @@
 							<span class="caret"></span>
 						</a>
 						<ul class="dropdown-menu">
-							<li>
-								<a href="${pageContext.request.contextPath}/leave/create">请假申请</a>
-							</li>
-							<li>
-								<a href="${pageContext.request.contextPath}/leave/list">申请记录</a>
-							</li>
-							<c:if test="${user.type.code <= UserType.NORMAL_USER.code }">
-								<li role="separator" class="divider"></li>
+							<c:if test="${user.type.code == UserType.NORMAL_USER.code }">
 								<li>
-									<a href="${pageContext.request.contextPath}/leave/list?clazzId=${user.clazz.id }">审核名单</a>
+									<a href="${pageContext.request.contextPath}/leave/create">请假申请</a>
+								</li>
+								<li>
+									<a href="${pageContext.request.contextPath}/leave/list">申请记录</a>
+								</li>
+							</c:if>
+							<c:if test="${user.type.code < UserType.NORMAL_USER.code }">
+								<li>
+									<a
+										href="${pageContext.request.contextPath}/leave/list">审核名单</a>
 								</li>
 							</c:if>
 						</ul>
@@ -90,8 +92,7 @@
 									style="color: #9d9d9d">个人信息</a>
 							</li>
 							<li>
-								<a
-									href="${pageContext.request.contextPath}/user/modify"
+								<a href="${pageContext.request.contextPath}/user/modify"
 									style="color: #9d9d9d">修改个人资料</a>
 							</li>
 							<li>
